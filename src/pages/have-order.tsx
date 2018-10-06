@@ -22,7 +22,7 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 		return (
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
-					<div className="vspace80 centered w-row">
+					<div className="vspace80 centered w-row animated zoomIn">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
 							<h3>Ok {this.state.name}, do you have an order from your doctor?</h3>
@@ -34,7 +34,7 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 									wide
 								/>
 								<BigButton
-									href="/"
+									href="/no-order"
 									img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7266876eedf_Providers.svg"
 									text="No"
 									wide

@@ -80,11 +80,14 @@ class MriType extends React.Component<{}, IScanTypeState> {
 	}
 
 	public setName(setTo: string) {
-		const name = (setTo || '').toUpperCase();
+		let name = (setTo || '').toUpperCase();
+		let nf = name.replace('MRI', '');
+		nf = nf.replace(' OF', '');
+		nf = nf.trim();
 		const matches = types.filter((typ) =>
-			(typ.name || '').toUpperCase().indexOf(name) > -1 ||
-			(typ.name2 || '').toUpperCase().indexOf(name) > -1 ||
-			(typ.name3 || '').toUpperCase().indexOf(name) > -1
+			(typ.name || '').toUpperCase().indexOf(nf) > -1 ||
+			(typ.name2 || '').toUpperCase().indexOf(nf) > -1 ||
+			(typ.name3 || '').toUpperCase().indexOf(nf) > -1
 		);
 		if (matches.length > 0) {
 			this.setState({name, matches, oops: null});
@@ -105,53 +108,35 @@ class MriType extends React.Component<{}, IScanTypeState> {
 		return (
 			<IndexLayout>
 				<section id="Q3" className="vspace80 w-container">
-					<div className="centered w-row">
-						<div className="w-hidden-small w-hidden-tiny w-col w-col-7">
-							<h3>
-								Great {this.state.fname}, do you know what type of scan you need?
-							</h3>
-							<div className="w-form">
-								<form
-									id="email-form"
-									name="email-form"
-									data-name="Email Form"
-								>
-									<label htmlFor="scan">
-										Type name to filter, then select below
-									</label>
-									<input
-										type="search"
-										className="w-input centered"
-										maxLength={256}
-										name="scan"
-										data-name="Scan"
-										id="scan"
-										placeholder="Type scan name to search"
-										value={this.state.name}
-										onChange={(e) => this.setName(e.currentTarget.value)}
-									/>
-								</form>
+					<div className="w-row">
+						<div className="w-col w-col-3" />
+						<div className="w-col w-col-6">
+							<div className="centered w-form">
+								<form id="email-form" name="email-form" data-name="Email Form">
+									<h3>OK {'{'}fname{'}'}, do you know what type of scan you need?</h3>
+									<div className="cta-subitem">
+										<input type="text"
+											   placeholder="TYpe scan name to search"
+											   className="text-field w-input" maxLength={256} name="name-3"
+											   data-name="Name 3" id="name-3"
+											   value={this.state.name}
+											   onChange={(e) => this.setName(e.currentTarget.value)}
+										/>
+										<div className="text-block-3"> OR </div>
+										<a href="/no-type" className="button w-button">
+											I don't know
+										</a>
+									</div>
+									</form>
+								<div className="w-form-done">
+									<div>Thank you! Your submission has been received!</div>
+								</div>
+								<div className="w-form-fail">
+									<div>Oops! Something went wrong while submitting the form.</div>
+								</div>
 							</div>
 						</div>
-						<div className="w-col w-col-5">
-							<div className="w-form">
-								<form
-									id="email-form-2"
-									name="email-form-2"
-									data-name="Email Form 2"
-								>
-									<label htmlFor="email-2">
-										We offer different MRI types on different days. Reserve your time, and we'll reschedule you if needed
-									</label>
-									<button
-										type="submit"
-										defaultValue=""
-										data-wait="Please wait..."
-										className="w-button"
-									>I don't know</button>
-								</form>
-							</div>
-						</div>
+						<div className="w-col w-col-3" />
 					</div>
 					{this.state.oops && (
 						<ErrorDisplay>

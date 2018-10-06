@@ -12,3 +12,4 @@ export const BigButton = ({href, img, wide, text}) => (
 		<div>{text}</div>
 	</a>
 );
+
