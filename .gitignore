@@ -16,6 +16,7 @@ packages
 .ssh
 .vs
 .cache
+public
 node_modules
 Newtonsoft.Json.*
 Npgsql*.dll

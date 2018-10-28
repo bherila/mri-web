@@ -1,9 +1,4 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
-import {EditFormBase} from '../forms';
-
-import Page from '../components/Page'
-import Container from '../components/Container'
 import IndexLayout from '../layouts'
 import ErrorDisplay from "../components/ErrorDisplay";
 
@@ -100,7 +95,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 	public select(name: string) {
 		if (typeof sessionStorage !== 'undefined') {
 			sessionStorage.setItem('scan', name);
-			location.href = '/contact-info';
+			location.href = '/safety-questions';
 		}
 	}
 
@@ -113,7 +108,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 						<div className="w-col w-col-6">
 							<div className="centered w-form">
 								<form id="email-form" name="email-form" data-name="Email Form">
-									<h3>OK {'{'}fname{'}'}, do you know what type of scan you need?</h3>
+									<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
 									<div className="cta-subitem">
 										<input type="text"
 											   placeholder="TYpe scan name to search"

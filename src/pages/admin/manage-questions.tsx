@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'gatsby'
 import {EditFormBase} from '../../forms';
-import * as Api from '../../api';
+import * as Api from '../../api/api';
 import {isEmpty} from "ucshared";
 
 import Page from '../../components/Page'
@@ -100,7 +100,7 @@ class ManageQuestions extends React.Component<any, {
 
 	public componentDidMount() {
 		console.log('welcome', this.props.location.search);
-		new Api.DefaultApi().questiongetGet().then((data) => {
+		new Api.QuestionApi().getQuestions().then((data) => {
 			console.log('got', data);
 			this.setState({data});
 		});
