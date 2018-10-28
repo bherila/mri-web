@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-starter-typescript-plus",
-  "description": "A starter kit for TypeScript-based Gatsby projects with sensible defaults.",
+  "name": "mri-web",
+  "description": "Website for idealMRI, based on gatsby-starter-typescript-plus",
   "version": "1.0.0",
   "private": true,
-  "author": "Resi Respati <resir014@gmail.com>",
+  "author": "Ben Herila <ben@herila.net>",
   "keywords": [
     "gatsby"
   ],
@@ -16,7 +16,8 @@
     "dev": "gatsby develop",
     "lint": "tslint 'src/**/*.{ts,tsx}'",
     "start": "npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"swagger": "java -jar ../swagger-codegen-cli.jar generate -i http://localhost:7071/api/swagger/v1 -l typescript-fetch -o ./src/api"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -47,9 +48,9 @@
     "polished": "^1.9.3",
     "prism-themes": "^1.0.1",
     "prismjs": "^1.15.0",
-    "react": "^16.4.2",
     "react-datepicker": "^1.6.0",
     "react-dom": "^16.4.2",
+    "react": "^16.4.2",
     "react-emotion": "^9.2.8",
     "react-helmet": "^5.2.0",
     "typescript": "^2.9.2",

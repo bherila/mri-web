@@ -11,127 +11,31 @@ import { css } from "emotion";
 const StyledHeader = styled.header('navContainer');
 
 const Header: React.SFC<{}> = ({}) => (
-    <header className="nav-container">
-        <div className="spacer" />
-        <div className="nav-flex">
-            <a href="/" className="brand-link left-spacing w-nav-brand">
-                <img
-                    src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba3081aff7d475f9a6fa6d1_Logo%20Dark.svg"
-                    className="image-2"
-                />
-            </a>
-            <div className="nav-right">
-                <div className="cta-top w-hidden-tiny">
-                    <div className="cta-heading inline-block blue">CALL :</div>
-                    <div className="cta-heading inline-block">978-987-4291</div>
-                    <a href="#" className="button small">
-                        Schedule
-                    </a>
-                </div>
-                <div>
-                    <div
-                        data-collapse="medium"
-                        data-animation="default"
-                        data-duration={400}
-                        className="navbar w-nav"
-                    >
-                        <nav
-                            role="navigation"
-                            className="navigation-menu w-nav-menu"
-                        >
-                            <a
-                                href="/why-ideal-mri"
-                                className="navigation-link white w-nav-link"
-                            >
-                                Why idealMRI?
-                            </a>
-                            <a
-                                href="/what-to-expect"
-                                className="navigation-link white w-nav-link"
-                            >
-                                What to Expect
-                            </a>
-                            <a
-                                href="/pricing-and-insurance"
-                                className="navigation-link white w-nav-link"
-                            >
-                                Pricing &amp; Insurance
-                            </a>
-                            <a
-                                href="/come-see-us"
-                                className="navigation-link white w-nav-link"
-                            >
-                                Locations
-                            </a>
-                        </nav>
-                        <div className="hamburger-button white w-nav-button">
-                            <div className="w-icon-nav-menu" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+	<div className="header">
+		<div className="nav-grid">
+			<div id="w-node-82dfbff5e208-14f3913a" className="cta-top-2">
+				<div className="cta-heading inline-block blue">CALL :</div>
+				<div className="cta-heading inline-block"><a href="tel:+18334332567" className="white">833-IDEAL-MR</a>
+				</div>
+				<a href="/schedule" className="button-3">Schedule Online</a></div>
+			<a href="/" id="w-node-82dfbff5e20f-14f3913a" className="w-nav-brand w--current"><img
+				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba3081aff7d475f9a6fa6d1_Logo%20Dark.svg"
+				alt=""/></a>
+			<div data-collapse="medium" data-animation="default" data-duration="400" id="w-node-82dfbff5e211-14f3913a"
+				 className="navbar w-nav">
+				<nav role="navigation" className="navigation-menu w-nav-menu"><a href="/why-ideal-mri"
+																				 className="navigation-link-2 white w-nav-link">Why
+					ideal MRI</a><a href="/what-to-expect" className="navigation-link-2 white w-nav-link">What to
+					Expect</a><a href="/pricing-and-insurance"
+								 className="navigation-link-2 white w-nav-link">Pricing &amp; Insurance</a><a
+					href="/for-clinicians" className="navigation-link-2 white w-nav-link">For Clinicians</a><a
+					href="/come-see-us" className="navigation-link-2 white w-nav-link">Find Us</a></nav>
+				<div className="hamburger-button-2 white w-nav-button">
+					<div className="w-icon-nav-menu"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 );
-// {/*<header className="nav-container">*/}
-// 		{/*<div className={css`${Webflow.spacer}`} />*/}
-// 		{/*<div className={css`${Webflow.navFlex}`}>*/}
-//             {/*<a href="/" className={css`${Webflow.brandLink} ${Webflow.wNavBrand}`}>*/}
-//                 {/*<img src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba3081aff7d475f9a6fa6d1_Logo%20Dark.svg" className={css`${Webflow.image2}`} />*/}
-//             {/*</a>*/}
-// 			{/*<div className={css`${Webflow.navRight}`}>*/}
-// 				{/*<div className={css`${Webflow.ctaTop} ${Webflow.wHiddenTiny}`}>*/}
-// 					{/*<div className={css`${Webflow.ctaHeading} ${Webflow.wInlineBlock} ${Webflow.blue}`}>CALL :</div>*/}
-// 					{/*<div className={css`${Webflow.ctaHeading} ${Webflow.wInlineBlock} ${Webflow.blue}`}>978-987-4291</div>*/}
-//                     {/*<a href="#" className={css`${Webflow.button} ${Webflow.small}`}>Schedule</a></div>*/}
-// 				{/*<div>*/}
-// 					{/*<div data-collapse="medium" data-animation="default" data-duration={400} className="navbar w-nav">*/}
-// 						{/*<nav role="navigation" className="navigation-menu w-nav-menu"><a href="/why-ideal-mri" className="navigation-link white w-nav-link">Why idealMRI?</a><a href="/what-to-expect" className="navigation-link white w-nav-link">What to Expect</a><a href="/pricing-and-insurance" className="navigation-link white w-nav-link">Pricing &amp; Insurance</a><a href="/come-see-us" className="navigation-link white w-nav-link">Locations</a></nav>*/}
-// 						{/*<div className="hamburger-button white w-nav-button">*/}
-// 							{/*<div className="w-icon-nav-menu" />*/}
-// 						{/*</div>*/}
-// 					{/*</div>*/}
-// 				{/*</div>*/}
-// 			{/*</div>*/}
-// 		{/*</div>*/}
-// 	{/*</header>*/}
-// );
-
-// const StyledHeader = styled.header`
-//   height: ${heights.header}px;
-//   padding: 0 ${dimensions.containerPadding}rem;
-//   background-color: ${colors.brand};
-//   color: ${transparentize(0.5, colors.white)};
-// `
-//
-// const HeaderInner = styled(Container)`
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   height: 100%;
-// `
-//
-// const HomepageLink = styled(Link)`
-//   color: ${colors.white};
-//   font-size: 1.5rem;
-//   font-weight: 600;
-//
-//   &:hover,
-//   &:focus {
-//     text-decoration: none;
-//   }
-// `
-//
-// interface HeaderProps {
-//   title: string
-// }
-//
-// const Header: React.SFC<HeaderProps> = ({ title }) => (
-//   <StyledHeader>
-//     <HeaderInner>
-//       <HomepageLink to="/">{title}</HomepageLink>
-//     </HeaderInner>
-//   </StyledHeader>
-// )
 
 export default Header
