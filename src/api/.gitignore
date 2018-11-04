@@ -1,9 +1,3 @@
 wwwroot/*.js
 node_modules
 typings
-/README.md
-/git_push.sh
-/package.json
-/tsconfig.json
-/tslint.json
-/typings.json

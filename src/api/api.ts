@@ -36,6 +36,46 @@ export class BaseAPI {
     }
 };
 
+export interface Appointment {
+    "appointmentId"?: string;
+    "appointmentSlotId"?: string;
+    "serviceType"?: string;
+    "firstName"?: string;
+    "lastName"?: string;
+    "dob"?: string;
+    "phone"?: string;
+    "email"?: string;
+    "address1"?: string;
+    "city"?: string;
+    "state"?: string;
+    "zip"?: string;
+    "height"?: string;
+    "weight"?: string;
+    "reminder"?: number;
+    "doctorName"?: string;
+    "doctorPhone"?: string;
+    "insuranceCarrier"?: string;
+    "insuranceGroupNumber"?: string;
+    "insurancePolicyNumber"?: string;
+    "insuranceVerified"?: boolean;
+    "priorAuthObtained"?: boolean;
+    "orderEnteredToRIS"?: boolean;
+    "patientWasCalled"?: boolean;
+    "confirmed"?: boolean;
+    "orderImageUrl"?: string;
+    "insuranceFrontUrl"?: string;
+    "insuranceBackUrl"?: string;
+    "surveyDataJson"?: string;
+    "approvedDate"?: Date;
+    "submittedDate"?: Date;
+    "confirmedDate"?: Date;
+    "birthday"?: Date;
+    "partitionKey"?: string;
+    "rowKey"?: string;
+    "timestamp"?: Date;
+    "eTag"?: string;
+}
+
 export interface DayRule {
     "dayOfWeek"?: DayRuleDayOfWeekEnum;
     "openTime"?: number;
@@ -376,6 +416,117 @@ export const ScheduleApiFetchParamCreator = {
             options: fetchOptions,
         };
     },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userScheduleDELETE(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any): FetchArgs {
+        const baseUrl = `/api/appointment`;
+        let urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "authToken": params["authToken"],
+            "search": params["search"],
+        });
+        let fetchOptions: RequestInit = assign({}, { method: "DELETE" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        contentTypeHeader = { "Content-Type": "application/json" };
+        if (params["req"]) {
+            fetchOptions.body = JSON.stringify(params["req"] || {});
+        }
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param authToken
+     * @param search
+     */
+    userScheduleGET(params: {  "authToken"?: string; "search"?: string; }, options?: any): FetchArgs {
+        const baseUrl = `/api/appointment`;
+        let urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "authToken": params["authToken"],
+            "search": params["search"],
+        });
+        let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePOST(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any): FetchArgs {
+        const baseUrl = `/api/appointment`;
+        let urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "authToken": params["authToken"],
+            "search": params["search"],
+        });
+        let fetchOptions: RequestInit = assign({}, { method: "POST" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        contentTypeHeader = { "Content-Type": "application/json" };
+        if (params["req"]) {
+            fetchOptions.body = JSON.stringify(params["req"] || {});
+        }
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePUT(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any): FetchArgs {
+        const baseUrl = `/api/appointment`;
+        let urlObj = url.parse(baseUrl, true);
+        urlObj.query = assign({}, urlObj.query, {
+            "authToken": params["authToken"],
+            "search": params["search"],
+        });
+        let fetchOptions: RequestInit = assign({}, { method: "PUT" }, options);
+
+        let contentTypeHeader: Dictionary<string> = {};
+        contentTypeHeader = { "Content-Type": "application/json" };
+        if (params["req"]) {
+            fetchOptions.body = JSON.stringify(params["req"] || {});
+        }
+        if (contentTypeHeader) {
+            fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
+        }
+        return {
+            url: url.format(urlObj),
+            options: fetchOptions,
+        };
+    },
 };
 
 /**
@@ -475,6 +626,81 @@ export const ScheduleApiFp = {
             });
         };
     },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userScheduleDELETE(params: { "req"?: Appointment; "authToken"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+        const fetchArgs = ScheduleApiFetchParamCreator.userScheduleDELETE(params, options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param authToken
+     * @param search
+     */
+    userScheduleGET(params: { "authToken"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SlotAvailabilityDate>> {
+        const fetchArgs = ScheduleApiFetchParamCreator.userScheduleGET(params, options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePOST(params: { "req"?: Appointment; "authToken"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+        const fetchArgs = ScheduleApiFetchParamCreator.userSchedulePOST(params, options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePUT(params: { "req"?: Appointment; "authToken"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+        const fetchArgs = ScheduleApiFetchParamCreator.userSchedulePUT(params, options);
+        return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+            return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            });
+        };
+    },
 };
 
 /**
@@ -528,6 +754,45 @@ export class ScheduleApi extends BaseAPI {
      */
     timeSlotsGET(params: {  "contrast"?: string; "locationId"?: string; }, options?: any) {
         return ScheduleApiFp.timeSlotsGET(params, options)(this.fetch, this.basePath);
+    }
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userScheduleDELETE(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+        return ScheduleApiFp.userScheduleDELETE(params, options)(this.fetch, this.basePath);
+    }
+    /**
+     *
+     * @summary UserSchedule
+     * @param authToken
+     * @param search
+     */
+    userScheduleGET(params: {  "authToken"?: string; "search"?: string; }, options?: any) {
+        return ScheduleApiFp.userScheduleGET(params, options)(this.fetch, this.basePath);
+    }
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePOST(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+        return ScheduleApiFp.userSchedulePOST(params, options)(this.fetch, this.basePath);
+    }
+    /**
+     *
+     * @summary UserSchedule
+     * @param req
+     * @param authToken
+     * @param search
+     */
+    userSchedulePUT(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+        return ScheduleApiFp.userSchedulePUT(params, options)(this.fetch, this.basePath);
     }
 };
 
@@ -583,6 +848,45 @@ export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string)
          */
         timeSlotsGET(params: {  "contrast"?: string; "locationId"?: string; }, options?: any) {
             return ScheduleApiFp.timeSlotsGET(params, options)(fetch, basePath);
+        },
+        /**
+         *
+         * @summary UserSchedule
+         * @param req
+         * @param authToken
+         * @param search
+         */
+        userScheduleDELETE(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+            return ScheduleApiFp.userScheduleDELETE(params, options)(fetch, basePath);
+        },
+        /**
+         *
+         * @summary UserSchedule
+         * @param authToken
+         * @param search
+         */
+        userScheduleGET(params: {  "authToken"?: string; "search"?: string; }, options?: any) {
+            return ScheduleApiFp.userScheduleGET(params, options)(fetch, basePath);
+        },
+        /**
+         *
+         * @summary UserSchedule
+         * @param req
+         * @param authToken
+         * @param search
+         */
+        userSchedulePOST(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+            return ScheduleApiFp.userSchedulePOST(params, options)(fetch, basePath);
+        },
+        /**
+         *
+         * @summary UserSchedule
+         * @param req
+         * @param authToken
+         * @param search
+         */
+        userSchedulePUT(params: {  "req"?: Appointment; "authToken"?: string; "search"?: string; }, options?: any) {
+            return ScheduleApiFp.userSchedulePUT(params, options)(fetch, basePath);
         },
     };
 };

@@ -18,6 +18,12 @@ class AdminIndex extends React.Component<{}, {name: string}> {
 				<Page>
 					<Container>
 						<h1>Admin Panel</h1>
+						<ul>
+							<li>
+								<Link to="/admin/manage-questions">Manage Questions</Link>
+								<Link to="/admin/manage-time-slots">Manage Time Slots</Link>
+							</li>
+						</ul>
 					</Container>
 				</Page>
 			</IndexLayout>
