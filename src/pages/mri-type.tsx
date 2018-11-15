@@ -1,6 +1,8 @@
 import * as React from 'react'
 import IndexLayout from '../layouts'
 import ErrorDisplay from "../components/ErrorDisplay";
+import {Link} from "gatsby";
+import {Ez123, OrderBreadcrumb} from "../components/breadcrumb";
 
 const types = [
 	{name: 'Hip MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
@@ -58,19 +60,21 @@ interface IScanTypeState {
 	matches: {name, contrast, time, name2, name3}[];
 	fname: string;
 	oops: string|null;
+	haveOrder: boolean;
 }
 
 class MriType extends React.Component<{}, IScanTypeState> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: '', matches: types, fname: '', oops: null};
+		this.state = {name: '', matches: types, fname: '', oops: null, haveOrder: true};
 	}
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
 			let name = sessionStorage.getItem('name') || '';
 			name = name.split(' ')[0];
-			this.setState({fname: name});
+			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
+			this.setState({fname: name, haveOrder});
 		}
 	}
 
@@ -95,7 +99,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 	public select(name: string) {
 		if (typeof sessionStorage !== 'undefined') {
 			sessionStorage.setItem('scan', name);
-			location.href = '/safety-questions';
+			location.href = '/pick-time';
 		}
 	}
 
@@ -106,12 +110,15 @@ class MriType extends React.Component<{}, IScanTypeState> {
 					<div className="w-row">
 						<div className="w-col w-col-3" />
 						<div className="w-col w-col-6">
-							<div className="centered w-form">
-								<form id="email-form" name="email-form" data-name="Email Form">
+							<div className="centered">
+								<div>
+									<Ez123 num={2} />
+								</div>
+								<form action="#">
 									<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
 									<div className="cta-subitem">
 										<input type="text"
-											   placeholder="TYpe scan name to search"
+											   placeholder="Type scan name to search"
 											   className="text-field w-input" maxLength={256} name="name-3"
 											   data-name="Name 3" id="name-3"
 											   value={this.state.name}
@@ -122,13 +129,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 											I don't know
 										</a>
 									</div>
-									</form>
-								<div className="w-form-done">
-									<div>Thank you! Your submission has been received!</div>
-								</div>
-								<div className="w-form-fail">
-									<div>Oops! Something went wrong while submitting the form.</div>
-								</div>
+								</form>
 							</div>
 						</div>
 						<div className="w-col w-col-3" />

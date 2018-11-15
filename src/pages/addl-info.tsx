@@ -1,22 +1,87 @@
 import * as React from 'react'
 import { Link } from 'gatsby'
 import IndexLayout from '../layouts'
+import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
+import Dropzone from "react-dropzone";
+import {showImageOrPlaceholder} from "../components/FileUpload";
 
-class ContactInformation extends React.Component<{}, {name: string, hasInsurance: boolean}> {
+interface ICPState {
+	lname: string;
+	scan: string;
+	fname: string;
+	hasInsurance: boolean;
+	haveOrder: boolean;
+	height: string;
+	weight: string;
+	doctorName: string;
+	mriOrder: string;
+	insFront: string;
+	insBack: string;
+}
+
+class ContactInformation extends React.Component<{}, ICPState> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: '', hasInsurance: true};
+		this.state = {
+			fname: '',
+			hasInsurance: true,
+			lname: '',
+			scan: '',
+			haveOrder: false,
+			height: '',
+			weight: '',
+			doctorName: '',
+			mriOrder: '',
+			insFront: '',
+			insBack: '',
+		};
+	}
+
+	public componentDidMount() {
+		if (typeof sessionStorage !== 'undefined') {
+			const fname = sessionStorage.getItem('fname') || '';
+			const lname = sessionStorage.getItem('lname') || '';
+			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
+			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
+			this.setState({fname, lname, haveOrder, scan});
+
+			const height = sessionStorage.getItem('height') || '';
+			const weight = sessionStorage.getItem('weight') || '';
+			const doctorName = sessionStorage.getItem('doctorName') || '';
+			const insFront = sessionStorage.getItem('insFront') || '';
+			const insBack = sessionStorage.getItem('insBack') || '';
+			const mriOrder = sessionStorage.getItem('mriOrder') || '';
+			this.setState({height, weight, doctorName, insFront, insBack, mriOrder});
+		}
+	}
+
+	public updateStorage() {
+		if (typeof sessionStorage !== 'undefined') {
+			sessionStorage.setItem('height', this.state.height);
+			sessionStorage.setItem('weight', this.state.weight);
+			sessionStorage.setItem('doctorName', this.state.doctorName);
+			sessionStorage.setItem('insFront', this.state.insFront);
+			sessionStorage.setItem('insBack', this.state.insBack);
+			sessionStorage.setItem('mriOrder', this.state.mriOrder);
+		}
 	}
 
 	public render() {
 		return (
 			<IndexLayout>
 				<section id="Q1" className="vspace80 w-container">
+					<div>
+						<Ez123 num={3} />
+						<div className="breadcrumb-stack">
+							<MriTypeBreadcrumb value={this.state.scan}/>
+							<TimeslotBreadcrumb value={'Jan 21, 2018 at 3:00 pm'}/>
+						</div>
+					</div>
 					<div className="vspace80 centered w-row">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-4">
 							<img
 								src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba72c92e33cb6832a1bd949_idealMRI_lady_3.png"
-								alt
+								alt=""
 							/>
 						</div>
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-1" />
@@ -26,6 +91,7 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 									id="email-form"
 									name="email-form"
 									data-name="Email Form"
+									action="#"
 								>
 									<h3>Additional Information</h3>
 									<p>
@@ -46,6 +112,8 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											name="Height"
 											data-name="Height"
 											id="Height"
+											value={this.state.height}
+											onChange={(e) => this.setState({height: e.currentTarget.value}, () => this.updateStorage())}
 										/>
 									</div>
 									<div className="inputrow">
@@ -59,6 +127,8 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											name="Weight"
 											data-name="Weight"
 											id="Weight"
+											value={this.state.weight}
+											onChange={(e) => this.setState({weight: e.currentTarget.value}, () => this.updateStorage())}
 										/>
 									</div>
 									<div className="inputrow">
@@ -72,6 +142,8 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											name="DoctorName"
 											data-name="DoctorName"
 											id="DoctorName"
+											value={this.state.doctorName}
+											onChange={(e) => this.setState({doctorName: e.currentTarget.value}, () => this.updateStorage())}
 										/>
 									</div>
 									<div className="inputrow">
@@ -79,9 +151,12 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											Upload MRI&nbsp;order
 										</label>
 										<div className="flexinput">
-											<a href="#" className="button green small w-button">
-												Click here to select picture/PDF
-											</a>
+											<Dropzone
+												accept="image/*"
+												className="button green small w-button"
+												onDrop={(files) => this.onDrop('mri-order', files)}
+											>{showImageOrPlaceholder(this.state.mriOrder)}
+											</Dropzone>
 										</div>
 									</div>
 									<div className="inputrow">
@@ -89,9 +164,12 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											<strong>Insurance Card Front</strong>
 										</label>
 										<div className="flexinput">
-											<a href="#" className="button green small w-button">
-												Click here to select picture/PDF
-											</a>
+											<Dropzone
+												accept="image/*"
+												className="button green small w-button"
+												onDrop={(files) => this.onDrop('ins-front', files)}
+											>{showImageOrPlaceholder(this.state.insFront)}
+											</Dropzone>
 										</div>
 									</div>
 									<div className="inputrow">
@@ -99,9 +177,12 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 											<strong>Insurance Card Back</strong>
 										</label>
 										<div className="flexinput">
-											<a href="#" className="button green small w-button">
-												Click here to select picture/PDF
-											</a>
+											<Dropzone
+												accept="image/*"
+												className="button green small w-button"
+												onDrop={(files) => this.onDrop('ins-back', files)}
+											>{showImageOrPlaceholder(this.state.insBack)}
+											</Dropzone>
 										</div>
 									</div>
 									<div className="cta-subitem distributed">
@@ -124,6 +205,17 @@ class ContactInformation extends React.Component<{}, {name: string, hasInsurance
 				</section>
 			</IndexLayout>
 		);
+	}
+
+	private onDrop(insBack: string, files: File[]) {
+		console.log(insBack, files);
+		if (files.length) {
+			if (files[0]) {
+				const sObj = {};
+				sObj[insBack] = files[0].name;
+				this.setState(sObj, () => this.updateStorage());
+			}
+		}
 	}
 }
 

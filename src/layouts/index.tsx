@@ -5,6 +5,7 @@ import {StaticQuery, graphql} from 'gatsby'
 // import 'modern-normalize'
 // import '../styles/normalize'
 import '../styles/webflow.css'
+import '../styles/webflow.grid.css'
 import '../styles/animate.css'
 
 import Header from '../components/Header'

@@ -100,6 +100,19 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		);
 	}
 
+	public applies(slot: Api.SlotAvailabilityTime) {
+		if (this.state.open && !slot.isAvailable) {
+			return false;
+		}
+		if (this.state.hideUnavailable && !slot.isAvailable) {
+			return false;
+		}
+		if (this.state.reservedUnconfirmed && slot.isAvailable) {
+			return false;
+		}
+		return true;
+	}
+
 	public renderInner() {
 		const {hideUnavailable, open, reservedUnconfirmed, confirmed, search, data} = this.state;
 		const {classes} = this.props;
@@ -130,15 +143,21 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{(data || []).map((date) => (date.times || []).map((slot) => (
+						{(data || []).map((date) => (date.times || []).map((slot) => this.applies(slot) && (
 							<TableRow>
-								<TableCell>{slot.time}</TableCell>
+								<TableCell>{date.friendlyBegin}, {slot.time} CST</TableCell>
 								<TableCell>{slot.isAvailable ? 'Available' : 'Unavailable'}</TableCell>
-								<TableCell>
-									<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>
-									<button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>
-									<button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>
-								</TableCell>
+								{slot.isAvailable ? (
+									<TableCell>
+										<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Schedule</button>
+									</TableCell>
+								):(
+                                    <TableCell>
+                                        <button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>
+                                        <button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>
+                                        <button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>
+                                    </TableCell>
+								)}
 							</TableRow>
 						)))}
 					</TableBody>

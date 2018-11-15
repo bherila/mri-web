@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 const Footer: React.SFC<{}> = ({}) => (
-	<footer className="cta-section">
+	<section className="cta-section">
 		<div className="w-container">
 			<div className="w-layout-grid grid-2"><a href="/why-ideal-mri" id="w-node-774288a9e25a-774089fe"
 													 className="cta-grid-item w-inline-block"><img
@@ -16,7 +16,7 @@ const Footer: React.SFC<{}> = ({}) => (
 			</a><a href="/meet-our-team" id="w-node-774288a9e262-774089fe" className="cta-grid-item w-inline-block"><img
 				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 				alt="" className="cta-button-image"/>
-				<div>Meet our Team</div>
+				<div>Meet Our Team</div>
 			</a><a href="/for-clinicians" id="w-node-774288a9e266-774089fe"
 				   className="cta-grid-item w-inline-block"><img
 				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7266876eedf_Providers.svg"
@@ -33,7 +33,7 @@ const Footer: React.SFC<{}> = ({}) => (
 				<div>Find Us</div>
 			</a></div>
 		</div>
-	</footer>
+	</section>
 );
 
 export default Footer

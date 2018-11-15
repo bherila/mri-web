@@ -1,6 +1,7 @@
 import * as React from 'react'
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
+import {Ez123} from "../components/breadcrumb";
 
 class HaveOrder extends React.Component<{}, {name: string}> {
 	constructor(props, context) {
@@ -13,6 +14,7 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 			let name = sessionStorage.getItem('name') || '';
 			name = name.split(' ')[0];
 			this.setState({name});
+			sessionStorage.setItem('haveOrder', 'true');
 		}
 	}
 
@@ -23,6 +25,9 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 					<div className="vspace80 centered w-row animated zoomIn">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
+							<div>
+								<Ez123 num={1} />
+							</div>
 							<h3>Ok {this.state.name}, do you have an order from your doctor?</h3>
 							<div className="cta-subitem distributed">
 								<BigButton

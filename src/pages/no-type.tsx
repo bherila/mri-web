@@ -29,7 +29,7 @@ class DontKnowConfirmationPage extends React.Component<{}, {name: string}> {
 							<p>We offer different types of MRIs on different days. Reserve your time, and we'll reschedule you if needed.</p>
 							<div className="cta-subitem distributed">
 								<BigButton
-									href="/mri-type"
+									href="/pick-time"
 									img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 									text="Continue to Schedule"
 									wide

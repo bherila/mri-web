@@ -15,6 +15,7 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 			let name = sessionStorage.getItem('name') || '';
 			name = name.split(' ')[0];
 			this.setState({name});
+			sessionStorage.setItem('haveOrder', 'false');
 		}
 	}
 

@@ -1,20 +1,21 @@
 import * as React from 'react'
 import { Link } from 'gatsby'
-
 import Page from '../components/Page'
 import Container from '../components/Container'
 import IndexLayout from '../layouts'
+import {Ez123} from "../components/breadcrumb";
 
-class IndexPage extends React.Component<{}, {name: string, email: string}> {
+class IndexPage extends React.Component<{}, {fname: string, lname: string, email: string}> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: '', email: ''};
+		this.state = {fname: '', lname: '', email: ''};
 	}
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
 			this.setState({
-				name: sessionStorage.getItem('name') || '',
+				fname: sessionStorage.getItem('fname') || '',
+				lname: sessionStorage.getItem('lname') || '',
 				email: sessionStorage.getItem('email') || '',
 			});
 		}
@@ -22,13 +23,15 @@ class IndexPage extends React.Component<{}, {name: string, email: string}> {
 
 	public updateStorage() {
 		if (typeof sessionStorage !== 'undefined') {
-			sessionStorage.setItem('name', this.state.name);
+			sessionStorage.setItem('fname', this.state.fname);
+			sessionStorage.setItem('lname', this.state.lname);
 			sessionStorage.setItem('email', this.state.email);
 		}
 	}
 
 	public formError() {
-		if (this.state.name === '') return 'Name is required';
+		if (this.state.fname === '') return 'First name is required';
+		if (this.state.lname === '') return 'Last name is required';
 		if (this.state.email === '') return 'Email is required';
 		return null;
 	}
@@ -40,6 +43,9 @@ class IndexPage extends React.Component<{}, {name: string, email: string}> {
 				<div className="vspace80 centered w-row">
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
 					<div className="w-col w-col-6">
+						<div>
+							<Ez123 num={1} />
+						</div>
 						<h3>Ready to schedule your MRI?</h3>
 						<div className="w-form">
 							<form
@@ -48,16 +54,27 @@ class IndexPage extends React.Component<{}, {name: string, email: string}> {
 								data-name="Email Form"
 								action="/have-order/" method="get"
 							>
-								<label htmlFor="name">Your name</label>
+								<label htmlFor="fname">First name</label>
 								<input
 									type="text"
 									className="w-input centered"
 									maxLength={256}
-									name="name"
-									data-name="Name"
-									id="name"
-									value={this.state.name}
-									onChange={(e) => this.setState({name: e.currentTarget.value}, () => this.updateStorage())}
+									name="fname"
+									data-name="First Name"
+									id="fname"
+									value={this.state.fname}
+									onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.updateStorage())}
+								/>
+								<label htmlFor="lname">Last name</label>
+								<input
+									type="text"
+									className="w-input centered"
+									maxLength={256}
+									name="lname"
+									data-name="Last Name"
+									id="lname"
+									value={this.state.lname}
+									onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.updateStorage())}
 								/>
 								<label htmlFor="email">Email Address</label>
 								<input
@@ -79,14 +96,6 @@ class IndexPage extends React.Component<{}, {name: string, email: string}> {
 									disabled={!!err}
 								/>
 							</form>
-							<div className="w-form-done">
-								<div>Thank you! Your submission has been received!</div>
-							</div>
-							<div className="w-form-fail">
-								<div>
-									Oops! Something went wrong while submitting the form.
-								</div>
-							</div>
 						</div>
 					</div>
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>

@@ -1,12 +1,16 @@
 import * as React from 'react'
 import * as Api from '../api/api'
 import IndexLayout from '../layouts'
+import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
 
 const take = 4;
 
 interface IState
 {
-	name: string, times: Api.SlotAvailabilityDate[] | null, err: any, offset: number;
+	fname: string, times: Api.SlotAvailabilityDate[] | null, err: any, offset: number;
+	lname: string;
+	scan: string;
+	haveOrder?: boolean;
 	total: number;
 }
 
@@ -14,7 +18,9 @@ class PickTimePage extends React.Component<{}, IState> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
-			name: '',
+			fname: '',
+			lname: '',
+			scan: '',
 			times: null,
 			err: null,
 			offset: 0,
@@ -24,9 +30,11 @@ class PickTimePage extends React.Component<{}, IState> {
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
-			let name = sessionStorage.getItem('name') || '';
-			name = name.split(' ')[0];
-			this.setState({name});
+			const fname = sessionStorage.getItem('fname') || '';
+			const lname = sessionStorage.getItem('lname') || '';
+			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
+			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
+			this.setState({fname, lname, haveOrder, scan});
 		}
 		new Api.ScheduleApi().timeSlotsGET({contrast: 'false', locationId: ''}).then((result) => {
 			this.setState({times: result, total: result.length});
@@ -52,6 +60,12 @@ class PickTimePage extends React.Component<{}, IState> {
 		return (
 			<IndexLayout>
 			<section id="Q2" className="vspace80 w-container">
+				<div>
+					<Ez123 num={2} />
+					<div className="breadcrumb-stack">
+						<MriTypeBreadcrumb value={this.state.scan}/>
+					</div>
+				</div>
 				<div className="w-row">
 					<div className="centered w-col w-col-3">
 						<img

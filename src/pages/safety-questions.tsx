@@ -3,6 +3,8 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
+import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb} from "../components/breadcrumb";
+import ReactModal from 'react-modal';
 
 const qs = [
 	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false},
@@ -25,39 +27,38 @@ const qPost = [
 	{id: 'p4', q: 'Do you have diabetes?', r: false},
 ];
 
-const clinicalHistory = [
-
-];
-
-const priorImaging = [
-
-];
-
-const surgicalHistory = [
-
-];
-
 class SafetyQuestions extends React.Component<{}, {
-	name: string;
+	fname: string;
+	lname: string;
 	answers: any;
 	implants: string[];
 	currentImplant: string;
+	haveOrder: boolean;
+	scan: any;
+	overrideSafetyWarning: boolean;
 }> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
-			name: '',
+			fname: '',
+			lname: '',
 			answers: {},
 			implants: [],
-			currentImplant: ''
+			currentImplant: '',
+			scan: {},
+			haveOrder: false,
+			overrideSafetyWarning: false,
 		};
 	}
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
-			let name = sessionStorage.getItem('name') || '';
-			name = name.split(' ')[0];
-			this.setState({name});
+			const fname = sessionStorage.getItem('fname') || '';
+			const lname = sessionStorage.getItem('lname') || '';
+			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
+			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
+			this.setState({fname, lname, haveOrder, scan});
+			this.loadState();
 		}
 	}
 
@@ -69,7 +70,24 @@ class SafetyQuestions extends React.Component<{}, {
 		let answers = Object.assign({}, this.state.answers);
 		answers[q] = val;
 		console.log(q, val, answers);
-		this.setState({answers});
+		this.setState({answers}, () => this.saveState());
+	}
+
+	public saveState() {
+		if (typeof sessionStorage !== 'undefined') {
+			sessionStorage.setItem('safety', JSON.stringify(this.state));
+		}
+	}
+
+	public loadState() {
+		if (typeof sessionStorage !== 'undefined') {
+			const jsonState = JSON.parse(sessionStorage.getItem('safety') || '{}');
+			delete jsonState.name;
+			delete jsonState.haveOrder;
+			delete jsonState.scan;
+			delete jsonState.overrideSafetyWarning;
+			this.setState(jsonState);
+		}
 	}
 
 	public addImplant() {
@@ -120,17 +138,36 @@ class SafetyQuestions extends React.Component<{}, {
 		return (
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
-					<h1>We need to ask some safety questions before we can schedule you.</h1>
+					<div>
+						<Ez123 num={2} />
+						<div className="breadcrumb-stack">
+							<OrderBreadcrumb value={this.state.haveOrder}/>
+							<MriTypeBreadcrumb value={this.state.scan}/>
+						</div>
+					</div>
+
+					<h2>We need to ask some safety questions before we can schedule you.</h2>
 
 					<h3>Do you have...</h3>
 
 					{this.renderQuestionSet(qs)}
 
-					{!this.isValid() && <div className="error-wrapper">
-						Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.
-					</div>}
+					<ReactModal
+						isOpen={!this.isValid() && !this.state.overrideSafetyWarning}
+								className="modal-content animated fadeInUp"
+								overlayClassName="modal-wrapper"
+					>
+						<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
+						<p>
+							<button type="button"
+									className="button w-button"
+									onClick={() => this.setState({overrideSafetyWarning: true})}>
+								Continue Anyway
+							</button>
+						</p>
+					</ReactModal>
 
-					{this.isValid() && (
+					{(
 						<div>
 							<YesNoQuestion
 								id="implants"
@@ -271,7 +308,7 @@ class SafetyQuestions extends React.Component<{}, {
 						</div>
 					)}
 
-					{this.isValid() && <div className="cta-subitem distributed">
+					{(this.isValid() || this.state.overrideSafetyWarning) && <div className="cta-subitem distributed">
 						<BigButton
 							href="/contact-info"
 							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
@@ -285,4 +322,4 @@ class SafetyQuestions extends React.Component<{}, {
 	}
 }
 
-export default SafetyQuestions
+export default SafetyQuestions;
