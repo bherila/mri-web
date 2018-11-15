@@ -1,7 +1,7 @@
 import Dropzone from "react-dropzone";
 import * as React from "react";
 import {BASE_PATH} from "ucshared";
-declare var $: any;
+const $ = require('jquery');
 
 export function showImageOrPlaceholder(img: string | null) {
 	if (typeof img !== 'string' || img === null || img.length < 1) {
