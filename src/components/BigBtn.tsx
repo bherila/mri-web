@@ -1,8 +1,9 @@
 import * as React from "react";
+import {Link} from "gatsby";
 
 export const BigButton = ({href, img, wide, text}) => (
-	<a
-		href={href}
+	<Link
+		to={href}
 		className={`cta-link ${wide ? 'wider' : ''} w-inline-block`}
 	>
 		<img
@@ -10,6 +11,6 @@ export const BigButton = ({href, img, wide, text}) => (
 			className="image"
 		/>
 		<div>{text}</div>
-	</a>
+	</Link>
 );
 

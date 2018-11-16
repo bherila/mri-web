@@ -1,9 +1,12 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
-import Page from '../components/Page'
-import Container from '../components/Container'
 import IndexLayout from '../layouts'
 import {Ez123} from "../components/breadcrumb";
+import {navigate} from "gatsby";
+
+function doSubmit(e: React.FormEvent<HTMLFormElement>) {
+	e.preventDefault();
+	navigate('/have-order');
+}
 
 class IndexPage extends React.Component<{}, {fname: string, lname: string, email: string}> {
 	constructor(props, context) {
@@ -40,19 +43,22 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 		const err = this.formError();
 		return <IndexLayout>
 			<section id="Q1" className="vspace80 w-container">
-				<div className="vspace80 centered w-row">
+				<div className="vspace40 centered w-row">
+					<div>
+						<Ez123 num={1} />
+					</div>
+				</div>
+				<div className="vspace40 centered w-row">
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
 					<div className="w-col w-col-6">
-						<div>
-							<Ez123 num={1} />
-						</div>
 						<h3>Ready to schedule your MRI?</h3>
 						<div className="w-form">
 							<form
 								id="email-form"
 								name="email-form"
 								data-name="Email Form"
-								action="/have-order/" method="get"
+								action="#" method="get"
+								onSubmit={(e) => doSubmit(e)}
 							>
 								<label htmlFor="fname">First name</label>
 								<input

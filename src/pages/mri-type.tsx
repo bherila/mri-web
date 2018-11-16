@@ -1,7 +1,7 @@
 import * as React from 'react'
 import IndexLayout from '../layouts'
 import ErrorDisplay from "../components/ErrorDisplay";
-import {Link} from "gatsby";
+import {Link, navigate} from "gatsby";
 import {Ez123, OrderBreadcrumb} from "../components/breadcrumb";
 
 const types = [
@@ -99,7 +99,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 	public select(name: string) {
 		if (typeof sessionStorage !== 'undefined') {
 			sessionStorage.setItem('scan', name);
-			location.href = '/pick-time';
+			navigate('/pick-time');
 		}
 	}
 
@@ -107,30 +107,30 @@ class MriType extends React.Component<{}, IScanTypeState> {
 		return (
 			<IndexLayout>
 				<section id="Q3" className="vspace80 w-container">
-					<div className="w-row">
+					<div className="vspace40 centered w-row animated zoomIn">
+						<div>
+							<Ez123 num={2} />
+						</div>
+					</div>
+					<div className="vspace40 centered w-row">
 						<div className="w-col w-col-3" />
 						<div className="w-col w-col-6">
-							<div className="centered">
-								<div>
-									<Ez123 num={2} />
+							<form action="#">
+								<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
+								<div className="cta-subitem">
+									<input type="text"
+										   placeholder="Type scan name to search"
+										   className="text-field w-input" maxLength={256} name="name-3"
+										   data-name="Name 3" id="name-3"
+										   value={this.state.name}
+										   onChange={(e) => this.setName(e.currentTarget.value)}
+									/>
+									<div className="text-block-3"> OR </div>
+									<Link to="/no-type" className="button w-button">
+										I don't know
+									</Link>
 								</div>
-								<form action="#">
-									<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
-									<div className="cta-subitem">
-										<input type="text"
-											   placeholder="Type scan name to search"
-											   className="text-field w-input" maxLength={256} name="name-3"
-											   data-name="Name 3" id="name-3"
-											   value={this.state.name}
-											   onChange={(e) => this.setName(e.currentTarget.value)}
-										/>
-										<div className="text-block-3"> OR </div>
-										<a href="/no-type" className="button w-button">
-											I don't know
-										</a>
-									</div>
-								</form>
-							</div>
+							</form>
 						</div>
 						<div className="w-col w-col-3" />
 					</div>
@@ -139,7 +139,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 							Oops! We didn't find any matches for '{this.state.oops}'. Please enter fewer characters. If we don't have the scan type listed, click "I don't know" above, and we will work with you personally to schedule your appointment.
 						</ErrorDisplay>
 					)}
-					<table className="vspace80 w-row">
+					{(this.state.name || '').length > 0 && <table className="vspace80 w-row" style={{width: '100%', marginBottom: '80px'}} cellPadding={3} cellSpacing={3}>
 						<thead>
 						<tr>
 							<th>Service Type</th>
@@ -163,7 +163,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 							</tr>
 						))}
 						</tbody>
-					</table>
+					</table>}
 				</section>
 			</IndexLayout>
 		);

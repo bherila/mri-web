@@ -17,7 +17,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {SignOutButton} from "../../components/sign-out";
+import {getAuthToken} from "../../helpers/authToken";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -59,10 +60,15 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	public componentDidMount() {
 		new Api.ScheduleApi().userScheduleGET({
 			search: '',
-			authToken: 'TODO',
-		}).then((result) => {
+			authToken: getAuthToken(),
+			locationId: '',
+			withContrast: false,
+		} as any).then((result) => {
 			this.setState({data: result});
-		}, (err) => console.log(err));
+		}, (err) => {
+			console.log(err);
+			// TODO: loginRedirect()
+		});
 	}
 
 	public doConfirm(e) {
@@ -193,6 +199,8 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					/>
 				</div>
 				</Modal>
+
+				<SignOutButton/>
 			</div>
 		);
 	}

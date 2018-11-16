@@ -3,6 +3,7 @@ import { Link } from 'gatsby'
 
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
+import {Ez123} from "../components/breadcrumb";
 
 class HaveOrder extends React.Component<{}, {name: string}> {
 	constructor(props, context) {
@@ -23,7 +24,12 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 		return (
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
-					<div className="vspace80 centered w-row animated bounceInUp">
+					<div className="vspace40 centered w-row">
+						<div>
+							<Ez123 num={1} />
+						</div>
+					</div>
+					<div className="vspace40 centered w-row animated fadeIn">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
 							<h3>That's OK.</h3>

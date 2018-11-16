@@ -2,6 +2,8 @@ import * as React from 'react'
 import * as Api from '../api/api'
 import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
+import {navigate} from "gatsby";
+import {SlotAvailabilityTime} from "../api/api";
 
 const take = 4;
 
@@ -47,7 +49,10 @@ class PickTimePage extends React.Component<{}, IState> {
 				<h3>{dt.friendlyBegin}</h3>
 				{dt.times ? dt.times.map((timeSlot) => (
 					<a key={timeSlot.time}
-					   href="/addl-info" className={`buttontimeslot ${timeSlot.isAvailable ? '' : 'unavailable '}w-button`}>
+					   href="#"
+					   className={`buttontimeslot ${timeSlot.isAvailable ? '' : 'unavailable '}w-button`}
+					   onClick={() => this.pickTime(timeSlot)}
+					>
 						{timeSlot.time}
 					</a>
 				)) : <div>dt.times is {typeof dt.times}</div>}
@@ -62,7 +67,7 @@ class PickTimePage extends React.Component<{}, IState> {
 			<section id="Q2" className="vspace80 w-container">
 				<div>
 					<Ez123 num={2} />
-					<div className="breadcrumb-stack">
+					<div className="breadcrumb-stack animated zoomIn">
 						<MriTypeBreadcrumb value={this.state.scan}/>
 					</div>
 				</div>
@@ -114,6 +119,11 @@ class PickTimePage extends React.Component<{}, IState> {
 			</section>
 			</IndexLayout>
 		);
+	}
+
+	private pickTime(timeSlot: SlotAvailabilityTime) {
+
+		navigate('/addl-info');
 	}
 }
 

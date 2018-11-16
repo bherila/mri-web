@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link} from 'gatsby';
 
 const Chevron = (props: {translucent?: boolean}) => (
 	<img
@@ -24,31 +25,31 @@ export const Ez123 = (props: {num: number}) => (
 );
 
 export const OrderBreadcrumb = ({value}) => (
-    <a href="/have-order"
+    <Link to="/have-order"
        className="breadcrumb w-button" style={{display: 'none'}}>
 		{value ? 'Have Doctor\'s Order' : 'No Order'} ✓
-	</a>
+	</Link>
 );
 
 export const MriTypeBreadcrumb = ({value}) => {
 	if (typeof value === 'string') {
 		return (
-			<a href="/mri-type" className="breadcrumb w-button">
+			<Link to="/mri-type" className="breadcrumb w-button">
 				Scan type: {value}
-			</a>
+			</Link>
 		);
 	} else {
 		return (
-			<a href="/mri-type" className="breadcrumb w-button">
+			<Link to="/mri-type" className="breadcrumb w-button">
 				Scan type: {value.name || 'e!name'} {value.contrast || 'e!contrast'}
-			</a>
+			</Link>
 		)
 	}
 };
 
 export const TimeslotBreadcrumb = ({value}) => (
-	<a href="/pick-time"
+	<Link to="/pick-time"
 	   className="breadcrumb w-button">
 		{value} <br /><small>(not yet reserved)</small>
-	</a>
+	</Link>
 );

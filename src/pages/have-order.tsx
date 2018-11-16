@@ -22,12 +22,15 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 		return (
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
-					<div className="vspace80 centered w-row animated zoomIn">
+					<div className="vspace40 centered w-row">
+						<div>
+							<Ez123 num={1} />
+						</div>
+					</div>
+					<div className="vspace40 centered w-row animated zoomIn">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
-							<div>
-								<Ez123 num={1} />
-							</div>
+
 							<h3>Ok {this.state.name}, do you have an order from your doctor?</h3>
 							<div className="cta-subitem distributed">
 								<BigButton
