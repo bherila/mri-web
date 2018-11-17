@@ -2,11 +2,7 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import {Ez123} from "../components/breadcrumb";
 import {navigate} from "gatsby";
-
-function doSubmit(e: React.FormEvent<HTMLFormElement>) {
-	e.preventDefault();
-	navigate('/have-order');
-}
+import {LeadGenApi} from "../api/api";
 
 class IndexPage extends React.Component<{}, {fname: string, lname: string, email: string}> {
 	constructor(props, context) {
@@ -53,13 +49,7 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 					<div className="w-col w-col-6">
 						<h3>Ready to schedule your MRI?</h3>
 						<div className="w-form">
-							<form
-								id="email-form"
-								name="email-form"
-								data-name="Email Form"
-								action="#" method="get"
-								onSubmit={(e) => doSubmit(e)}
-							>
+							<form action="#" onSubmit={(e) => this.submitLead(e)}>
 								<label htmlFor="fname">First name</label>
 								<input
 									type="text"
@@ -108,6 +98,21 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 				</div>
 			</section>
 		</IndexLayout>;
+	}
+
+	private submitLead(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		new LeadGenApi().runPOST({
+			req: {
+				firstName: this.state.fname,
+				lastName: this.state.lname,
+				email: this.state.email,
+			},
+			authToken: '',
+		}).then((resp) => {
+			console.log(resp);
+			navigate('/have-order');
+		});
 	}
 }
 

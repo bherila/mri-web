@@ -22,6 +22,7 @@ import {getAuthToken} from "../../helpers/authToken";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
+	hideAvailable: boolean;
 	open: boolean;
 	reservedUnconfirmed: boolean;
 	confirmed: boolean;
@@ -48,6 +49,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		super(props, context);
 		this.state = {
 			hideUnavailable: false,
+			hideAvailable: false,
 			open: false,
 			reservedUnconfirmed: false,
 			confirmed: false,
@@ -113,14 +115,20 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (this.state.hideUnavailable && !slot.isAvailable) {
 			return false;
 		}
+		if (this.state.hideAvailable && slot.isAvailable) {
+			return false;
+		}
 		if (this.state.reservedUnconfirmed && slot.isAvailable) {
+			return false;
+		}
+		if (this.state.confirmed && slot.isAvailable) {
 			return false;
 		}
 		return true;
 	}
 
 	public renderInner() {
-		const {hideUnavailable, open, reservedUnconfirmed, confirmed, search, data} = this.state;
+		const {hideUnavailable, hideAvailable, open, reservedUnconfirmed, confirmed, search, data} = this.state;
 		const {classes} = this.props;
 		return (
 			<div>
@@ -134,10 +142,11 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 						{EditFormBase.boundTextboxValue('', search, (search) => this.setState({search}), 'Search')}
 					</div>
 					<div style={{display: 'flex', flexDirection: 'row', justifySelf: 'flex-end'}}>
-						{EditFormBase.boundCheckboxValue('Hide Unavailable', hideUnavailable, (hideUnavailable) => this.setState({hideUnavailable}), false)}
-						{EditFormBase.boundCheckboxValue('Open', open, (open) => this.setState({open}), false)}
-						{EditFormBase.boundCheckboxValue('Reserved, Unconfirmed', reservedUnconfirmed, (reservedUnconfirmed) => this.setState({reservedUnconfirmed}), false)}
-						{EditFormBase.boundCheckboxValue('Confirmed', confirmed, (confirmed) => this.setState({confirmed}), false)}
+						<button>{EditFormBase.boundCheckboxValue('Hide Unavailable', hideUnavailable, (hideUnavailable) => this.setState({hideUnavailable}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Hide Available', hideAvailable, (hideAvailable) => this.setState({hideAvailable}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Open', open, (open) => this.setState({open, hideUnavailable: false}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Reserved, Unconfirmed', reservedUnconfirmed, (reservedUnconfirmed) => this.setState({reservedUnconfirmed}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Confirmed', confirmed, (confirmed) => this.setState({confirmed, hideAvailable: false}), false)}</button>
 					</div>
 				</div>
 				<Table className={classes.table}>
@@ -150,7 +159,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					</TableHead>
 					<TableBody>
 						{(data || []).map((date) => (date.times || []).map((slot) => this.applies(slot) && (
-							<TableRow>
+							<TableRow key={slot.slotId}>
 								<TableCell>{date.friendlyBegin}, {slot.time} CST</TableCell>
 								<TableCell>{slot.isAvailable ? 'Available' : 'Unavailable'}</TableCell>
 								{slot.isAvailable ? (

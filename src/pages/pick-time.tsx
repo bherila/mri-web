@@ -4,6 +4,7 @@ import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
 import {navigate} from "gatsby";
 import {SlotAvailabilityTime} from "../api/api";
+import {IScan} from "./mri-type";
 
 const take = 4;
 
@@ -11,7 +12,7 @@ interface IState
 {
 	fname: string, times: Api.SlotAvailabilityDate[] | null, err: any, offset: number;
 	lname: string;
-	scan: string;
+	scan: IScan | null;
 	haveOrder?: boolean;
 	total: number;
 }
@@ -22,7 +23,7 @@ class PickTimePage extends React.Component<{}, IState> {
 		this.state = {
 			fname: '',
 			lname: '',
-			scan: '',
+			scan: null,
 			times: null,
 			err: null,
 			offset: 0,
@@ -34,13 +35,14 @@ class PickTimePage extends React.Component<{}, IState> {
 		if (typeof sessionStorage !== 'undefined') {
 			const fname = sessionStorage.getItem('fname') || '';
 			const lname = sessionStorage.getItem('lname') || '';
-			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
+			const scan: IScan = JSON.parse(sessionStorage.getItem('scan') || '{}');
 			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname, lname, haveOrder, scan});
+			this.setState({fname, lname, haveOrder, scan}, () => {
+				new Api.ScheduleApi().timeSlotsGET({withContrast: scan.contrast === 'with and without contrast', locationId: ''}).then((result) => {
+					this.setState({times: result, total: result.length});
+				}, (err) => this.setState({err}));
+			});
 		}
-		new Api.ScheduleApi().timeSlotsGET({contrast: 'false', locationId: ''}).then((result) => {
-			this.setState({times: result, total: result.length});
-		}, (err) => this.setState({err}));
 	}
 
 	public renderSlotAvailabilityDate(dt: Api.SlotAvailabilityDate) {
@@ -99,7 +101,7 @@ class PickTimePage extends React.Component<{}, IState> {
 					</div>
 					{times && times.map((date, i) => (
 						(i >= offset && (i - offset) < take) && (
-							<div className="w-col w-col-2">
+							<div key={JSON.stringify(date || i)} className="w-col w-col-2">
 								{this.renderSlotAvailabilityDate(date)}
 							</div>
 						)
@@ -122,7 +124,7 @@ class PickTimePage extends React.Component<{}, IState> {
 	}
 
 	private pickTime(timeSlot: SlotAvailabilityTime) {
-
+		sessionStorage.setItem('timeSlot', JSON.stringify(timeSlot));
 		navigate('/addl-info');
 	}
 }

@@ -4,6 +4,7 @@ import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import Dropzone from "react-dropzone";
 import {showImageOrPlaceholder} from "../components/FileUpload";
+import {SlotAvailabilityTime} from "../api/api";
 
 interface ICPState {
 	lname: string;
@@ -17,6 +18,7 @@ interface ICPState {
 	mriOrder: string;
 	insFront: string;
 	insBack: string;
+	timeSlot: SlotAvailabilityTime;
 }
 
 class ContactInformation extends React.Component<{}, ICPState> {
@@ -34,6 +36,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 			mriOrder: '',
 			insFront: '',
 			insBack: '',
+			timeSlot: null,
 		};
 	}
 
@@ -51,7 +54,9 @@ class ContactInformation extends React.Component<{}, ICPState> {
 			const insFront = sessionStorage.getItem('insFront') || '';
 			const insBack = sessionStorage.getItem('insBack') || '';
 			const mriOrder = sessionStorage.getItem('mriOrder') || '';
-			this.setState({height, weight, doctorName, insFront, insBack, mriOrder});
+
+			const timeSlot = JSON.parse(sessionStorage.getItem('timeSlot') || '{}');
+			this.setState({height, weight, doctorName, insFront, insBack, mriOrder, timeSlot});
 		}
 	}
 

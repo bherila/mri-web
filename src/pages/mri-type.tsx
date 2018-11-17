@@ -2,9 +2,18 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import ErrorDisplay from "../components/ErrorDisplay";
 import {Link, navigate} from "gatsby";
-import {Ez123, OrderBreadcrumb} from "../components/breadcrumb";
+import {Ez123} from "../components/breadcrumb";
 
-const types = [
+export interface IScan {
+	name: string;
+	contrast: string;
+	time: string;
+	name2: string;
+	name3: string;
+	name4: string;
+}
+
+const types: IScan[] = [
 	{name: 'Hip MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
 	{name: 'Hip MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
 	{name: 'Knee MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
@@ -115,7 +124,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 					<div className="vspace40 centered w-row">
 						<div className="w-col w-col-3" />
 						<div className="w-col w-col-6">
-							<form action="#">
+							<form action="#" onSubmit={(e) => e.preventDefault()}>
 								<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
 								<div className="cta-subitem">
 									<input type="text"

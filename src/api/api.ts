@@ -19,7 +19,7 @@ import * as assign from "core-js/library/fn/object/assign";
 interface Dictionary<T> { [index: string]: T; }
 export interface FetchAPI { (url: string, init?: any): Promise<any>; }
 
-const BASE_PATH = "http://mrisched.azurewebsites.net".replace(/\/+$/, "");
+const BASE_PATH = "http://localhost:7071".replace(/\/+$/, "");
 
 export interface FetchArgs {
     url: string;
@@ -99,6 +99,13 @@ export interface DayRule {
 }
 
 export type DayRuleDayOfWeekEnum = "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
+export interface ExecutionContext {
+    "invocationId"?: string;
+    "functionName"?: string;
+    "functionDirectory"?: string;
+    "functionAppDirectory"?: string;
+}
+
 export interface Location {
     "locationName"?: string;
     "partitionKey"?: string;
@@ -161,9 +168,10 @@ export const AuthApiFetchParamCreator = {
      *
      * @summary Auth
      * @param req
+     * @param context
      * @param authToken
      */
-    auth(params: {  "req"?: User; "authToken"?: string; }, options?: any): FetchArgs {
+    auth(params: {  "req"?: User; "context"?: ExecutionContext; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/auth`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -173,8 +181,8 @@ export const AuthApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -194,9 +202,10 @@ export const AuthApiFp = {
      *
      * @summary Auth
      * @param req
+     * @param context
      * @param authToken
      */
-    auth(params: { "req"?: User; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+    auth(params: { "req"?: User; "context"?: ExecutionContext; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
         const fetchArgs = AuthApiFetchParamCreator.auth(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -218,9 +227,10 @@ export class AuthApi extends BaseAPI {
      *
      * @summary Auth
      * @param req
+     * @param context
      * @param authToken
      */
-    auth(params: {  "req"?: User; "authToken"?: string; }, options?: any) {
+    auth(params: {  "req"?: User; "context"?: ExecutionContext; "authToken"?: string; }, options?: any) {
         return AuthApiFp.auth(params, options)(this.fetch, this.basePath);
     }
 };
@@ -234,9 +244,10 @@ export const AuthApiFactory = function (fetch?: FetchAPI, basePath?: string) {
          *
          * @summary Auth
          * @param req
+         * @param context
          * @param authToken
          */
-        auth(params: {  "req"?: User; "authToken"?: string; }, options?: any) {
+        auth(params: {  "req"?: User; "context"?: ExecutionContext; "authToken"?: string; }, options?: any) {
             return AuthApiFp.auth(params, options)(fetch, basePath);
         },
     };
@@ -250,10 +261,11 @@ export const LeadGenApiFetchParamCreator = {
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runGET(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any): FetchArgs {
+    runGET(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/leadGen`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -277,10 +289,11 @@ export const LeadGenApiFetchParamCreator = {
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runPOST(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any): FetchArgs {
+    runPOST(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/leadGen`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -310,10 +323,11 @@ export const LeadGenApiFp = {
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runGET(params: { "req"?: Appointment; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
+    runGET(params: { "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
         const fetchArgs = LeadGenApiFetchParamCreator.runGET(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -328,10 +342,11 @@ export const LeadGenApiFp = {
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runPOST(params: { "req"?: Appointment; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
+    runPOST(params: { "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
         const fetchArgs = LeadGenApiFetchParamCreator.runPOST(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -352,19 +367,21 @@ export class LeadGenApi extends BaseAPI {
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runGET(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any) {
+    runGET(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
         return LeadGenApiFp.runGET(params, options)(this.fetch, this.basePath);
     }
     /**
      *
      * @summary Run
+     * @param context
      * @param req
      * @param authToken
      */
-    runPOST(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any) {
+    runPOST(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
         return LeadGenApiFp.runPOST(params, options)(this.fetch, this.basePath);
     }
 };
@@ -377,19 +394,21 @@ export const LeadGenApiFactory = function (fetch?: FetchAPI, basePath?: string) 
         /**
          *
          * @summary Run
+         * @param context
          * @param req
          * @param authToken
          */
-        runGET(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any) {
+        runGET(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
             return LeadGenApiFp.runGET(params, options)(fetch, basePath);
         },
         /**
          *
          * @summary Run
+         * @param context
          * @param req
          * @param authToken
          */
-        runPOST(params: {  "req"?: Appointment; "authToken"?: string; }, options?: any) {
+        runPOST(params: {  "context"?: ExecutionContext; "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
             return LeadGenApiFp.runPOST(params, options)(fetch, basePath);
         },
     };
@@ -425,9 +444,10 @@ export const LocationApiFetchParamCreator = {
     /**
      *
      * @summary Locations
+     * @param context
      * @param locationId
      */
-    locationsPOST(params: {  "locationId"?: string; }, options?: any): FetchArgs {
+    locationsPOST(params: {  "context"?: ExecutionContext; "locationId"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/locations`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -436,6 +456,10 @@ export const LocationApiFetchParamCreator = {
         let fetchOptions: RequestInit = assign({}, { method: "POST" }, options);
 
         let contentTypeHeader: Dictionary<string> = {};
+        contentTypeHeader = { "Content-Type": "application/json" };
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
+        }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
         }
@@ -470,9 +494,10 @@ export const LocationApiFp = {
     /**
      *
      * @summary Locations
+     * @param context
      * @param locationId
      */
-    locationsPOST(params: { "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Location>> {
+    locationsPOST(params: { "context"?: ExecutionContext; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Location>> {
         const fetchArgs = LocationApiFetchParamCreator.locationsPOST(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -501,9 +526,10 @@ export class LocationApi extends BaseAPI {
     /**
      *
      * @summary Locations
+     * @param context
      * @param locationId
      */
-    locationsPOST(params: {  "locationId"?: string; }, options?: any) {
+    locationsPOST(params: {  "context"?: ExecutionContext; "locationId"?: string; }, options?: any) {
         return LocationApiFp.locationsPOST(params, options)(this.fetch, this.basePath);
     }
 };
@@ -524,9 +550,10 @@ export const LocationApiFactory = function (fetch?: FetchAPI, basePath?: string)
         /**
          *
          * @summary Locations
+         * @param context
          * @param locationId
          */
-        locationsPOST(params: {  "locationId"?: string; }, options?: any) {
+        locationsPOST(params: {  "context"?: ExecutionContext; "locationId"?: string; }, options?: any) {
             return LocationApiFp.locationsPOST(params, options)(fetch, basePath);
         },
     };
@@ -541,16 +568,17 @@ export const PostQuestionApiFetchParamCreator = {
      *
      * @summary GetQuestions
      * @param req
+     * @param context
      */
-    postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any): FetchArgs {
+    postQuestion(params: {  "req"?: SurveyQuestion; "context"?: ExecutionContext; }, options?: any): FetchArgs {
         const baseUrl = `/api/question`;
         let urlObj = url.parse(baseUrl, true);
         let fetchOptions: RequestInit = assign({}, { method: "POST" }, options);
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -570,8 +598,9 @@ export const PostQuestionApiFp = {
      *
      * @summary GetQuestions
      * @param req
+     * @param context
      */
-    postQuestion(params: { "req"?: SurveyQuestion;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<TableResult> {
+    postQuestion(params: { "req"?: SurveyQuestion; "context"?: ExecutionContext;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<TableResult> {
         const fetchArgs = PostQuestionApiFetchParamCreator.postQuestion(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -593,8 +622,9 @@ export class PostQuestionApi extends BaseAPI {
      *
      * @summary GetQuestions
      * @param req
+     * @param context
      */
-    postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any) {
+    postQuestion(params: {  "req"?: SurveyQuestion; "context"?: ExecutionContext; }, options?: any) {
         return PostQuestionApiFp.postQuestion(params, options)(this.fetch, this.basePath);
     }
 };
@@ -608,8 +638,9 @@ export const PostQuestionApiFactory = function (fetch?: FetchAPI, basePath?: str
          *
          * @summary GetQuestions
          * @param req
+         * @param context
          */
-        postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any) {
+        postQuestion(params: {  "req"?: SurveyQuestion; "context"?: ExecutionContext; }, options?: any) {
             return PostQuestionApiFp.postQuestion(params, options)(fetch, basePath);
         },
     };
@@ -623,13 +654,18 @@ export const QuestionApiFetchParamCreator = {
     /**
      *
      * @summary GetQuestions
+     * @param context
      */
-    getQuestions(options?: any): FetchArgs {
+    getQuestions(params: {  "context"?: ExecutionContext; }, options?: any): FetchArgs {
         const baseUrl = `/api/question`;
         let urlObj = url.parse(baseUrl, true);
         let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
 
         let contentTypeHeader: Dictionary<string> = {};
+        contentTypeHeader = { "Content-Type": "application/json" };
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
+        }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
         }
@@ -647,9 +683,10 @@ export const QuestionApiFp = {
     /**
      *
      * @summary GetQuestions
+     * @param context
      */
-    getQuestions(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SurveyQuestion>> {
-        const fetchArgs = QuestionApiFetchParamCreator.getQuestions(options);
+    getQuestions(params: { "context"?: ExecutionContext;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SurveyQuestion>> {
+        const fetchArgs = QuestionApiFetchParamCreator.getQuestions(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
@@ -669,9 +706,10 @@ export class QuestionApi extends BaseAPI {
     /**
      *
      * @summary GetQuestions
+     * @param context
      */
-    getQuestions(options?: any) {
-        return QuestionApiFp.getQuestions(options)(this.fetch, this.basePath);
+    getQuestions(params: {  "context"?: ExecutionContext; }, options?: any) {
+        return QuestionApiFp.getQuestions(params, options)(this.fetch, this.basePath);
     }
 };
 
@@ -683,9 +721,10 @@ export const QuestionApiFactory = function (fetch?: FetchAPI, basePath?: string)
         /**
          *
          * @summary GetQuestions
+         * @param context
          */
-        getQuestions(options?: any) {
-            return QuestionApiFp.getQuestions(options)(fetch, basePath);
+        getQuestions(params: {  "context"?: ExecutionContext; }, options?: any) {
+            return QuestionApiFp.getQuestions(params, options)(fetch, basePath);
         },
     };
 };
@@ -699,10 +738,11 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesDELETE(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
+    adminRulesDELETE(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -713,8 +753,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -752,10 +792,11 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPOST(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
+    adminRulesPOST(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -766,8 +807,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -781,10 +822,11 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPUT(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
+    adminRulesPUT(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -795,8 +837,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -834,11 +876,12 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userScheduleDELETE(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
+    userScheduleDELETE(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -850,8 +893,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -891,11 +934,12 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePOST(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
+    userSchedulePOST(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -907,8 +951,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -922,11 +966,12 @@ export const ScheduleApiFetchParamCreator = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePUT(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
+    userSchedulePUT(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -938,8 +983,8 @@ export const ScheduleApiFetchParamCreator = {
 
         let contentTypeHeader: Dictionary<string> = {};
         contentTypeHeader = { "Content-Type": "application/json" };
-        if (params["req"]) {
-            fetchOptions.body = JSON.stringify(params["req"] || {});
+        if (params["context"]) {
+            fetchOptions.body = JSON.stringify(params["context"] || {});
         }
         if (contentTypeHeader) {
             fetchOptions.headers = assign({}, contentTypeHeader, fetchOptions.headers);
@@ -959,10 +1004,11 @@ export const ScheduleApiFp = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesDELETE(params: { "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
+    adminRulesDELETE(params: { "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
         const fetchArgs = ScheduleApiFetchParamCreator.adminRulesDELETE(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -996,10 +1042,11 @@ export const ScheduleApiFp = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPOST(params: { "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
+    adminRulesPOST(params: { "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
         const fetchArgs = ScheduleApiFetchParamCreator.adminRulesPOST(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1015,10 +1062,11 @@ export const ScheduleApiFp = {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPUT(params: { "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
+    adminRulesPUT(params: { "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<DayRule>> {
         const fetchArgs = ScheduleApiFetchParamCreator.adminRulesPUT(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1052,11 +1100,12 @@ export const ScheduleApiFp = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userScheduleDELETE(params: { "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+    userScheduleDELETE(params: { "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
         const fetchArgs = ScheduleApiFetchParamCreator.userScheduleDELETE(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1091,11 +1140,12 @@ export const ScheduleApiFp = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePOST(params: { "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+    userSchedulePOST(params: { "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
         const fetchArgs = ScheduleApiFetchParamCreator.userSchedulePOST(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1111,11 +1161,12 @@ export const ScheduleApiFp = {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePUT(params: { "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
+    userSchedulePUT(params: { "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Appointment>> {
         const fetchArgs = ScheduleApiFetchParamCreator.userSchedulePUT(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1137,10 +1188,11 @@ export class ScheduleApi extends BaseAPI {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesDELETE(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+    adminRulesDELETE(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
         return ScheduleApiFp.adminRulesDELETE(params, options)(this.fetch, this.basePath);
     }
     /**
@@ -1156,20 +1208,22 @@ export class ScheduleApi extends BaseAPI {
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPOST(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+    adminRulesPOST(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
         return ScheduleApiFp.adminRulesPOST(params, options)(this.fetch, this.basePath);
     }
     /**
      *
      * @summary AdminRules
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      */
-    adminRulesPUT(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+    adminRulesPUT(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
         return ScheduleApiFp.adminRulesPUT(params, options)(this.fetch, this.basePath);
     }
     /**
@@ -1185,11 +1239,12 @@ export class ScheduleApi extends BaseAPI {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userScheduleDELETE(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+    userScheduleDELETE(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.userScheduleDELETE(params, options)(this.fetch, this.basePath);
     }
     /**
@@ -1206,22 +1261,24 @@ export class ScheduleApi extends BaseAPI {
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePOST(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+    userSchedulePOST(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.userSchedulePOST(params, options)(this.fetch, this.basePath);
     }
     /**
      *
      * @summary UserSchedule
      * @param req
+     * @param context
      * @param withContrast
      * @param locationId
      * @param search
      */
-    userSchedulePUT(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+    userSchedulePUT(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.userSchedulePUT(params, options)(this.fetch, this.basePath);
     }
 };
@@ -1235,10 +1292,11 @@ export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string)
          *
          * @summary AdminRules
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          */
-        adminRulesDELETE(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+        adminRulesDELETE(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
             return ScheduleApiFp.adminRulesDELETE(params, options)(fetch, basePath);
         },
         /**
@@ -1254,20 +1312,22 @@ export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string)
          *
          * @summary AdminRules
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          */
-        adminRulesPOST(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+        adminRulesPOST(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
             return ScheduleApiFp.adminRulesPOST(params, options)(fetch, basePath);
         },
         /**
          *
          * @summary AdminRules
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          */
-        adminRulesPUT(params: {  "req"?: DayRule; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
+        adminRulesPUT(params: {  "req"?: DayRule; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; }, options?: any) {
             return ScheduleApiFp.adminRulesPUT(params, options)(fetch, basePath);
         },
         /**
@@ -1283,11 +1343,12 @@ export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string)
          *
          * @summary UserSchedule
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          * @param search
          */
-        userScheduleDELETE(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+        userScheduleDELETE(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.userScheduleDELETE(params, options)(fetch, basePath);
         },
         /**
@@ -1304,22 +1365,24 @@ export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string)
          *
          * @summary UserSchedule
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          * @param search
          */
-        userSchedulePOST(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+        userSchedulePOST(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.userSchedulePOST(params, options)(fetch, basePath);
         },
         /**
          *
          * @summary UserSchedule
          * @param req
+         * @param context
          * @param withContrast
          * @param locationId
          * @param search
          */
-        userSchedulePUT(params: {  "req"?: Appointment; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
+        userSchedulePUT(params: {  "req"?: Appointment; "context"?: ExecutionContext; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.userSchedulePUT(params, options)(fetch, basePath);
         },
     };

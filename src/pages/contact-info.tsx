@@ -1,6 +1,8 @@
 import * as React from 'react'
 import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
+import {navigate} from 'gatsby';
+import {LeadGenApi} from "../api/api";
 
 class ContactInformation extends React.Component<{}, {haveOrder: boolean, scan: string,fname: string, lname: string, phone: string, email: string, dob: string}> {
 	constructor(props, context) {
@@ -62,7 +64,7 @@ class ContactInformation extends React.Component<{}, {haveOrder: boolean, scan: 
 								id="email-form"
 								name="email-form"
 								data-name="Email Form"
-								action="/have-order/" method="get"
+								action="#" method="get"
 							>
 								<label htmlFor="fname">First name</label>
 								<input
@@ -137,6 +139,7 @@ class ContactInformation extends React.Component<{}, {haveOrder: boolean, scan: 
 			</IndexLayout>
 		);
 	}
+
 }
 
 export default ContactInformation;
