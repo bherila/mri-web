@@ -82,8 +82,8 @@ class PickTimePage extends React.Component<{}, IState> {
 						/>
 					</div>
 					<div className="w-col w-col-9">
-						<h2>Almost done!</h2>
-						<h3>Choose an available time slot to book your appointment.</h3>
+						<h2>Almost done {this.state.fname}!</h2>
+						<h3>Choose an available time slot to book your {this.state.scan && this.state.scan.time} appointment.</h3>
 						{err && <p>Oops! {err.toString()}</p>}
 					</div>
 				</div>

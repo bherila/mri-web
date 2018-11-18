@@ -79,7 +79,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 						<Ez123 num={3} />
 						<div className="breadcrumb-stack">
 							<MriTypeBreadcrumb value={this.state.scan}/>
-							<TimeslotBreadcrumb value={'Jan 21, 2018 at 3:00 pm'}/>
+							<TimeslotBreadcrumb value={this.state.timeSlot}/>
 						</div>
 					</div>
 					<div className="vspace80 centered w-row">

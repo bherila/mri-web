@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Link} from 'gatsby';
+import {SlotAvailabilityTime} from "../api/api";
 
 const Chevron = (props: {translucent?: boolean}) => (
 	<img
@@ -32,24 +33,30 @@ export const OrderBreadcrumb = ({value}) => (
 );
 
 export const MriTypeBreadcrumb = ({value}) => {
+	if (!value) {
+		return (
+			<Link to="/mri-type" className="breadcrumb w-button">
+				Click here to select MRI type
+			</Link>
+		);
+	}
 	if (typeof value === 'string') {
 		return (
 			<Link to="/mri-type" className="breadcrumb w-button">
 				Scan type: {value}
 			</Link>
 		);
-	} else {
-		return (
-			<Link to="/mri-type" className="breadcrumb w-button">
-				Scan type: {value.name || 'e!name'} {value.contrast || 'e!contrast'}
-			</Link>
-		)
 	}
+	return (
+		<Link to="/mri-type" className="breadcrumb w-button">
+			Scan type: {value.name || 'e!name'} {value.contrast || 'e!contrast'}
+		</Link>
+	)
 };
 
-export const TimeslotBreadcrumb = ({value}) => (
-	<Link to="/pick-time"
+export const TimeslotBreadcrumb = (props: {value: SlotAvailabilityTime}) => (
+	!!props.value && <Link to="/pick-time"
 	   className="breadcrumb w-button">
-		{value} <br /><small>(not yet reserved)</small>
+		{(props.value.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")}<br /><small>(not yet reserved)</small>
 	</Link>
 );
