@@ -7,6 +7,7 @@ import {StaticQuery, graphql} from 'gatsby'
 import '../styles/webflow.css'
 import '../styles/webflow.grid.css'
 import '../styles/animate.css'
+import '../styles/tables.css'
 
 import Header from '../components/Header'
 import LayoutRoot from '../components/LayoutRoot'

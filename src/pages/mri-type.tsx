@@ -83,12 +83,12 @@ class MriType extends React.Component<{}, IScanTypeState> {
 			let name = sessionStorage.getItem('name') || '';
 			name = name.split(' ')[0];
 			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname: name, haveOrder});
+			this.setState({haveOrder, fname: name});
 		}
 	}
 
 	public setName(setTo: string) {
-		let name = (setTo || '').toUpperCase();
+		const name = (setTo || '').toUpperCase();
 		let nf = name.replace('MRI', '');
 		nf = nf.replace(' OF', '');
 		nf = nf.trim();

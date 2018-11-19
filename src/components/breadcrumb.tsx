@@ -54,7 +54,7 @@ export const MriTypeBreadcrumb = ({value}) => {
 	)
 };
 
-export const TimeslotBreadcrumb = (props: {value: SlotAvailabilityTime}) => (
+export const TimeslotBreadcrumb = (props: {value: SlotAvailabilityTime | null}) => (
 	!!props.value && <Link to="/pick-time"
 	   className="breadcrumb w-button">
 		{(props.value.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")}<br /><small>(not yet reserved)</small>

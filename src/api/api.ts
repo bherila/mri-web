@@ -19,7 +19,7 @@ import * as assign from "core-js/library/fn/object/assign";
 interface Dictionary<T> { [index: string]: T; }
 export interface FetchAPI { (url: string, init?: any): Promise<any>; }
 
-const BASE_PATH = "https://localhost".replace(/\/+$/, "");
+const BASE_PATH = "http://localhost:7071".replace(/\/+$/, "");
 
 export interface FetchArgs {
     url: string;
@@ -43,6 +43,13 @@ export interface ApiResultListAppointment {
     "stackTrace"?: Array<Stack>;
 }
 
+export interface ApiResultListAvailabilityRule {
+    "value"?: Array<AvailabilityRule>;
+    "success"?: boolean;
+    "message"?: string;
+    "stackTrace"?: Array<Stack>;
+}
+
 export interface ApiResultListSlotAvailabilityDate {
     "value"?: Array<SlotAvailabilityDate>;
     "success"?: boolean;
@@ -51,15 +58,12 @@ export interface ApiResultListSlotAvailabilityDate {
 }
 
 export interface Appointment {
-    "appointmentSlotId"?: string;
     "resourceId"?: string;
-    "aptStart"?: Date;
-    "aptEnd"?: Date;
-    "aptLength"?: number;
+    "startTimeRequested"?: string;
     "serviceType"?: string;
+    "serviceLength"?: number;
     "firstName"?: string;
     "lastName"?: string;
-    "dob"?: string;
     "phone"?: string;
     "email"?: string;
     "address1"?: string;
@@ -86,7 +90,7 @@ export interface Appointment {
     "approvedDate"?: Date;
     "submittedDate"?: Date;
     "confirmedDate"?: Date;
-    "birthday"?: Date;
+    "birthday"?: string;
     "partitionKey"?: string;
     "rowKey"?: string;
     "timestamp"?: Date;
@@ -140,6 +144,8 @@ export interface SlotAvailabilityTime {
     "resourceId"?: string;
     "isHidden"?: boolean;
     "isAvailable"?: boolean;
+    "isContrastAvailable"?: boolean;
+    "isContrastRequired"?: boolean;
     "linkedAppointment"?: Appointment;
     "slotId"?: string;
 }
@@ -187,10 +193,10 @@ export interface User {
  */
 export const AuthApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary Auth
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     auth(params: {  "req"?: User; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/auth`;
@@ -220,10 +226,10 @@ export const AuthApiFetchParamCreator = {
  */
 export const AuthApiFp = {
     /**
-     * 
+     *
      * @summary Auth
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     auth(params: { "req"?: User; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
         const fetchArgs = AuthApiFetchParamCreator.auth(params, options);
@@ -244,10 +250,10 @@ export const AuthApiFp = {
  */
 export class AuthApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary Auth
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     auth(params: {  "req"?: User; "authToken"?: string; }, options?: any) {
         return AuthApiFp.auth(params, options)(this.fetch, this.basePath);
@@ -260,10 +266,10 @@ export class AuthApi extends BaseAPI {
 export const AuthApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary Auth
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         auth(params: {  "req"?: User; "authToken"?: string; }, options?: any) {
             return AuthApiFp.auth(params, options)(fetch, basePath);
@@ -277,10 +283,10 @@ export const AuthApiFactory = function (fetch?: FetchAPI, basePath?: string) {
  */
 export const LeadGenApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runGET(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/leadGen`;
@@ -304,10 +310,10 @@ export const LeadGenApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runPOST(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/leadGen`;
@@ -337,10 +343,10 @@ export const LeadGenApiFetchParamCreator = {
  */
 export const LeadGenApiFp = {
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runGET(params: { "req"?: CustomerLead; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
         const fetchArgs = LeadGenApiFetchParamCreator.runGET(params, options);
@@ -355,10 +361,10 @@ export const LeadGenApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runPOST(params: { "req"?: CustomerLead; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<CustomerLead> {
         const fetchArgs = LeadGenApiFetchParamCreator.runPOST(params, options);
@@ -379,19 +385,19 @@ export const LeadGenApiFp = {
  */
 export class LeadGenApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runGET(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
         return LeadGenApiFp.runGET(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary Run
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     runPOST(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
         return LeadGenApiFp.runPOST(params, options)(this.fetch, this.basePath);
@@ -404,19 +410,19 @@ export class LeadGenApi extends BaseAPI {
 export const LeadGenApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary Run
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         runGET(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
             return LeadGenApiFp.runGET(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary Run
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         runPOST(params: {  "req"?: CustomerLead; "authToken"?: string; }, options?: any) {
             return LeadGenApiFp.runPOST(params, options)(fetch, basePath);
@@ -430,9 +436,9 @@ export const LeadGenApiFactory = function (fetch?: FetchAPI, basePath?: string) 
  */
 export const PostQuestionApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary GetQuestions
-     * @param req 
+     * @param req
      */
     postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any): FetchArgs {
         const baseUrl = `/api/question`;
@@ -459,9 +465,9 @@ export const PostQuestionApiFetchParamCreator = {
  */
 export const PostQuestionApiFp = {
     /**
-     * 
+     *
      * @summary GetQuestions
-     * @param req 
+     * @param req
      */
     postQuestion(params: { "req"?: SurveyQuestion;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<TableResult> {
         const fetchArgs = PostQuestionApiFetchParamCreator.postQuestion(params, options);
@@ -482,9 +488,9 @@ export const PostQuestionApiFp = {
  */
 export class PostQuestionApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary GetQuestions
-     * @param req 
+     * @param req
      */
     postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any) {
         return PostQuestionApiFp.postQuestion(params, options)(this.fetch, this.basePath);
@@ -497,9 +503,9 @@ export class PostQuestionApi extends BaseAPI {
 export const PostQuestionApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary GetQuestions
-         * @param req 
+         * @param req
          */
         postQuestion(params: {  "req"?: SurveyQuestion; }, options?: any) {
             return PostQuestionApiFp.postQuestion(params, options)(fetch, basePath);
@@ -513,7 +519,7 @@ export const PostQuestionApiFactory = function (fetch?: FetchAPI, basePath?: str
  */
 export const QuestionApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary GetQuestions
      */
     getQuestions(options?: any): FetchArgs {
@@ -537,7 +543,7 @@ export const QuestionApiFetchParamCreator = {
  */
 export const QuestionApiFp = {
     /**
-     * 
+     *
      * @summary GetQuestions
      */
     getQuestions(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<SurveyQuestion>> {
@@ -559,7 +565,7 @@ export const QuestionApiFp = {
  */
 export class QuestionApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary GetQuestions
      */
     getQuestions(options?: any) {
@@ -573,7 +579,7 @@ export class QuestionApi extends BaseAPI {
 export const QuestionApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary GetQuestions
          */
         getQuestions(options?: any) {
@@ -588,10 +594,10 @@ export const QuestionApiFactory = function (fetch?: FetchAPI, basePath?: string)
  */
 export const ResourceApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesDELETE(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
@@ -615,9 +621,9 @@ export const ResourceApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param authToken 
+     * @param authToken
      */
     availabilityRulesGET(params: {  "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
@@ -637,10 +643,10 @@ export const ResourceApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesPOST(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
@@ -664,10 +670,10 @@ export const ResourceApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesPUT(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslot/rules`;
@@ -691,10 +697,10 @@ export const ResourceApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsGET(params: {  "locationId"?: string; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/locations`;
@@ -715,10 +721,10 @@ export const ResourceApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsPOST(params: {  "locationId"?: string; "authToken"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/locations`;
@@ -745,12 +751,12 @@ export const ResourceApiFetchParamCreator = {
  */
 export const ResourceApiFp = {
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
-    availabilityRulesDELETE(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<AvailabilityRule>> {
+    availabilityRulesDELETE(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAvailabilityRule> {
         const fetchArgs = ResourceApiFetchParamCreator.availabilityRulesDELETE(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -763,11 +769,11 @@ export const ResourceApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param authToken 
+     * @param authToken
      */
-    availabilityRulesGET(params: { "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<AvailabilityRule>> {
+    availabilityRulesGET(params: { "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAvailabilityRule> {
         const fetchArgs = ResourceApiFetchParamCreator.availabilityRulesGET(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -780,12 +786,12 @@ export const ResourceApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
-    availabilityRulesPOST(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<AvailabilityRule>> {
+    availabilityRulesPOST(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAvailabilityRule> {
         const fetchArgs = ResourceApiFetchParamCreator.availabilityRulesPOST(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -798,12 +804,12 @@ export const ResourceApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
-    availabilityRulesPUT(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<AvailabilityRule>> {
+    availabilityRulesPUT(params: { "req"?: AvailabilityRule; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAvailabilityRule> {
         const fetchArgs = ResourceApiFetchParamCreator.availabilityRulesPUT(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -816,10 +822,10 @@ export const ResourceApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsGET(params: { "locationId"?: string; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Location>> {
         const fetchArgs = ResourceApiFetchParamCreator.locationsGET(params, options);
@@ -834,10 +840,10 @@ export const ResourceApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsPOST(params: { "locationId"?: string; "authToken"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Location>> {
         const fetchArgs = ResourceApiFetchParamCreator.locationsPOST(params, options);
@@ -858,54 +864,54 @@ export const ResourceApiFp = {
  */
 export class ResourceApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesDELETE(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
         return ResourceApiFp.availabilityRulesDELETE(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param authToken 
+     * @param authToken
      */
     availabilityRulesGET(params: {  "authToken"?: string; }, options?: any) {
         return ResourceApiFp.availabilityRulesGET(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesPOST(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
         return ResourceApiFp.availabilityRulesPOST(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AvailabilityRules
-     * @param req 
-     * @param authToken 
+     * @param req
+     * @param authToken
      */
     availabilityRulesPUT(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
         return ResourceApiFp.availabilityRulesPUT(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsGET(params: {  "locationId"?: string; "authToken"?: string; }, options?: any) {
         return ResourceApiFp.locationsGET(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary Locations
-     * @param locationId 
-     * @param authToken 
+     * @param locationId
+     * @param authToken
      */
     locationsPOST(params: {  "locationId"?: string; "authToken"?: string; }, options?: any) {
         return ResourceApiFp.locationsPOST(params, options)(this.fetch, this.basePath);
@@ -918,54 +924,54 @@ export class ResourceApi extends BaseAPI {
 export const ResourceApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary AvailabilityRules
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         availabilityRulesDELETE(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
             return ResourceApiFp.availabilityRulesDELETE(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AvailabilityRules
-         * @param authToken 
+         * @param authToken
          */
         availabilityRulesGET(params: {  "authToken"?: string; }, options?: any) {
             return ResourceApiFp.availabilityRulesGET(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AvailabilityRules
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         availabilityRulesPOST(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
             return ResourceApiFp.availabilityRulesPOST(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AvailabilityRules
-         * @param req 
-         * @param authToken 
+         * @param req
+         * @param authToken
          */
         availabilityRulesPUT(params: {  "req"?: AvailabilityRule; "authToken"?: string; }, options?: any) {
             return ResourceApiFp.availabilityRulesPUT(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary Locations
-         * @param locationId 
-         * @param authToken 
+         * @param locationId
+         * @param authToken
          */
         locationsGET(params: {  "locationId"?: string; "authToken"?: string; }, options?: any) {
             return ResourceApiFp.locationsGET(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary Locations
-         * @param locationId 
-         * @param authToken 
+         * @param locationId
+         * @param authToken
          */
         locationsPOST(params: {  "locationId"?: string; "authToken"?: string; }, options?: any) {
             return ResourceApiFp.locationsPOST(params, options)(fetch, basePath);
@@ -979,13 +985,13 @@ export const ResourceApiFactory = function (fetch?: FetchAPI, basePath?: string)
  */
 export const ScheduleApiFetchParamCreator = {
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerDELETE(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
@@ -1012,12 +1018,12 @@ export const ScheduleApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerGET(params: {  "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
@@ -1040,13 +1046,13 @@ export const ScheduleApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPOST(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
@@ -1073,13 +1079,13 @@ export const ScheduleApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPUT(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/appointment`;
@@ -1106,12 +1112,12 @@ export const ScheduleApiFetchParamCreator = {
         };
     },
     /**
-     * 
+     *
      * @summary TimeSlots
-     * @param authToken 
-     * @param withContrast 
-     * @param length 
-     * @param locationId 
+     * @param authToken
+     * @param withContrast
+     * @param length
+     * @param locationId
      */
     timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslots`;
@@ -1140,13 +1146,13 @@ export const ScheduleApiFetchParamCreator = {
  */
 export const ScheduleApiFp = {
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerDELETE(params: { "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAppointment> {
         const fetchArgs = ScheduleApiFetchParamCreator.appointmentHandlerDELETE(params, options);
@@ -1161,12 +1167,12 @@ export const ScheduleApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerGET(params: { "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAppointment> {
         const fetchArgs = ScheduleApiFetchParamCreator.appointmentHandlerGET(params, options);
@@ -1181,13 +1187,13 @@ export const ScheduleApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPOST(params: { "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAppointment> {
         const fetchArgs = ScheduleApiFetchParamCreator.appointmentHandlerPOST(params, options);
@@ -1202,13 +1208,13 @@ export const ScheduleApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPUT(params: { "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListAppointment> {
         const fetchArgs = ScheduleApiFetchParamCreator.appointmentHandlerPUT(params, options);
@@ -1223,12 +1229,12 @@ export const ScheduleApiFp = {
         };
     },
     /**
-     * 
+     *
      * @summary TimeSlots
-     * @param authToken 
-     * @param withContrast 
-     * @param length 
-     * @param locationId 
+     * @param authToken
+     * @param withContrast
+     * @param length
+     * @param locationId
      */
     timeSlotsGET(params: { "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListSlotAvailabilityDate> {
         const fetchArgs = ScheduleApiFetchParamCreator.timeSlotsGET(params, options);
@@ -1249,59 +1255,59 @@ export const ScheduleApiFp = {
  */
 export class ScheduleApi extends BaseAPI {
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerDELETE(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.appointmentHandlerDELETE(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerGET(params: {  "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.appointmentHandlerGET(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPOST(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.appointmentHandlerPOST(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary AppointmentHandler
-     * @param req 
-     * @param authToken 
-     * @param withContrast 
-     * @param locationId 
-     * @param search 
+     * @param req
+     * @param authToken
+     * @param withContrast
+     * @param locationId
+     * @param search
      */
     appointmentHandlerPUT(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
         return ScheduleApiFp.appointmentHandlerPUT(params, options)(this.fetch, this.basePath);
     }
     /**
-     * 
+     *
      * @summary TimeSlots
-     * @param authToken 
-     * @param withContrast 
-     * @param length 
-     * @param locationId 
+     * @param authToken
+     * @param withContrast
+     * @param length
+     * @param locationId
      */
     timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; }, options?: any) {
         return ScheduleApiFp.timeSlotsGET(params, options)(this.fetch, this.basePath);
@@ -1314,59 +1320,59 @@ export class ScheduleApi extends BaseAPI {
 export const ScheduleApiFactory = function (fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * 
+         *
          * @summary AppointmentHandler
-         * @param req 
-         * @param authToken 
-         * @param withContrast 
-         * @param locationId 
-         * @param search 
+         * @param req
+         * @param authToken
+         * @param withContrast
+         * @param locationId
+         * @param search
          */
         appointmentHandlerDELETE(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.appointmentHandlerDELETE(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AppointmentHandler
-         * @param authToken 
-         * @param withContrast 
-         * @param locationId 
-         * @param search 
+         * @param authToken
+         * @param withContrast
+         * @param locationId
+         * @param search
          */
         appointmentHandlerGET(params: {  "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.appointmentHandlerGET(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AppointmentHandler
-         * @param req 
-         * @param authToken 
-         * @param withContrast 
-         * @param locationId 
-         * @param search 
+         * @param req
+         * @param authToken
+         * @param withContrast
+         * @param locationId
+         * @param search
          */
         appointmentHandlerPOST(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.appointmentHandlerPOST(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary AppointmentHandler
-         * @param req 
-         * @param authToken 
-         * @param withContrast 
-         * @param locationId 
-         * @param search 
+         * @param req
+         * @param authToken
+         * @param withContrast
+         * @param locationId
+         * @param search
          */
         appointmentHandlerPUT(params: {  "req"?: Appointment; "authToken"?: string; "withContrast"?: boolean; "locationId"?: string; "search"?: string; }, options?: any) {
             return ScheduleApiFp.appointmentHandlerPUT(params, options)(fetch, basePath);
         },
         /**
-         * 
+         *
          * @summary TimeSlots
-         * @param authToken 
-         * @param withContrast 
-         * @param length 
-         * @param locationId 
+         * @param authToken
+         * @param withContrast
+         * @param length
+         * @param locationId
          */
         timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; }, options?: any) {
             return ScheduleApiFp.timeSlotsGET(params, options)(fetch, basePath);

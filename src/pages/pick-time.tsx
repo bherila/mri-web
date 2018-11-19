@@ -39,7 +39,11 @@ class PickTimePage extends React.Component<{}, IState> {
 			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
 			this.setState({fname, lname, haveOrder, scan}, () => {
 				new Api.ScheduleApi().timeSlotsGET({withContrast: scan.contrast === 'with and without contrast', locationId: ''}).then((result) => {
-					this.setState({times: result, total: result.length});
+					if (result.value) {
+						this.setState({times: result.value || [], total: result.value.length || 0});
+					} else {
+						this.setState({err: result.message || 'Error'});
+					}
 				}, (err) => this.setState({err}));
 			});
 		}
@@ -124,8 +128,10 @@ class PickTimePage extends React.Component<{}, IState> {
 	}
 
 	private pickTime(timeSlot: SlotAvailabilityTime) {
-		sessionStorage.setItem('timeSlot', JSON.stringify(timeSlot));
-		navigate('/addl-info');
+		if (timeSlot.isAvailable) {
+			sessionStorage.setItem('timeSlot', JSON.stringify(timeSlot));
+			navigate('/addl-info');
+		}
 	}
 }
 

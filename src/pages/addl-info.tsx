@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
+import { navigate } from 'gatsby'
 import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import Dropzone from "react-dropzone";
 import {showImageOrPlaceholder} from "../components/FileUpload";
-import {SlotAvailabilityTime} from "../api/api";
+import {ScheduleApi, SlotAvailabilityTime} from "../api/api";
+import {getAuthToken} from "../helpers/authToken";
 
 interface ICPState {
 	lname: string;
@@ -18,7 +19,11 @@ interface ICPState {
 	mriOrder: string;
 	insFront: string;
 	insBack: string;
-	timeSlot: SlotAvailabilityTime;
+	timeSlot: SlotAvailabilityTime | null;
+	email: string;
+	phone: string;
+	dob: string;
+	err: string;
 }
 
 class ContactInformation extends React.Component<{}, ICPState> {
@@ -26,6 +31,9 @@ class ContactInformation extends React.Component<{}, ICPState> {
 		super(props, context);
 		this.state = {
 			fname: '',
+			email: '',
+			dob: '',
+			phone: '',
 			hasInsurance: true,
 			lname: '',
 			scan: '',
@@ -37,6 +45,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 			insFront: '',
 			insBack: '',
 			timeSlot: null,
+			err: '',
 		};
 	}
 
@@ -44,9 +53,11 @@ class ContactInformation extends React.Component<{}, ICPState> {
 		if (typeof sessionStorage !== 'undefined') {
 			const fname = sessionStorage.getItem('fname') || '';
 			const lname = sessionStorage.getItem('lname') || '';
+			const email = sessionStorage.getItem('email') || '';
+			const phone = sessionStorage.getItem('phone') || '';
 			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
 			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname, lname, haveOrder, scan});
+			this.setState({fname, lname, email, phone, haveOrder, scan});
 
 			const height = sessionStorage.getItem('height') || '';
 			const weight = sessionStorage.getItem('weight') || '';
@@ -97,6 +108,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 									name="email-form"
 									data-name="Email Form"
 									action="#"
+									onSubmit={(e) => this.handleSubmit(e)}
 								>
 									<h3>Additional Information</h3>
 									<p>
@@ -191,17 +203,14 @@ class ContactInformation extends React.Component<{}, ICPState> {
 										</div>
 									</div>
 									<div className="cta-subitem distributed">
-										<a
-											href="/meet-our-team"
-											className="cta-link wider w-inline-block"
-										>
+										<button className="cta-link wider w-inline-block" type="submit">
 											<img
 												src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 												alt="Submit"
 												className="image"
 											/>
 											<div>Submit</div>
-										</a>
+										</button>
 									</div>
 								</form>
 							</div>
@@ -221,6 +230,52 @@ class ContactInformation extends React.Component<{}, ICPState> {
 				this.setState(sObj, () => this.updateStorage());
 			}
 		}
+	}
+
+	private handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		if (!this.state.timeSlot) {
+			alert('missing timeSlot');
+			return;
+		}
+		const slotId = this.state.timeSlot.slotId || '';
+		new ScheduleApi().appointmentHandlerPOST({
+			req: {
+				partitionKey: slotId.split(' ')[1], // extract location from slotId
+				rowKey: slotId,
+				lastName: this.state.lname,
+				firstName: this.state.fname,
+				address1: '',
+				confirmed: false,
+				doctorName: this.state.doctorName,
+				email: this.state.email,
+				phone: this.state.phone,
+				height: this.state.height || '',
+				insuranceBackUrl: this.state.insBack,
+				insuranceFrontUrl: this.state.insFront,
+				insuranceCarrier: '',
+				insuranceGroupNumber: '',
+				insurancePolicyNumber: '',
+				insuranceVerified: false,
+				orderImageUrl: this.state.mriOrder,
+				resourceId: this.state.timeSlot.resourceId,
+				serviceType: JSON.stringify(this.state.scan),
+				weight: this.state.weight,
+				birthday: this.state.dob,
+				serviceLength: 45, // TODO: Update service length?
+			},
+			search: '',
+			authToken: getAuthToken(),
+			withContrast: false,
+			locationId: ''
+		}).then((res) => {
+			if (res.success && !!res.value && !!res.value.length) {
+				sessionStorage.setItem('appointmentEntity', JSON.stringify(res.value[0] || null));
+				navigate('/safety-questions');
+			} else {
+				this.setState({err: res.message || ''});
+			}
+		});
 	}
 }
 

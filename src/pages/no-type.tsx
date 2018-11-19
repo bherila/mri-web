@@ -1,6 +1,4 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
-
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {Ez123} from "../components/breadcrumb";

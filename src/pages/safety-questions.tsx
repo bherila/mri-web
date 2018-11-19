@@ -146,7 +146,7 @@ class SafetyQuestions extends React.Component<{}, {
 						</div>
 					</div>
 
-					<h2>We need to ask some safety questions before we can schedule you.</h2>
+					<h2>We need to ask some safety questions before we can finish scheduling you.</h2>
 
 					<h3>Do you have...</h3>
 

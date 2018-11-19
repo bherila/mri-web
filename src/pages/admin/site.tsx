@@ -1,13 +1,8 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
 import {EditFormBase} from '../../forms';
 import * as Api from '../../api/api';
-import {isEmpty} from "ucshared";
-
 import Page from '../../components/Page'
-import Container from '../../components/Container'
 import IndexLayout from '../../layouts'
-
 import { withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import {PatientDetailsForm} from "../../components/patient-details";
@@ -19,6 +14,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import {SignOutButton} from "../../components/sign-out";
 import {getAuthToken} from "../../helpers/authToken";
+import {navigate} from "gatsby";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -60,13 +56,13 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	}
 
 	public componentDidMount() {
-		new Api.ScheduleApi().userScheduleGET({
+		new Api.ScheduleApi().timeSlotsGET({
 			search: '',
 			authToken: getAuthToken(),
 			locationId: '',
 			withContrast: false,
 		} as any).then((result) => {
-			this.setState({data: result});
+			this.setState({data: result.value || []});
 		}, (err) => {
 			console.log(err);
 			// TODO: loginRedirect()
@@ -128,55 +124,50 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	}
 
 	public renderInner() {
-		const {hideUnavailable, hideAvailable, open, reservedUnconfirmed, confirmed, search, data} = this.state;
 		const {classes} = this.props;
 		return (
 			<div>
+				<h1>Default Location</h1>
+
+
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
 						[Date picker]
 					</div>
+					<button className="w-button" type="button" onClick={() => navigate('/admin/rules')}>
+						Manage availability rules
+					</button>
+
+					<SignOutButton/>
 				</div>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
-						{EditFormBase.boundTextboxValue('', search, (search) => this.setState({search}), 'Search')}
+						{EditFormBase.boundTextboxValue('', this.state.search, (search) => this.setState({search}), 'Search')}
 					</div>
 					<div style={{display: 'flex', flexDirection: 'row', justifySelf: 'flex-end'}}>
-						<button>{EditFormBase.boundCheckboxValue('Hide Unavailable', hideUnavailable, (hideUnavailable) => this.setState({hideUnavailable}), false)}</button>
-						<button>{EditFormBase.boundCheckboxValue('Hide Available', hideAvailable, (hideAvailable) => this.setState({hideAvailable}), false)}</button>
-						<button>{EditFormBase.boundCheckboxValue('Open', open, (open) => this.setState({open, hideUnavailable: false}), false)}</button>
-						<button>{EditFormBase.boundCheckboxValue('Reserved, Unconfirmed', reservedUnconfirmed, (reservedUnconfirmed) => this.setState({reservedUnconfirmed}), false)}</button>
-						<button>{EditFormBase.boundCheckboxValue('Confirmed', confirmed, (confirmed) => this.setState({confirmed, hideAvailable: false}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Hide Unavailable', this.state.hideUnavailable, (hideUnavailable) => this.setState({hideUnavailable}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Hide Available', this.state.hideAvailable, (hideAvailable) => this.setState({hideAvailable}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Open', this.state.open, (open) => this.setState({open, hideUnavailable: false}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Reserved, Unconfirmed', this.state.reservedUnconfirmed, (reservedUnconfirmed) => this.setState({reservedUnconfirmed}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Confirmed', this.state.confirmed, (confirmed) => this.setState({confirmed, hideAvailable: false}), false)}</button>
 					</div>
 				</div>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<TableCell component="th">Time Slot</TableCell>
-							<TableCell component="th">Status</TableCell>
-							<TableCell component="th">Actions</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{(data || []).map((date) => (date.times || []).map((slot) => this.applies(slot) && (
-							<TableRow key={slot.slotId}>
-								<TableCell>{date.friendlyBegin}, {slot.time} CST</TableCell>
-								<TableCell>{slot.isAvailable ? 'Available' : 'Unavailable'}</TableCell>
-								{slot.isAvailable ? (
-									<TableCell>
-										<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Schedule</button>
-									</TableCell>
-								):(
-                                    <TableCell>
-                                        <button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>
-                                        <button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>
-                                        <button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>
-                                    </TableCell>
-								)}
-							</TableRow>
-						)))}
-					</TableBody>
-				</Table>
+				{(this.state.data || []).map((date) => (
+					<div key={date.friendlyBegin}>
+					<h3>{date.friendlyBegin}</h3>
+					<table className="blue">
+						<tbody>
+							{(date.times || []).map((slot) => this.applies(slot) && (
+								<tr key={slot.slotId}>
+									<td>{date.friendlyBegin}, {slot.time} CST</td>
+									<td>{slot.isAvailable ? 'Available' : 'Unavailable'}</td>
+									{this.renderSlotActionCell(slot)}
+								</tr>
+							))}
+						</tbody>
+					</table>
+					</div>
+				))}
 
 				<Modal open={this.state.modal === 'release'} onClose={() => this.closeModal()}>
 					<div className="centered white-box radiologist">
@@ -209,8 +200,31 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				</div>
 				</Modal>
 
-				<SignOutButton/>
 			</div>
+		);
+	}
+
+	private renderSlotActionCell(slot: Api.SlotAvailabilityTime) {
+		if (slot.isAvailable) {
+			return (
+				<td>
+					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>
+						Manual Schedule
+					</button>
+				</td>
+			);
+		}
+		if (!!slot.linkedAppointment) {
+			return (
+				<td>
+					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>
+					<button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>
+					<button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>
+				</td>
+			);
+		}
+		return (
+			<td>-</td>
 		);
 	}
 }

@@ -1,21 +1,12 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
 import {EditFormBase} from '../../forms';
 import * as Api from '../../api/api';
 import Page from '../../components/Page'
-import Container from '../../components/Container'
 import IndexLayout from '../../layouts'
-
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import {SignOutButton} from "../../components/sign-out";
 import {getAuthToken} from "../../helpers/authToken";
+import {navigate} from "gatsby";
 
-interface ISiteFormState {
+interface IRuleEditorState {
 	hideUnavailable: boolean;
 	hideAvailable: boolean;
 	open: boolean;
@@ -23,28 +14,17 @@ interface ISiteFormState {
 	confirmed: boolean;
 	search: string;
 	modal: 'confirm' | 'edit' | 'release' | null;
-	data: Api.SlotAvailabilityDate[];
+	data: Api.AvailabilityRule[];
 	startTime: string;
 	endTime: string;
 	resourceName: string;
-	contrast: string;
+	contrastReqStatus: string;
+	err: string;
 	date: string;
+	newItemComment: string;
 }
 
-const styles = (theme: any) => ({
-	paper: {
-		position: 'absolute',
-		width: theme.spacing.unit * 50,
-		backgroundColor: theme.palette.background.paper,
-		boxShadow: theme.shadows[5],
-		padding: theme.spacing.unit * 4,
-	},
-	table: {
-		minWidth: 700,
-	},
-});
-
-class RulesPage extends React.Component<{classes: any}, ISiteFormState>{
+class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
@@ -59,19 +39,25 @@ class RulesPage extends React.Component<{classes: any}, ISiteFormState>{
 			startTime: '7:00',
 			endTime: '19:00',
 			resourceName: '',
-			contrast: '',
+			contrastReqStatus: '',
 			date: 'yyyy-mm-dd',
+			err: '',
+			newItemComment: '',
 		};
 	}
 
 	public componentDidMount() {
-		new Api.ScheduleApi().userScheduleGET({
+		new Api.ResourceApi().availabilityRulesGET({
 			search: '',
 			authToken: getAuthToken(),
 			locationId: '',
 			withContrast: false,
 		} as any).then((result) => {
-			this.setState({data: result});
+			if (result.value) {
+				this.setState({data: result.value || []});
+			} else {
+				this.setState({err: result.message || 'Error'});
+			}
 		}, (err) => {
 			console.log(err);
 			// TODO: loginRedirect()
@@ -88,80 +74,129 @@ class RulesPage extends React.Component<{classes: any}, ISiteFormState>{
 		);
 	}
 
+	public handleAddRule(e) {
+		e.preventDefault();
+		new Api.ResourceApi().availabilityRulesPOST({
+			authToken: getAuthToken(),
+			req: {
+				status: this.state.contrastReqStatus,
+				comment: this.state.newItemComment,
+				startTime: this.state.startTime,
+				endTime: this.state.endTime,
+				onThisDay: this.state.search === 'Specific Date' ? this.state.date : this.state.search,
+				partitionKey: 'DefaultLocation',
+				rowKey: 'Auto',
+				priority: 0,
+				resourceID: this.state.resourceName,
+			},
+		}).then((resp) => {
+			if (resp.success) {
+				this.setState({data: resp.value || []});
+			} else {
+				alert(resp.message);
+			}
+		});
+	}
+
+	public handleDeleteRule(e) {
+		e.preventDefault();
+	}
+
+	public renderTable() {
+		return (
+			<form action="#" onSubmit={(e) => this.handleAddRule(e)}>
+				<table className="blue" style={{width: '500px'}} cellPadding={3}>
+					<thead>
+					<tr>
+						<th style={{whiteSpace: 'nowrap'}}>#</th>
+						<th style={{whiteSpace: 'nowrap'}}>On this day</th>
+						<th style={{whiteSpace: 'nowrap'}}>Starting at time</th>
+						<th style={{whiteSpace: 'nowrap'}}>Until time</th>
+						<th style={{whiteSpace: 'nowrap'}}>ResID</th>
+						<th style={{whiteSpace: 'nowrap'}}>Comment</th>
+						<th style={{whiteSpace: 'nowrap'}}>Allow Contrast?</th>
+						<th style={{whiteSpace: 'nowrap'}}>Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					{(this.state.data || []).map((rule) => (
+						<tr key={(rule.partitionKey || '') + (rule.rowKey || '')}>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.priority}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.onThisDay}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.startTime}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.endTime}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.resourceID}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.comment}</td>
+							<td style={{whiteSpace: 'nowrap'}}>{rule.status}</td>
+							<td style={{whiteSpace: 'nowrap'}}>-</td>
+						</tr>
+					))}
+					<tr>
+						<td>New</td>
+						<td>
+							{EditFormBase.boundChoices(
+								'',
+								"Any Weekday,Weekend,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Specific Date".split(','),
+								this.state.search,
+								(search) => this.setState({search}),
+							)}
+							{this.state.search === 'Specific Date' && (
+								EditFormBase.boundTextboxValue(
+									'',
+									this.state.date,
+									(date) => this.setState({date})
+								)
+							)}
+						</td>
+						<td>
+							{EditFormBase.boundTextboxValue('', this.state.startTime, (startTime) => this.setState({startTime}))}
+						</td>
+						<td>
+							{EditFormBase.boundTextboxValue('', this.state.endTime, (endTime) => this.setState({endTime}))}
+						</td>
+						<td>
+							{EditFormBase.boundTextboxValue('',
+								this.state.resourceName,
+								(resourceName) => this.setState({resourceName})
+							)}
+						</td>
+						<td>
+							{EditFormBase.boundTextboxValue('',
+								this.state.newItemComment,
+								(newItemComment) => this.setState({newItemComment})
+							)}
+						</td>
+						<td>
+							{EditFormBase.boundChoices('',
+								['Contrast Unavailable', 'Contrast Available', 'Contrast Required', 'Blocked'],
+								this.state.contrastReqStatus,
+								(contrastReqStatus) => this.setState({contrastReqStatus})
+							)}
+						</td>
+						<td>
+							<button className="w-button" type="submit">Add</button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+		);
+	}
+
 	public renderInner() {
-		const {classes} = this.props;
 		return (
 			<div>
 				<h2>Time Rules For This Location</h2>
-				<table className={classes.table} style={{width: '500px'}} cellPadding={3}>
-					<thead>
-						<tr>
-							<th>On this day</th>
-							<th>Starting at time</th>
-							<th>Until time</th>
-							<th>Comment/Staff Name</th>
-							<th>Allow Contrast?</th>
-						</tr>
-					</thead>
-					<tbody>
-						{/*{(data || []).map((date) => (date.times || []).map((slot) => this.applies(slot) && (*/}
-							{/*<TableRow key={slot.slotId}>*/}
-								{/*<TableCell>{date.friendlyBegin}, {slot.time} CST</TableCell>*/}
-								{/*<TableCell>{slot.isAvailable ? 'Available' : 'Unavailable'}</TableCell>*/}
-								{/*{slot.isAvailable ? (*/}
-									{/*<TableCell>*/}
-										{/*<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Schedule</button>*/}
-									{/*</TableCell>*/}
-								{/*):(*/}
-									{/*<TableCell>*/}
-										{/*<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>*/}
-										{/*<button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>*/}
-										{/*<button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>*/}
-									{/*</TableCell>*/}
-								{/*)}*/}
-							{/*</TableRow>*/}
-						{/*)))}*/}
-						<tr>
-							<td>
-								{EditFormBase.boundChoices(
-									'',
-									"Any Weekday,Weekend,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Specific Date".split(','),
-									this.state.search,
-									(search) => this.setState({search}),
-								)}
-								{this.state.search === 'Specific Date' && (
-									EditFormBase.boundTextboxValue(
-										'',
-										this.state.date,
-										(date) => this.setState({date})
-									)
-								)}
-							</td>
-							<td>
-								{EditFormBase.boundTextboxValue('', this.state.startTime, (startTime) => this.setState({startTime}))}
-							</td>
-							<td>
-								{EditFormBase.boundTextboxValue('', this.state.endTime, (endTime) => this.setState({endTime}))}
-							</td>
-							<td>
-								{EditFormBase.boundTextboxValue('', this.state.resourceName, (resourceName) => this.setState({resourceName}))}
-							</td>
-							<td>
-								{EditFormBase.boundChoices('', ['Contrast Unavailable', 'Contrast Available', 'Contrast Required'], this.state.contrast, (contrast) => this.setState({contrast}))}
-							</td>
-							<td>
-								<button className="w-button" type="button" onClick={(e) => e.preventDefault()}>Add</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				{this.renderTable()}
+
+				<button className="w-button" onClick={() => navigate('/admin/site')}>
+					Go back to site
+				</button>
 
 
-				<SignOutButton/>
 			</div>
 		);
 	}
 }
-// We need an intermediary variable for handling the recursive nesting.
-const RulesPageWrapped = withStyles(styles)(RulesPage);
-export default RulesPageWrapped;
+
+export default RulesPage;
