@@ -4,82 +4,19 @@ import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import Dropzone from "react-dropzone";
 import {showImageOrPlaceholder} from "../components/FileUpload";
-import {ScheduleApi, SlotAvailabilityTime} from "../api/api";
+import {ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
+import {SafetyState} from "../models/SafetyState";
 
-interface ICPState {
-	lname: string;
-	scan: string;
-	fname: string;
-	hasInsurance: boolean;
-	haveOrder: boolean;
-	height: string;
-	weight: string;
-	doctorName: string;
-	mriOrder: string;
-	insFront: string;
-	insBack: string;
-	timeSlot: SlotAvailabilityTime | null;
-	email: string;
-	phone: string;
-	dob: string;
-	err: string;
-}
-
-class ContactInformation extends React.Component<{}, ICPState> {
+class ContactInformation extends React.Component<{}, SafetyState> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {
-			fname: '',
-			email: '',
-			dob: '',
-			phone: '',
-			hasInsurance: true,
-			lname: '',
-			scan: '',
-			haveOrder: false,
-			height: '',
-			weight: '',
-			doctorName: '',
-			mriOrder: '',
-			insFront: '',
-			insBack: '',
-			timeSlot: null,
-			err: '',
-		};
+		this.state = SafetyState.loadState();
 	}
 
 	public componentDidMount() {
-		if (typeof sessionStorage !== 'undefined') {
-			const fname = sessionStorage.getItem('fname') || '';
-			const lname = sessionStorage.getItem('lname') || '';
-			const email = sessionStorage.getItem('email') || '';
-			const phone = sessionStorage.getItem('phone') || '';
-			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
-			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname, lname, email, phone, haveOrder, scan});
-
-			const height = sessionStorage.getItem('height') || '';
-			const weight = sessionStorage.getItem('weight') || '';
-			const doctorName = sessionStorage.getItem('doctorName') || '';
-			const insFront = sessionStorage.getItem('insFront') || '';
-			const insBack = sessionStorage.getItem('insBack') || '';
-			const mriOrder = sessionStorage.getItem('mriOrder') || '';
-
-			const timeSlot = JSON.parse(sessionStorage.getItem('timeSlot') || '{}');
-			this.setState({height, weight, doctorName, insFront, insBack, mriOrder, timeSlot});
-		}
-	}
-
-	public updateStorage() {
-		if (typeof sessionStorage !== 'undefined') {
-			sessionStorage.setItem('height', this.state.height);
-			sessionStorage.setItem('weight', this.state.weight);
-			sessionStorage.setItem('doctorName', this.state.doctorName);
-			sessionStorage.setItem('insFront', this.state.insFront);
-			sessionStorage.setItem('insBack', this.state.insBack);
-			sessionStorage.setItem('mriOrder', this.state.mriOrder);
-		}
+		const state = SafetyState.loadState();
+		this.setState(state);
 	}
 
 	public render() {
@@ -90,7 +27,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 						<Ez123 num={3} />
 						<div className="breadcrumb-stack">
 							<MriTypeBreadcrumb value={this.state.scan}/>
-							<TimeslotBreadcrumb value={this.state.timeSlot}/>
+							<TimeslotBreadcrumb slot={this.state.timeSlot}/>
 						</div>
 					</div>
 					<div className="vspace80 centered w-row">
@@ -227,7 +164,7 @@ class ContactInformation extends React.Component<{}, ICPState> {
 			if (files[0]) {
 				const sObj = {};
 				sObj[insBack] = files[0].name;
-				this.setState(sObj, () => this.updateStorage());
+				this.setState(sObj, () => this.saveState());
 			}
 		}
 	}

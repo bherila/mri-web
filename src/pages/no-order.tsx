@@ -2,22 +2,18 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {Ez123} from "../components/breadcrumb";
+import {FormBasePage} from "../helpers/FormBasePage";
+import {SafetyState} from "../models/SafetyState";
 
-class HaveOrder extends React.Component<{}, {name: string}> {
+class HaveOrder extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: ''};
 	}
-
 	public componentDidMount() {
-		if (typeof sessionStorage !== 'undefined') {
-			let name = sessionStorage.getItem('name') || '';
-			name = name.split(' ')[0];
-			this.setState({name});
-			sessionStorage.setItem('haveOrder', 'false');
-		}
+		const state = SafetyState.loadState();
+		state.haveOrder = false;
+		this.setState(state, () => this.saveState());
 	}
-
 	public render() {
 		return (
 			<IndexLayout>

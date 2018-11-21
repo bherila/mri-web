@@ -2,20 +2,17 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {Ez123} from "../components/breadcrumb";
+import {FormBasePage} from "../helpers/FormBasePage";
+import {SafetyState} from "../models/SafetyState";
 
-class HaveOrder extends React.Component<{}, {name: string}> {
+class HaveOrder extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: ''};
 	}
-
 	public componentDidMount() {
-		if (typeof sessionStorage !== 'undefined') {
-			let name = sessionStorage.getItem('name') || '';
-			name = name.split(' ')[0];
-			this.setState({name});
-			sessionStorage.setItem('haveOrder', 'true');
-		}
+		const state = SafetyState.loadState();
+		state.haveOrder = true;
+		this.setState(state, () => this.saveState());
 	}
 
 	public render() {
@@ -31,7 +28,7 @@ class HaveOrder extends React.Component<{}, {name: string}> {
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
 
-							<h3>Ok {this.state.name}, do you have an order from your doctor?</h3>
+							<h3>Ok {this.state.fname}, do you have an order from your doctor?</h3>
 							<div className="cta-subitem distributed">
 								<BigButton
 									href="/mri-type"

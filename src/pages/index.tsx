@@ -3,29 +3,15 @@ import IndexLayout from '../layouts'
 import {Ez123} from "../components/breadcrumb";
 import {navigate} from "gatsby";
 import {LeadGenApi} from "../api/api";
+import {FormBasePage} from "../helpers/FormBasePage";
+import {formatDate, formatPhone} from "../helpers/phone";
 
-class IndexPage extends React.Component<{}, {fname: string, lname: string, email: string}> {
+class IndexPage extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {fname: '', lname: '', email: ''};
 	}
-
 	public componentDidMount() {
-		if (typeof sessionStorage !== 'undefined') {
-			this.setState({
-				fname: sessionStorage.getItem('fname') || '',
-				lname: sessionStorage.getItem('lname') || '',
-				email: sessionStorage.getItem('email') || '',
-			});
-		}
-	}
-
-	public updateStorage() {
-		if (typeof sessionStorage !== 'undefined') {
-			sessionStorage.setItem('fname', this.state.fname);
-			sessionStorage.setItem('lname', this.state.lname);
-			sessionStorage.setItem('email', this.state.email);
-		}
+		super.componentDidMount();
 	}
 
 	public formError() {
@@ -59,7 +45,7 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 									data-name="First Name"
 									id="fname"
 									value={this.state.fname}
-									onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.updateStorage())}
+									onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.saveState())}
 								/>
 								<label htmlFor="lname">Last name</label>
 								<input
@@ -70,7 +56,7 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 									data-name="Last Name"
 									id="lname"
 									value={this.state.lname}
-									onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.updateStorage())}
+									onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
 								/>
 								<label htmlFor="email">Email Address</label>
 								<input
@@ -82,7 +68,31 @@ class IndexPage extends React.Component<{}, {fname: string, lname: string, email
 									id="email"
 									required
 									value={this.state.email}
-									onChange={(e) => this.setState({email: e.currentTarget.value}, () => this.updateStorage())}
+									onChange={(e) => this.setState({email: e.currentTarget.value}, () => this.saveState())}
+								/>
+								<label htmlFor="email">Phone</label>
+								<input
+									type="text"
+									className="w-input centered"
+									maxLength={256}
+									name="phone"
+									data-name="Phone"
+									id="phone"
+									required
+									value={this.state.phone}
+									onChange={(e) => this.setState({phone: formatPhone(e.currentTarget.value)}, () => this.saveState())}
+								/>
+								<label htmlFor="email">Date of Birth</label>
+								<input
+									type="text"
+									className="w-input centered"
+									maxLength={256}
+									name="dob"
+									data-name="Date of Birth"
+									id="dob"
+									required
+									value={this.state.dob}
+									onChange={(e) => this.setState({dob: formatDate(e.currentTarget.value)}, () => this.saveState())}
 								/>
 								<input
 									type="submit"

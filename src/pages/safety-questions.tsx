@@ -5,6 +5,7 @@ import {BigButton} from "../components/BigBtn";
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
 import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb} from "../components/breadcrumb";
 import ReactModal from 'react-modal';
+import {FormBasePage} from "../helpers/FormBasePage";
 
 const qs = [
 	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false},
@@ -27,67 +28,13 @@ const qPost = [
 	{id: 'p4', q: 'Do you have diabetes?', r: false},
 ];
 
-class SafetyQuestions extends React.Component<{}, {
-	fname: string;
-	lname: string;
-	answers: any;
-	implants: string[];
-	currentImplant: string;
-	haveOrder: boolean;
-	scan: any;
-	overrideSafetyWarning: boolean;
-}> {
+
+class SafetyQuestions extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {
-			fname: '',
-			lname: '',
-			answers: {},
-			implants: [],
-			currentImplant: '',
-			scan: {},
-			haveOrder: false,
-			overrideSafetyWarning: false,
-		};
 	}
-
 	public componentDidMount() {
-		if (typeof sessionStorage !== 'undefined') {
-			const fname = sessionStorage.getItem('fname') || '';
-			const lname = sessionStorage.getItem('lname') || '';
-			const scan = JSON.parse(sessionStorage.getItem('scan') || '{}');
-			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname, lname, haveOrder, scan});
-			this.loadState();
-		}
-	}
-
-	public getAns(q) {
-		return this.state.answers[q];
-	}
-
-	public ans(q, val) {
-		let answers = Object.assign({}, this.state.answers);
-		answers[q] = val;
-		console.log(q, val, answers);
-		this.setState({answers}, () => this.saveState());
-	}
-
-	public saveState() {
-		if (typeof sessionStorage !== 'undefined') {
-			sessionStorage.setItem('safety', JSON.stringify(this.state));
-		}
-	}
-
-	public loadState() {
-		if (typeof sessionStorage !== 'undefined') {
-			const jsonState = JSON.parse(sessionStorage.getItem('safety') || '{}');
-			delete jsonState.name;
-			delete jsonState.haveOrder;
-			delete jsonState.scan;
-			delete jsonState.overrideSafetyWarning;
-			this.setState(jsonState);
-		}
+		super.componentDidMount();
 	}
 
 	public addImplant() {
@@ -97,6 +44,7 @@ class SafetyQuestions extends React.Component<{}, {
 	}
 
 	public removeImplant() {
+		console.log('TODO');
 	}
 
 	public validate(qArray) {
@@ -119,7 +67,7 @@ class SafetyQuestions extends React.Component<{}, {
 					<YesNoQuestion
 						key={item.q}
 						id={item.id}
-						val={this.getAns(item.q)}
+						val={this.state.getAns(item.q)}
 						onChange={(val) => this.ans(item.q, val)}
 						text={item.q}
 					/>
@@ -167,44 +115,29 @@ class SafetyQuestions extends React.Component<{}, {
 						</p>
 					</ReactModal>
 
-					{(
-						<div>
-							<YesNoQuestion
+					<div>
+						<YesNoQuestion
+							id="implants"
+							text="Do you have any other implants?"
+							onChange={(val) => this.ans('implants', val)}
+							val={this.state.getAns('implants')}
+						>
+							<TextQuestion
 								id="implants"
-								text="Do you have any other implants?"
-								onChange={(val) => this.ans('implants', val)}
-								val={this.getAns('implants')}
-							>
-								<TextQuestion
-									id="implants"
-									val={this.state.currentImplant}
-									onChange={(currentImplant) => this.setState({currentImplant})}
-									text="Tell us as much as you can about them."
-								/>
-							</YesNoQuestion>
+								val={this.state.currentImplant}
+								onChange={(currentImplant) => this.setState({currentImplant})}
+								text="Tell us as much as you can about them."
+							/>
+						</YesNoQuestion>
 
-							<YesNoQuestion
-								id="eye"
-								text="Have you ever had injury to your eye with metal, or metal in your eye?"
-								onChange={(val) => this.ans('MetalInEye', val)}
-								val={this.getAns('MetalInEye')}
-								>
+						<YesNoQuestion
+							id="eye"
+							text="Have you ever had injury to your eye with metal, or metal in your eye?"
+							onChange={(val) => this.ans('MetalInEye', val)}
+							val={this.state.getAns('MetalInEye')}
+						>
 
-								{this.renderQuestionSet(qEye)}
-
-								<TextQuestion
-									id="eyeDetails"
-									val={this.state.currentImplant}
-									onChange={(currentImplant) => this.setState({currentImplant})}
-									text="Additional details"
-								/>
-
-							</YesNoQuestion>
-
-							{this.renderQuestionSet(qPost)}
-
-							<h3>Tell us a little more about your medical history.</h3>
-							<p>This information improves the accuracy of your results, but is optional.</p>
+							{this.renderQuestionSet(qEye)}
 
 							<TextQuestion
 								id="eyeDetails"
@@ -212,101 +145,12 @@ class SafetyQuestions extends React.Component<{}, {
 								onChange={(currentImplant) => this.setState({currentImplant})}
 								text="Additional details"
 							/>
-							Why are you having an MRI?
-							Do you have pain? Where?
 
-							<YesNoQuestion
-								id="pain"
-								text="Do you have pain?"
-								onChange={(val) => this.ans('pain', val)}
-								val={this.getAns('pain')}
-							>
-								<TextQuestion
-									id="painDetails"
-									val={this.getAns('painDetails')}
-									onChange={(val) => this.ans('painDetails', val)}
-									text="Where?"
-								/>
-							</YesNoQuestion>
+						</YesNoQuestion>
 
-							<YesNoQuestion
-								id="injury"
-								text="Did you have an injury?"
-								onChange={(val) => this.ans('injury', val)}
-								val={this.getAns('injury')}
-							>
-								<TextQuestion
-									id="injuryDetails"
-									val={this.getAns('injuryDetails')}
-									onChange={(val) => this.ans('injuryDetails', val)}
-									text="Please add details"
-								/>
-							</YesNoQuestion>
+						{this.renderQuestionSet(qPost)}
 
-							<YesNoQuestion
-								id="cancer"
-								text="Do you have a diagnosis of cancer?"
-								onChange={(val) => this.ans('cancer', val)}
-								val={this.getAns('cancer')}
-							>
-								<TextQuestion
-									id="cancerDetails"
-									val={this.getAns('cancerDetails')}
-									onChange={(val) => this.ans('cancerDetails', val)}
-									text="What type?"
-								/>
-							</YesNoQuestion>
-
-							<YesNoQuestion
-								id="priorImaging_Mri"
-								text="Have you had an MRI before?"
-								onChange={(val) => this.ans('priorImaging_Mri', val)}
-								val={this.getAns('priorImaging_Mri')}
-							>
-								<TextQuestion
-									id="priorImaging_MriDetails"
-									val={this.getAns('priorImaging_MriDetails')}
-									onChange={(val) => this.ans('priorImaging_MriDetails', val)}
-									text=" When/where?"
-								/>
-							</YesNoQuestion>
-
-							<YesNoQuestion
-								id="priorImaging_BodyPartImg"
-								text="Have you had this body part imaged before?"
-								onChange={(val) => this.ans('priorImaging_BodyPartImg', val)}
-								val={this.getAns('priorImaging_BodyPartImg')}
-							>
-								<TextQuestion
-									id="priorImaging_BodyPartImgDetails"
-									val={this.getAns('priorImaging_BodyPartImgDetails')}
-									onChange={(val) => this.ans('priorImaging_BodyPartImgDetails', val)}
-									text="How/when/where"
-								/>
-							</YesNoQuestion>
-
-							<YesNoQuestion
-								id="priorSurgery_Area"
-								text="Have you had surgery on the area being scanned?"
-								onChange={(val) => this.ans('priorSurgery_Area', val)}
-								val={this.getAns('priorSurgery_Area')}
-							>
-								<TextQuestion
-									id="priorSurgery_Area_when"
-									val={this.getAns('priorSurgery_when')}
-									onChange={(val) => this.ans('priorSurgery_when', val)}
-									text="When?"
-								/>
-							</YesNoQuestion>
-
-							<TextQuestion
-								id="priorSurgery_Other"
-								val={this.getAns('priorSurgery_Other')}
-								onChange={(val) => this.ans('priorSurgery_Other', val)}
-								text="What other surgeries have you had?"
-							/>
-						</div>
-					)}
+					</div>
 
 					{(this.isValid() || this.state.overrideSafetyWarning) && <div className="cta-subitem distributed">
 						<BigButton

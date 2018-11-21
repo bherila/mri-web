@@ -3,28 +3,25 @@ import * as Api from '../api/api'
 import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
 import {navigate} from "gatsby";
-import {SlotAvailabilityTime} from "../api/api";
-import {IScan} from "./mri-type";
+import {SafetyState} from "../models/SafetyState";
 
 const take = 4;
 
 interface IState
 {
-	fname: string, times: Api.SlotAvailabilityDate[] | null, err: any, offset: number;
-	lname: string;
-	scan: IScan | null;
-	haveOrder?: boolean;
+	err: any,
+	offset: number;
 	total: number;
+	qna: SafetyState;
+	times: Api.SlotAvailabilityDate[];
 }
 
 class PickTimePage extends React.Component<{}, IState> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
-			fname: '',
-			lname: '',
-			scan: null,
-			times: null,
+			qna: SafetyState.loadState(),
+			times: [],
 			err: null,
 			offset: 0,
 			total: 0,
@@ -33,19 +30,27 @@ class PickTimePage extends React.Component<{}, IState> {
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
-			const fname = sessionStorage.getItem('fname') || '';
-			const lname = sessionStorage.getItem('lname') || '';
-			const scan: IScan = JSON.parse(sessionStorage.getItem('scan') || '{}');
-			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({fname, lname, haveOrder, scan}, () => {
-				new Api.ScheduleApi().timeSlotsGET({withContrast: scan.contrast === 'with and without contrast', locationId: ''}).then((result) => {
-					if (result.value) {
-						this.setState({times: result.value || [], total: result.value.length || 0});
-					} else {
-						this.setState({err: result.message || 'Error'});
-					}
-				}, (err) => this.setState({err}));
-			});
+			const scan = this.state.qna.scan;
+			new Api.ScheduleApi().timeSlotsGET({
+				withContrast: scan.contrast === 'with and without contrast',
+				locationId: ''
+			}).then((result) => {
+				if (result.value) {
+					this.setState({
+						times: result.value || [],
+						total: result.value.length || 0,
+						qna: SafetyState.loadState(),
+					});
+				} else {
+					this.setState({
+						err: result.message || 'Error',
+						qna: SafetyState.loadState(),
+					});
+				}
+			}, (err) => this.setState({
+				err,
+				qna: SafetyState.loadState(),
+			}));
 		}
 	}
 
@@ -74,7 +79,7 @@ class PickTimePage extends React.Component<{}, IState> {
 				<div>
 					<Ez123 num={2} />
 					<div className="breadcrumb-stack animated zoomIn">
-						<MriTypeBreadcrumb value={this.state.scan}/>
+						<MriTypeBreadcrumb value={this.state.qna.scan}/>
 					</div>
 				</div>
 				<div className="w-row">
@@ -86,8 +91,8 @@ class PickTimePage extends React.Component<{}, IState> {
 						/>
 					</div>
 					<div className="w-col w-col-9">
-						<h2>Almost done {this.state.fname}!</h2>
-						<h3>Choose an available time slot to book your {this.state.scan && this.state.scan.time} appointment.</h3>
+						<h2>Almost done {this.state.qna.fname}!</h2>
+						<h3>Choose an available time slot to book your {this.state.qna.scan && this.state.qna.scan.time} appointment.</h3>
 						{err && <p>Oops! {err.toString()}</p>}
 					</div>
 				</div>
@@ -127,7 +132,7 @@ class PickTimePage extends React.Component<{}, IState> {
 		);
 	}
 
-	private pickTime(timeSlot: SlotAvailabilityTime) {
+	private pickTime(timeSlot: Api.SlotAvailabilityTime) {
 		if (timeSlot.isAvailable) {
 			sessionStorage.setItem('timeSlot', JSON.stringify(timeSlot));
 			navigate('/addl-info');

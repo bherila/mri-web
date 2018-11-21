@@ -3,111 +3,48 @@ import IndexLayout from '../layouts'
 import ErrorDisplay from "../components/ErrorDisplay";
 import {Link, navigate} from "gatsby";
 import {Ez123} from "../components/breadcrumb";
-
-export interface IScan {
-	name: string;
-	contrast: string;
-	time: string;
-	name2: string;
-	name3: string;
-	name4: string;
-}
-
-const types: IScan[] = [
-	{name: 'Hip MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Hip MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Knee MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Knee MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Ankle MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Ankle MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Calf MRI', contrast: 'without contrast', time: '45 min', name2: 'Tib-Fib MRI', name3: 'Tibia Fibula MRI', name4: ''},
-	{name: 'Calf MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Tib-Fib MRI', name3: 'Tibia Fibula MRI', name4: ''},
-	{name: 'Foot MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Foot MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Thigh MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Thigh MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Hand MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Hand MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Wrist MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Wrist MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Forearm MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Forearm MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Elbow MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Elbow MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Humerus MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Humerus MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Shoulder MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Shoulder MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Cervical spine MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Cervical spine MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Multiple sclerosis protocol', name3: '', name4: ''},
-	{name: 'Thoracic spine MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Thoracic spine MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Multiple sclerosis protocol', name3: '', name4: ''},
-	{name: 'Lumbar spine MRI', contrast: 'without contrast', time: '45 min', name2: 'Low back pain MRI', name3: '', name4: ''},
-	{name: 'Lumbar spine MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Brain MRI', contrast: 'without contrast', time: '45 min', name2: 'Memory loss MRI', name3: 'Concussion evaluation MRI', name4: ''},
-	{name: 'Brain MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Pituitary (Brain MRI)', contrast: 'with and without contrast', time: '45 min', name2: 'Pituitary protocol MRI', name3: '', name4: ''},
-	{name: 'Brain MRA', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Neck MRA', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Neck (soft tissues) MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Soft tissue neck MRI', name3: 'Neck mass MRI', name4: ''},
-	{name: 'Chest MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Chest MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Abdomen MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Abdomen MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Liver lesion MRI', name3: 'Kidney lesion MRI', name4: 'Adrenal lesion MRI'},
-	{name: 'MRCP', contrast: 'without contrast', time: '45 min', name2: 'Biliary MRI', name3: 'MR Cholangiogram', name4: ''},
-	{name: 'Breast implant MRI', contrast: 'without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Pelvic (bony) MRI', contrast: 'without contrast', time: '45 min', name2: 'Sacrum MRI', name3: 'SI joint MRI', name4: ''},
-	{name: 'Pelvic (bony) MRI', contrast: 'with and without contrast', time: '45 min', name2: '', name3: '', name4: ''},
-	{name: 'Pelvic (prostate) MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Prostate MRI', name3: '', name4: ''},
-	{name: 'Pelvic (rectum) MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Rectal MRI', name3: '', name4: ''},
-	{name: 'Pelvic (female) MRI', contrast: 'with and without contrast', time: '45 min', name2: 'Female pelvis MRI', name3: 'Uterus MRI', name4: ''},
-	{name: 'MR Enterography', contrast: 'with and without contrast', time: '90 min', name2: 'Crohns protocol MRI', name3: '', name4: ''},
-];
-
-interface IScanTypeState {
-	name: string;
-	matches: {name, contrast, time, name2, name3}[];
-	fname: string;
-	oops: string|null;
-	haveOrder: boolean;
-}
+import {IScanTypeState, scanTypes} from "../models/Scan";
+import {SafetyState} from "../models/SafetyState";
 
 class MriType extends React.Component<{}, IScanTypeState> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: '', matches: types, fname: '', oops: null, haveOrder: true};
+		this.state = {
+			mriName: '',
+			matches: scanTypes,
+			oops: null,
+			haveOrder: true,
+			safetyState: SafetyState.loadState(),
+		};
 	}
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
-			let name = sessionStorage.getItem('name') || '';
-			name = name.split(' ')[0];
-			const haveOrder = sessionStorage.getItem('haveOrder') === 'true';
-			this.setState({haveOrder, fname: name});
+			this.setState({safetyState: SafetyState.loadState()});
 		}
 	}
 
-	public setName(setTo: string) {
-		const name = (setTo || '').toUpperCase();
-		let nf = name.replace('MRI', '');
+	public setMriName(setTo: string) {
+		const mriName = (setTo || '').toUpperCase();
+		let nf = mriName.replace('MRI', '');
 		nf = nf.replace(' OF', '');
 		nf = nf.trim();
-		const matches = types.filter((typ) =>
+		const matches = scanTypes.filter((typ) =>
 			(typ.name || '').toUpperCase().indexOf(nf) > -1 ||
 			(typ.name2 || '').toUpperCase().indexOf(nf) > -1 ||
 			(typ.name3 || '').toUpperCase().indexOf(nf) > -1
 		);
 		if (matches.length > 0) {
-			this.setState({name, matches, oops: null});
+			this.setState({mriName, matches, oops: null});
 		}
 		else {
-			this.setState({oops: name});
+			this.setState({oops: mriName});
 		}
 	}
 
-	public select(name: string) {
+	public select(iScanType: string) {
 		if (typeof sessionStorage !== 'undefined') {
-			sessionStorage.setItem('scan', name);
+			sessionStorage.setItem('scan', iScanType);
 			navigate('/pick-time');
 		}
 	}
@@ -125,14 +62,14 @@ class MriType extends React.Component<{}, IScanTypeState> {
 						<div className="w-col w-col-3" />
 						<div className="w-col w-col-6">
 							<form action="#" onSubmit={(e) => e.preventDefault()}>
-								<h3><b>Great!</b> {this.state.fname}, do you know what type of scan you need?</h3>
+								<h3><b>Great!</b> {this.state.safetyState.fname}, do you know what type of scan you need?</h3>
 								<div className="cta-subitem">
 									<input type="text"
 										   placeholder="Type scan name to search"
 										   className="text-field w-input" maxLength={256} name="name-3"
 										   data-name="Name 3" id="name-3"
-										   value={this.state.name}
-										   onChange={(e) => this.setName(e.currentTarget.value)}
+										   value={this.state.mriName}
+										   onChange={(e) => this.setMriName(e.currentTarget.value)}
 									/>
 									<div className="text-block-3"> OR </div>
 									<Link to="/no-type" className="button w-button">
@@ -148,7 +85,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 							Oops! We didn't find any matches for '{this.state.oops}'. Please enter fewer characters. If we don't have the scan type listed, click "I don't know" above, and we will work with you personally to schedule your appointment.
 						</ErrorDisplay>
 					)}
-					{(this.state.name || '').length > 0 && <table className="vspace80 w-row" style={{width: '100%', marginBottom: '80px'}} cellPadding={3} cellSpacing={3}>
+					{(this.state.mriName || '').length > 0 && <table className="vspace80 w-row" style={{width: '100%', marginBottom: '80px'}} cellPadding={3} cellSpacing={3}>
 						<thead>
 						<tr>
 							<th>Service Type</th>

@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
 import IndexLayout from '../layouts'
-import {BigButton} from "../components/BigBtn";
+import {FormBasePage} from "../helpers/FormBasePage";
 
-class FinishedPage extends React.Component<{}, {name: string, hasInsurance: boolean}> {
+class FinishedPage extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: '', hasInsurance: true};
+	}
+	public componentDidMount() {
+		super.componentDidMount();
 	}
 
 	public render() {
@@ -30,7 +31,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							<a href="/why-ideal-mri" className="cta-link w-inline-block">
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead31fb9e09c21b36b101_Why.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>Why idealMRI?</div>
@@ -38,7 +39,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							<a href="/what-to-expect" className="cta-link w-inline-block">
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f69d670128b342c0a_Expect.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>What to Expect</div>
@@ -49,7 +50,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							>
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7547b76eee0_Pricing.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>Pricing &amp;&nbsp;Insurance</div>
@@ -59,7 +60,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							<a href="/come-see-us" className="cta-link w-inline-block">
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f08470e4beefa3f54_Find%20Us.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>Find us</div>
@@ -67,7 +68,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							<a href="/meet-our-team" className="cta-link w-inline-block">
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>Meet our Team</div>
@@ -75,7 +76,7 @@ class FinishedPage extends React.Component<{}, {name: string, hasInsurance: bool
 							<a href="/for-providers" className="cta-link w-inline-block">
 								<img
 									src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7266876eedf_Providers.svg"
-									alt
+									alt=""
 									className="image"
 								/>
 								<div>Providers</div>

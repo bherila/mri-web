@@ -25,10 +25,10 @@ export const Ez123 = (props: {num: number}) => (
 	</div>
 );
 
-export const OrderBreadcrumb = ({value}) => (
+export const OrderBreadcrumb = (props: {value: boolean}) => (
     <Link to="/have-order"
        className="breadcrumb w-button" style={{display: 'none'}}>
-		{value ? 'Have Doctor\'s Order' : 'No Order'} ✓
+		{props.value ? 'Have Doctor\'s Order' : 'No Order'} ✓
 	</Link>
 );
 
@@ -54,9 +54,10 @@ export const MriTypeBreadcrumb = ({value}) => {
 	)
 };
 
-export const TimeslotBreadcrumb = (props: {value: SlotAvailabilityTime | null}) => (
-	!!props.value && <Link to="/pick-time"
-	   className="breadcrumb w-button">
-		{(props.value.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")}<br /><small>(not yet reserved)</small>
-	</Link>
+export const TimeslotBreadcrumb = (props: {slot: SlotAvailabilityTime | null}) => (
+	!!props.slot ? (
+		<Link to="/pick-time" className="breadcrumb w-button">
+			{(props.slot.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")}<br /><small>(not yet reserved)</small>
+		</Link>
+	) : <div />
 );

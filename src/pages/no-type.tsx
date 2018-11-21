@@ -3,10 +3,9 @@ import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {Ez123} from "../components/breadcrumb";
 
-class DontKnowConfirmationPage extends React.Component<{}, {name: string}> {
+class DontKnowConfirmationPage extends React.Component<{}, {}> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {name: ''};
 	}
 
 	public componentDidMount() {
