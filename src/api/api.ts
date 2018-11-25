@@ -19,7 +19,7 @@ import * as assign from "core-js/library/fn/object/assign";
 interface Dictionary<T> { [index: string]: T; }
 export interface FetchAPI { (url: string, init?: any): Promise<any>; }
 
-const BASE_PATH = "https://mrisched.azurewebsites.net".replace(/\/+$/, "");
+export const BASE_PATH = "https://mrisched.azurewebsites.net".replace(/\/+$/, "");
 
 export interface FetchArgs {
     url: string;
@@ -59,7 +59,6 @@ export interface ApiResultListSlotAvailabilityDate {
 
 export interface Appointment {
     "resourceId"?: string;
-    "startTimeRequested"?: string;
     "serviceType"?: string;
     "serviceLength"?: number;
     "firstName"?: string;
