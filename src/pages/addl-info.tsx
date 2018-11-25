@@ -56,36 +56,8 @@ class ContactInformation extends FormBasePage {
 										additional information now, to save time. It takes about 2
 										or 3 more minutes.
 									</p>
-									<div className="inputrow">
-										<label htmlFor="Height" className="flexlabel">
-											Height
-										</label>
-										<input
-											type="text"
-											className="flexinput w-input"
-											maxLength={256}
-											name="Height"
-											data-name="Height"
-											id="Height"
-											value={this.state.height}
-											onChange={(e) => this.setState({height: e.currentTarget.value}, () => this.updateStorage())}
-										/>
-									</div>
-									<div className="inputrow">
-										<label htmlFor="Weight" className="flexlabel">
-											Weight
-										</label>
-										<input
-											type="text"
-											className="flexinput w-input"
-											maxLength={256}
-											name="Weight"
-											data-name="Weight"
-											id="Weight"
-											value={this.state.weight}
-											onChange={(e) => this.setState({weight: e.currentTarget.value}, () => this.updateStorage())}
-										/>
-									</div>
+									{this.renderHeight()}
+									{this.renderWeight()}
 									<div className="inputrow">
 										<label htmlFor="DoctorName" className="flexlabel">
 											Who is your doctor?
@@ -214,6 +186,48 @@ class ContactInformation extends FormBasePage {
 				this.setState({err: res.message || ''});
 			}
 		});
+	}
+
+	private renderWeight() {
+		return false;
+		return (
+			<div className="inputrow">
+				<label htmlFor="Weight" className="flexlabel">
+					Weight
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="Weight"
+					data-name="Weight"
+					id="Weight"
+					value={this.state.weight}
+					onChange={(e) => this.setState({weight: e.currentTarget.value}, () => this.updateStorage())}
+				/>
+			</div>
+		);
+	}
+
+	private renderHeight() {
+		return false;
+		return (
+			<div className="inputrow">
+				<label htmlFor="Height" className="flexlabel">
+					Height
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="Height"
+					data-name="Height"
+					id="Height"
+					value={this.state.height}
+					onChange={(e) => this.setState({height: e.currentTarget.value}, () => this.updateStorage())}
+				/>
+			</div>
+		);
 	}
 }
 
