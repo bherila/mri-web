@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {EditFormBase} from "../forms";
+import {ScheduleApi} from "../api/api";
+import {getAuthToken} from "../helpers/authToken";
 
 export interface PatientDetailsFormProps {
 	onConfirm: () => any;
@@ -89,11 +91,43 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 				</table>
 
 				<div className="centered">
-					<button type="button">Update</button>
-					<button type="button">Print Data</button>
-					<button type="button">Nevermind</button>
+					<button type="button" onClick={(e) => this.doUpdate(e)}>Update</button>
+					<button type="button" onClick={(e) => this.doPrint(e)}>Print Data</button>
+					<button type="button" onClick={(e) => this.doCancel(e)}>Nevermind</button>
 				</div>
 			</div>
 		);
 	}
+
+	private doUpdate(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		new ScheduleApi().appointmentHandlerPUT({
+			authToken: getAuthToken(),
+			locationId: '',
+			req: this.state,
+			search: '',
+			withContrast: false,
+		}).then((releaseResp) => {
+			if (releaseResp.success) {
+				if (this.props.onConfirm instanceof Function) {
+					this.props.onConfirm();
+				}
+			} else {
+				alert(releaseResp.message || 'Error');
+			}
+		});
+	}
+
+	private doPrint(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		window.print();
+	}
+
+	private doCancel(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		if (this.props.onCancel instanceof Function) {
+			this.props.onCancel();
+		}
+	}
+
 }
