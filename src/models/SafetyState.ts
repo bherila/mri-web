@@ -70,7 +70,7 @@ export class SafetyState {
 				scan: JSON.parse(sessionStorage.getItem('scan') || '{}'),
 				haveOrder: sessionStorage.getItem('haveOrder') === 'true',
 			};
-			return Object.assign(new SafetyState(), o, jsonState);
+			return Object.assign(new SafetyState(), jsonState, o);
 		}
 		return new SafetyState();
 	}

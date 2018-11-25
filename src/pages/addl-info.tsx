@@ -7,16 +7,17 @@ import {showImageOrPlaceholder} from "../components/FileUpload";
 import {ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 import {SafetyState} from "../models/SafetyState";
+import {FormBasePage} from "../helpers/FormBasePage";
 
-class ContactInformation extends React.Component<{}, SafetyState> {
+class ContactInformation extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
-		this.state = SafetyState.loadState();
 	}
 
 	public componentDidMount() {
 		const state = SafetyState.loadState();
-		this.setState(state);
+		state.haveOrder = false;
+		this.setState(state, () => this.saveState());
 	}
 
 	public render() {
