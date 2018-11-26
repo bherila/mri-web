@@ -7,6 +7,10 @@ export abstract class FormBasePage extends React.Component<{}, SafetyState> {
 		this.state = SafetyState.loadState();
 	}
 
+	public getAns(q) {
+		return this.state.answers[q];
+	}
+
 	public componentDidMount() {
 		const state = SafetyState.loadState();
 		this.setState(state);

@@ -49,10 +49,6 @@ export class SafetyState {
 	public err: string;
 	public dob: string;
 
-	public getAns(q) {
-		return this.answers[q];
-	}
-
 	public static loadState(): SafetyState {
 		if (typeof sessionStorage !== 'undefined') {
 			const jsonState = JSON.parse(sessionStorage.getItem('wizard') || '{}');

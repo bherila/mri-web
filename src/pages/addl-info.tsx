@@ -175,7 +175,7 @@ class ContactInformation extends FormBasePage {
 				serviceLength: 45, // TODO: Update service length?
 			},
 			search: '',
-			authToken: getAuthToken(),
+			authToken: '',
 			withContrast: false,
 			locationId: ''
 		}).then((res) => {

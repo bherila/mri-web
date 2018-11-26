@@ -3,7 +3,7 @@ import * as React from 'react'
 import IndexLayout from '../layouts'
 import {BigButton} from "../components/BigBtn";
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
-import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb} from "../components/breadcrumb";
+import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import ReactModal from 'react-modal';
 import {FormBasePage} from "../helpers/FormBasePage";
 
@@ -67,7 +67,7 @@ class SafetyQuestions extends FormBasePage {
 					<YesNoQuestion
 						key={item.q}
 						id={item.id}
-						val={this.state.getAns(item.q)}
+						val={this.getAns(item.q)}
 						onChange={(val) => this.ans(item.q, val)}
 						text={item.q}
 					/>
@@ -87,10 +87,11 @@ class SafetyQuestions extends FormBasePage {
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
 					<div>
-						<Ez123 num={2} />
+						<Ez123 num={3} />
 						<div className="breadcrumb-stack">
 							<OrderBreadcrumb value={this.state.haveOrder}/>
 							<MriTypeBreadcrumb value={this.state.scan}/>
+							<TimeslotBreadcrumb slot={this.state.timeSlot} reserved={true} />
 						</div>
 					</div>
 
@@ -120,7 +121,7 @@ class SafetyQuestions extends FormBasePage {
 							id="implants"
 							text="Do you have any other implants?"
 							onChange={(val) => this.ans('implants', val)}
-							val={this.state.getAns('implants')}
+							val={this.getAns('implants')}
 						>
 							<TextQuestion
 								id="implants"
@@ -134,7 +135,7 @@ class SafetyQuestions extends FormBasePage {
 							id="eye"
 							text="Have you ever had injury to your eye with metal, or metal in your eye?"
 							onChange={(val) => this.ans('MetalInEye', val)}
-							val={this.state.getAns('MetalInEye')}
+							val={this.getAns('MetalInEye')}
 						>
 
 							{this.renderQuestionSet(qEye)}
@@ -154,7 +155,7 @@ class SafetyQuestions extends FormBasePage {
 
 					{(this.isValid() || this.state.overrideSafetyWarning) && <div className="cta-subitem distributed">
 						<BigButton
-							href="/contact-info"
+							href="/done"
 							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 							text="Continue to Schedule"
 							wide
