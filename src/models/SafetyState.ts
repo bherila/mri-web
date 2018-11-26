@@ -19,7 +19,11 @@ export class SafetyState {
 		this.insFront = '';
 		this.insBack = '';
 		this.mriOrder = '';
-		this.timeSlot = JSON.parse(sessionStorage.getItem('timeSlot') || '{}');
+		if (typeof sessionStorage !== 'undefined') {
+			this.timeSlot = JSON.parse(sessionStorage.getItem('timeSlot') || '{}');
+		} else {
+			this.timeSlot = null;
+		}
 		this.err = '';
 		this.dob = '';
 		this.carrierNumber = '';

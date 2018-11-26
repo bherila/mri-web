@@ -3,7 +3,7 @@ import {TextQuestion, YesNoQuestion} from "../components/Questions";
 import {BigButton} from "../components/BigBtn";
 import {FormBasePage} from "../helpers/FormBasePage";
 
-export class Questions2 extends FormBasePage {
+class Questions2 extends FormBasePage {
 	constructor(props, context) {
 		super(props, context);
 	}
@@ -32,11 +32,11 @@ export class Questions2 extends FormBasePage {
 					id="pain"
 					text="Do you have pain?"
 					onChange={(val) => this.ans('pain', val)}
-					val={this.state.getAns('pain')}
+					val={this.getAns('pain')}
 				>
 					<TextQuestion
 						id="painDetails"
-						val={this.state.getAns('painDetails')}
+						val={this.getAns('painDetails')}
 						onChange={(val) => this.ans('painDetails', val)}
 						text="Where?"
 					/>
@@ -46,11 +46,11 @@ export class Questions2 extends FormBasePage {
 					id="injury"
 					text="Did you have an injury?"
 					onChange={(val) => this.ans('injury', val)}
-					val={this.state.getAns('injury')}
+					val={this.getAns('injury')}
 				>
 					<TextQuestion
 						id="injuryDetails"
-						val={this.state.getAns('injuryDetails')}
+						val={this.getAns('injuryDetails')}
 						onChange={(val) => this.ans('injuryDetails', val)}
 						text="Please add details"
 					/>
@@ -60,11 +60,11 @@ export class Questions2 extends FormBasePage {
 					id="cancer"
 					text="Do you have a diagnosis of cancer?"
 					onChange={(val) => this.ans('cancer', val)}
-					val={this.state.getAns('cancer')}
+					val={this.getAns('cancer')}
 				>
 					<TextQuestion
 						id="cancerDetails"
-						val={this.state.getAns('cancerDetails')}
+						val={this.getAns('cancerDetails')}
 						onChange={(val) => this.ans('cancerDetails', val)}
 						text="What type?"
 					/>
@@ -74,11 +74,11 @@ export class Questions2 extends FormBasePage {
 					id="priorImaging_Mri"
 					text="Have you had an MRI before?"
 					onChange={(val) => this.ans('priorImaging_Mri', val)}
-					val={this.state.getAns('priorImaging_Mri')}
+					val={this.getAns('priorImaging_Mri')}
 				>
 					<TextQuestion
 						id="priorImaging_MriDetails"
-						val={this.state.getAns('priorImaging_MriDetails')}
+						val={this.getAns('priorImaging_MriDetails')}
 						onChange={(val) => this.ans('priorImaging_MriDetails', val)}
 						text=" When/where?"
 					/>
@@ -88,11 +88,11 @@ export class Questions2 extends FormBasePage {
 					id="priorImaging_BodyPartImg"
 					text="Have you had this body part imaged before?"
 					onChange={(val) => this.ans('priorImaging_BodyPartImg', val)}
-					val={this.state.getAns('priorImaging_BodyPartImg')}
+					val={this.getAns('priorImaging_BodyPartImg')}
 				>
 					<TextQuestion
 						id="priorImaging_BodyPartImgDetails"
-						val={this.state.getAns('priorImaging_BodyPartImgDetails')}
+						val={this.getAns('priorImaging_BodyPartImgDetails')}
 						onChange={(val) => this.ans('priorImaging_BodyPartImgDetails', val)}
 						text="How/when/where"
 					/>
@@ -102,11 +102,11 @@ export class Questions2 extends FormBasePage {
 					id="priorSurgery_Area"
 					text="Have you had surgery on the area being scanned?"
 					onChange={(val) => this.ans('priorSurgery_Area', val)}
-					val={this.state.getAns('priorSurgery_Area')}
+					val={this.getAns('priorSurgery_Area')}
 				>
 					<TextQuestion
 						id="priorSurgery_Area_when"
-						val={this.state.getAns('priorSurgery_when')}
+						val={this.getAns('priorSurgery_when')}
 						onChange={(val) => this.ans('priorSurgery_when', val)}
 						text="When?"
 					/>
@@ -114,7 +114,7 @@ export class Questions2 extends FormBasePage {
 
 				<TextQuestion
 					id="priorSurgery_Other"
-					val={this.state.getAns('priorSurgery_Other')}
+					val={this.getAns('priorSurgery_Other')}
 					onChange={(val) => this.ans('priorSurgery_Other', val)}
 					text="What other surgeries have you had?"
 				/>
@@ -131,3 +131,5 @@ export class Questions2 extends FormBasePage {
 		);
 	}
 }
+
+export default Questions2;
