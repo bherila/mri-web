@@ -32,14 +32,10 @@ class ContactInformation extends FormBasePage {
 						</div>
 					</div>
 					<div className="vspace80 centered w-row">
-						<div className="w-hidden-small w-hidden-tiny w-col w-col-4">
-							<img
-								src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba72c92e33cb6832a1bd949_idealMRI_lady_3.png"
-								alt=""
-							/>
+						<div className="w-hidden-small w-hidden-tiny w-col w-col-3">
+							{/*<img src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba72c92e33cb6832a1bd949_idealMRI_lady_3.png" alt=""/>*/}
 						</div>
-						<div className="w-hidden-small w-hidden-tiny w-col w-col-1" />
-						<div className="w-col w-col-7">
+						<div className="w-col w-col-6">
 							<div className="w-form">
 								<form
 									id="email-form"
@@ -124,6 +120,9 @@ class ContactInformation extends FormBasePage {
 									</div>
 								</form>
 							</div>
+						</div>
+						<div className="w-hidden-small w-hidden-tiny w-col w-col-3">
+							{/*<img src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba72c92e33cb6832a1bd949_idealMRI_lady_3.png" alt=""/>*/}
 						</div>
 					</div>
 				</section>
