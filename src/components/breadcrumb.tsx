@@ -43,13 +43,13 @@ export const MriTypeBreadcrumb = ({value}) => {
 	if (typeof value === 'string') {
 		return (
 			<Link to="/mri-type" className="breadcrumb w-button">
-				Scan type: {value}
+				Scan type: {value} &times;
 			</Link>
 		);
 	}
 	return (
 		<Link to="/mri-type" className="breadcrumb w-button">
-			Scan type: {value.name || 'e!name'} {value.contrast || 'e!contrast'}
+			Scan type: {value.name || 'e!name'} {value.contrast || 'e!contrast'} &times;
 		</Link>
 	)
 };
@@ -57,8 +57,7 @@ export const MriTypeBreadcrumb = ({value}) => {
 export const TimeslotBreadcrumb = (props: {slot: SlotAvailabilityTime | null, reserved?: boolean}) => (
 	!!props.slot ? (
 		<Link to="/pick-time" className="breadcrumb w-button">
-			{(props.slot.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")}
-			<br /><small>(not yet reserved)</small>
+			{(props.slot.slotId || 'no time selected').replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4")} &times;<br /><small>(not yet reserved)</small>
 		</Link>
 	) : <div />
 );
