@@ -82,18 +82,7 @@ class IndexPage extends FormBasePage {
 									value={this.state.phone}
 									onChange={(e) => this.setState({phone: formatPhone(e.currentTarget.value)}, () => this.saveState())}
 								/>
-								<label htmlFor="email">Date of Birth</label>
-								<input
-									type="text"
-									className="w-input centered"
-									maxLength={256}
-									name="dob"
-									data-name="Date of Birth"
-									id="dob"
-									required
-									value={this.state.dob}
-									onChange={(e) => this.setState({dob: formatDate(e.currentTarget.value)}, () => this.saveState())}
-								/>
+
 								<input
 									type="submit"
 									defaultValue="Let's begin!"

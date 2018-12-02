@@ -8,6 +8,7 @@ import {ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 import {SafetyState} from "../models/SafetyState";
 import {FormBasePage} from "../helpers/FormBasePage";
+import {formatDate} from "../helpers/phone";
 
 class ContactInformation extends FormBasePage {
 	constructor(props, context) {
@@ -25,7 +26,7 @@ class ContactInformation extends FormBasePage {
 			<IndexLayout>
 				<section id="Q1" className="vspace80 w-container">
 					<div>
-						<Ez123 num={3} />
+						<Ez123 num={3}/>
 						<div className="breadcrumb-stack">
 							<MriTypeBreadcrumb value={this.state.scan}/>
 							<TimeslotBreadcrumb slot={this.state.timeSlot}/>
@@ -52,62 +53,14 @@ class ContactInformation extends FormBasePage {
 										additional information now, to save time. It takes about 2
 										or 3 more minutes.
 									</p>
-									{this.renderHeight()}
-									{this.renderWeight()}
-									<div className="inputrow">
-										<label htmlFor="DoctorName" className="flexlabel">
-											Who is your doctor?
-										</label>
-										<input
-											type="text"
-											className="flexinput w-input"
-											maxLength={256}
-											name="DoctorName"
-											data-name="DoctorName"
-											id="DoctorName"
-											value={this.state.doctorName}
-											onChange={(e) => this.setState({doctorName: e.currentTarget.value}, () => this.updateStorage())}
-										/>
-									</div>
-									<div className="inputrow">
-										<label htmlFor="name-6" className="flexlabel">
-											Upload MRI&nbsp;order
-										</label>
-										<div className="flexinput">
-											<Dropzone
-												accept="image/*"
-												className="button green small w-button"
-												onDrop={(files) => this.onDrop('mri-order', files)}
-											>{showImageOrPlaceholder(this.state.mriOrder)}
-											</Dropzone>
-										</div>
-									</div>
-									<div className="inputrow">
-										<label htmlFor="name-6" className="flexlabel">
-											<strong>Insurance Card Front</strong>
-										</label>
-										<div className="flexinput">
-											<Dropzone
-												accept="image/*"
-												className="button green small w-button"
-												onDrop={(files) => this.onDrop('ins-front', files)}
-											>{showImageOrPlaceholder(this.state.insFront)}
-											</Dropzone>
-										</div>
-									</div>
-									<div className="inputrow">
-										<label htmlFor="name-6" className="flexlabel">
-											<strong>Insurance Card Back</strong>
-										</label>
-										<div className="flexinput">
-											<Dropzone
-												accept="image/*"
-												className="button green small w-button"
-												onDrop={(files) => this.onDrop('ins-back', files)}
-											>{showImageOrPlaceholder(this.state.insBack)}
-											</Dropzone>
-										</div>
-									</div>
+									{this.dateOfBirth()}
+									{/*{this.height()}*/}
+									{this.weight()}
+									{this.doctorName()}
+									{this.doctorContact()}
+									{this.uploadMri()}
+									{this.insFront()}
+									{this.insBack()}
 									<div className="cta-subitem distributed">
 										<button className="cta-link wider w-inline-block" type="submit">
 											<img
@@ -187,29 +140,8 @@ class ContactInformation extends FormBasePage {
 		});
 	}
 
-	private renderWeight() {
-		return false;
-		return (
-			<div className="inputrow">
-				<label htmlFor="Weight" className="flexlabel">
-					Weight
-				</label>
-				<input
-					type="text"
-					className="flexinput w-input"
-					maxLength={256}
-					name="Weight"
-					data-name="Weight"
-					id="Weight"
-					value={this.state.weight}
-					onChange={(e) => this.setState({weight: e.currentTarget.value}, () => this.updateStorage())}
-				/>
-			</div>
-		);
-	}
-
-	private renderHeight() {
-		return false;
+	private height() {
+		return false; // hidden
 		return (
 			<div className="inputrow">
 				<label htmlFor="Height" className="flexlabel">
@@ -223,7 +155,140 @@ class ContactInformation extends FormBasePage {
 					data-name="Height"
 					id="Height"
 					value={this.state.height}
-					onChange={(e) => this.setState({height: e.currentTarget.value}, () => this.updateStorage())}
+					onChange={(e) => this.setState({height: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private uploadMri() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="name-6" className="flexlabel">
+					Upload MRI&nbsp;order
+				</label>
+				<div className="flexinput">
+					<Dropzone
+						accept="image/*"
+						className="button green small w-button"
+						onDrop={(files) => this.onDrop('mri-order', files)}
+					>{showImageOrPlaceholder(this.state.mriOrder)}
+					</Dropzone>
+				</div>
+			</div>
+		);
+	}
+
+	private insFront() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="name-6" className="flexlabel">
+					<strong>Insurance Card Front</strong>
+				</label>
+				<div className="flexinput">
+					<Dropzone
+						accept="image/*"
+						className="button green small w-button"
+						onDrop={(files) => this.onDrop('ins-front', files)}
+					>{showImageOrPlaceholder(this.state.insFront)}
+					</Dropzone>
+				</div>
+			</div>
+		);
+	}
+
+	private insBack() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="name-6" className="flexlabel">
+					<strong>Insurance Card Back</strong>
+				</label>
+				<div className="flexinput">
+					<Dropzone
+						accept="image/*"
+						className="button green small w-button"
+						onDrop={(files) => this.onDrop('ins-back', files)}
+					>{showImageOrPlaceholder(this.state.insBack)}
+					</Dropzone>
+				</div>
+			</div>
+		);
+	}
+
+	private weight() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="Weight" className="flexlabel">
+					Weight
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="Weight"
+					data-name="Weight"
+					id="Weight"
+					value={this.state.weight}
+					onChange={(e) => this.setState({weight: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private doctorName() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="DoctorName" className="flexlabel">
+					Who is your doctor?
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="DoctorName"
+					data-name="DoctorName"
+					id="DoctorName"
+					value={this.state.doctorName}
+					onChange={(e) => this.setState({doctorName: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private doctorContact() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="DoctorName" className="flexlabel">
+					Doctor contact information
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="doctorContact"
+					data-name="doctorContact"
+					id="doctorContact"
+					value={this.state.doctorContact}
+					onChange={(e) => this.setState({doctorContact: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private dateOfBirth() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="email">Date of Birth</label>
+				<input
+					type="text"
+					className="w-input centered"
+					maxLength={256}
+					name="dob"
+					data-name="Date of Birth"
+					id="dob"
+					required
+					value={this.state.dob}
+					onChange={(e) => this.setState({dob: formatDate(e.currentTarget.value)}, () => this.saveState())}
 				/>
 			</div>
 		);

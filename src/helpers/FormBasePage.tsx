@@ -36,6 +36,7 @@ export abstract class FormBasePage extends React.Component<{}, SafetyState> {
 				height: this.state.height,
 				weight: this.state.weight,
 				doctorName: this.state.doctorName,
+				doctorContact: this.state.doctorContact,
 				insFront: this.state.insFront,
 				insBack: this.state.insBack,
 				mriOrder: this.state.mriOrder,

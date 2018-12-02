@@ -16,6 +16,7 @@ export class SafetyState {
 		this.height = '';
 		this.weight = '';
 		this.doctorName = '';
+		this.doctorContact = '';
 		this.insFront = '';
 		this.insBack = '';
 		this.mriOrder = '';
@@ -29,6 +30,11 @@ export class SafetyState {
 		this.carrierNumber = '';
 		this.groupNumber = '';
 		this.policyNumber = '';
+		this.address1 = '';
+		this.address2 = '';
+		this.city = '';
+		this.state = '';
+		this.zip = '';
 	}
 	public fname: string;
 	public lname: string;
@@ -43,6 +49,7 @@ export class SafetyState {
 	public height: string;
 	public weight: string;
 	public doctorName: string;
+	public doctorContact: string;
 	public insFront: string;
 	public insBack: string;
 	public mriOrder: string;
@@ -52,6 +59,11 @@ export class SafetyState {
 	public timeSlot: SlotAvailabilityTime | null;
 	public err: string;
 	public dob: string;
+	public address1: string;
+	public address2: string;
+	public city: string;
+	public state: string;
+	public zip: string;
 
 	public static loadState(): SafetyState {
 		if (typeof sessionStorage !== 'undefined') {
