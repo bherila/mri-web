@@ -56,6 +56,7 @@ class ContactInformation extends FormBasePage {
 									{this.dateOfBirth()}
 									{/*{this.height()}*/}
 									{this.weight()}
+									{this.addressBlock()}
 									{this.doctorName()}
 									{this.doctorContact()}
 									{this.uploadMri()}
@@ -253,6 +254,44 @@ class ContactInformation extends FormBasePage {
 				/>
 			</div>
 		);
+	}
+
+	private addressBlock() {
+		return (
+			<div>
+				<div className="inputrow">
+					{this.field('address1', 'Address', this.state.address1, (address1) => this.setState({address1}))}
+				</div>
+				<div className="inputrow">
+					{this.field('address2', 'Address 2', this.state.address2, (address2) => this.setState({address2}))}
+				</div>
+				<div className="inputrow">
+					{this.field('city', 'City', this.state.city, (city) => this.setState({city}))}
+					{this.field('state', 'State', this.state.state, (state) => this.setState({state}))}
+					{this.field('zip', 'Zip', this.state.zip, (zip) => this.setState({zip}))}
+				</div>
+			</div>
+		)
+	}
+
+	private field(name: string, display: string, value: string, onChange: any) {
+		return (
+			<React.Fragment>
+				<label htmlFor={name} className="flexlabel">
+					{display}
+				</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name={name}
+					data-name={name}
+					id={name}
+					value={value}
+					onChange={(e) => onChange(e.currentTarget.value)}
+				/>
+			</React.Fragment>
+		)
 	}
 
 	private doctorContact() {

@@ -27,13 +27,14 @@ class IndexPage extends FormBasePage {
 			<section id="Q1" className="vspace80 w-container">
 				<div className="vspace40 centered w-row">
 					<div>
-						<Ez123 num={1} />
+						<Ez123 num={0} />
+						<h3>Ready to schedule your MRI?</h3>
 					</div>
 				</div>
 				<div className="vspace40 centered w-row">
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
 					<div className="w-col w-col-6">
-						<h3>Ready to schedule your MRI?</h3>
+
 						<div className="w-form">
 							<form action="#" onSubmit={(e) => this.submitLead(e)}>
 								<label htmlFor="fname">First name</label>
@@ -70,6 +71,19 @@ class IndexPage extends FormBasePage {
 									value={this.state.email}
 									onChange={(e) => this.setState({email: e.currentTarget.value}, () => this.saveState())}
 								/>
+
+								<div className="inputrow">
+									<label>
+										<input
+											type="checkbox"
+											checked={this.state.optedIn}
+											value="yes"
+											onClick={(e) => this.setState({optedIn: e.currentTarget.checked})}
+										/>&nbsp;
+										It's OK to send me more information about ideal MRI. (We'll never share your information)
+									</label>
+								</div>
+
 								<label htmlFor="email">Phone</label>
 								<input
 									type="text"
@@ -85,7 +99,7 @@ class IndexPage extends FormBasePage {
 
 								<input
 									type="submit"
-									defaultValue="Let's begin!"
+									value="Let's begin!"
 									data-wait="Please wait..."
 									className={`${err ? 'disabled ' : ''}w-button`}
 									disabled={!!err}

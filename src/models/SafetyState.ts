@@ -35,6 +35,7 @@ export class SafetyState {
 		this.city = '';
 		this.state = '';
 		this.zip = '';
+		this.optedIn = true;
 	}
 	public fname: string;
 	public lname: string;
@@ -64,6 +65,7 @@ export class SafetyState {
 	public city: string;
 	public state: string;
 	public zip: string;
+	public optedIn: boolean;
 
 	public static loadState(): SafetyState {
 		if (typeof sessionStorage !== 'undefined') {
