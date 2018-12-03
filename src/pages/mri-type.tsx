@@ -62,7 +62,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 						<div className="w-col w-col-3" />
 						<div className="w-col w-col-6">
 							<form action="#" onSubmit={(e) => e.preventDefault()}>
-								<h3><b>Great!</b> {this.state.safetyState.fname}, do you know what type of scan you need?</h3>
+								<h3><b>Ok,</b> what type of scan do you need?</h3>
 								<div className="cta-subitem">
 									<input type="text"
 										   placeholder="Type scan name to search"

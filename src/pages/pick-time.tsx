@@ -107,63 +107,61 @@ class PickTimePage extends React.Component<{}, IState> {
 		const {offset, total, err, times} = this.state;
 		return (
 			<IndexLayout>
-				<section id="Q2" className="vspace80 w-container">
-					<div>
-						<Ez123 num={2}/>
-						<div className="breadcrumb-stack animated zoomIn">
-							<MriTypeBreadcrumb value={this.state.qna.scan}/>
+			<section id="Q2" className="vspace80 w-container">
+				<div>
+					<Ez123 num={2} />
+					<div className="breadcrumb-stack animated zoomIn">
+						<MriTypeBreadcrumb value={this.state.qna.scan}/>
+					</div>
+				</div>
+				<div className="w-row">
+					<div className="centered w-col w-col-3">
+						<img
+							src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
+							width={150}
+							height={150}
+						/>
+					</div>
+					<div className="w-col w-col-9">
+						<h2>Almost done {this.state.qna.fname}!</h2>
+						<h3>Choose an available time slot to book your {this.state.qna.scan && this.state.qna.scan.time} appointment.</h3>
+						<p>If you're interested in a same day appointment, please call us for same day availability at <a href="tel:+18334332567">1 833-IDEAL-MR</a>.</p>
+						{err && <p>Oops! {err.toString()}</p>}
+					</div>
+				</div>
+				<div className="w-row">
+					<div className="w-col w-col-2">
+						<div className="timeslotcolumn">
+							{offset > 0 && (
+								<a href="#"
+								   onClick={() => this.setState({offset: offset - 1})}
+								   className="buttontimeslot w-button">
+									&laquo; Earlier Dates
+								</a>
+							)}
 						</div>
 					</div>
-					<div className="w-row">
-						<div className="centered w-col w-col-3">
-							<img
-								src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-								width={150}
-								height={150}
-							/>
-						</div>
-						<div className="w-col w-col-9">
-							<h2>Almost done {this.state.qna.fname}!</h2>
-							<h3>Choose an available time slot to book
-								your {this.state.qna.scan && this.state.qna.scan.time} appointment.</h3>
-							<p>If you're interested in a same day appointment, please call us for same day availability
-								at <a href="tel:+18334332567">1 833-IDEAL-MR</a>.</p>
-							{err && <p>Oops! {err.toString()}</p>}
-						</div>
-					</div>
-					<div className="w-row">
+					{times && times.map((date, i) => (
+						(i >= offset && (i - offset) < take) && (
+							<div key={JSON.stringify(date || i)} className="w-col w-col-2">
+								{this.renderSlotAvailabilityDate(date, i < 1)}
+							</div>
+						)
+					))}
+					{offset + take < total && (
 						<div className="w-col w-col-2">
 							<div className="timeslotcolumn">
-								{offset > 0 && (
-									<a href="#"
-									   onClick={() => this.setState({offset: offset - 1})}
-									   className="buttontimeslot w-button">
-										Later Dates &gt;&gt;
-									</a>
-								)}
+								<a href="#"
+								   onClick={() => this.setState({offset: offset + 1})}
+								   className="buttontimeslot w-button">
+									Later Dates &gt;&gt;
+								</a>
 							</div>
 						</div>
-						{times && times.map((date, i) => (
-							(i >= offset && (i - offset) < take) && (
-								<div key={JSON.stringify(date || i)} className="w-col w-col-2">
-									{this.renderSlotAvailabilityDate(date, i < 1)}
-								</div>
-							)
-						))}
-						{offset + take < total && (
-							<div className="w-col w-col-2">
-								<div className="timeslotcolumn">
-									<a href="#"
-									   onClick={() => this.setState({offset: offset + 1})}
-									   className="buttontimeslot w-button">
-										Later Dates &gt;&gt;
-									</a>
-								</div>
-							</div>
-						)}
-					</div>
-				</section>
-				{this.renderModal()}
+					)}
+				</div>
+			</section>
+			{this.renderModal()}
 			</IndexLayout>
 		);
 	}
