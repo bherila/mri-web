@@ -86,7 +86,8 @@ class PickTimePage extends React.Component<{}, IState> {
 				overlayClassName="modal-wrapper"
 			>
 				<p><b>The time you selected is tomorrow.</b></p>
-				<p>We won't have enough time to verify your insurance. Are you sure you want to select this time?</p>
+				<p>We won't have time to obtain prior authorization from your insurance carrier. If you aren't using insurance, this won't be a problem.</p>
+				<p>Are you sure you want to select this time?</p>
 				<p>
 					<button type="button"
 							className="button w-button"
