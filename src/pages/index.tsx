@@ -74,7 +74,7 @@ class IndexPage extends FormBasePage {
 								/>
 
 								<div className="inputrow">
-									<label>
+									<label style={{fontWeight: 'normal', fontSize: '8pt'}}>
 										<input
 											type="checkbox"
 											checked={this.state.optedIn}
