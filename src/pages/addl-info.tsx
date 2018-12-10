@@ -4,11 +4,12 @@ import IndexLayout from '../layouts'
 import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import Dropzone from "react-dropzone";
 import {showImageOrPlaceholder} from "../components/FileUpload";
-import {ScheduleApi} from "../api/api";
+import {BASE_PATH, ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 import {SafetyState} from "../models/SafetyState";
 import {FormBasePage} from "../helpers/FormBasePage";
 import {formatDate} from "../helpers/phone";
+const $ = require('jquery');
 
 class ContactInformation extends FormBasePage {
 	constructor(props, context) {
@@ -56,6 +57,8 @@ class ContactInformation extends FormBasePage {
 									{this.dateOfBirth()}
 									{/*{this.height()}*/}
 									{this.weight()}
+									{this.firstName()}
+									{this.lastName()}
 									{this.addressBlock()}
 									{this.doctorName()}
 									{this.doctorContact()}
@@ -91,6 +94,27 @@ class ContactInformation extends FormBasePage {
 				const sObj = {};
 				sObj[insBack] = files[0].name;
 				this.setState(sObj, () => this.saveState());
+				const fd = new FormData();
+				fd.append('file', files[0]);
+				$.ajax({
+					url: `${BASE_PATH}/api/file`,
+					type: 'POST',
+					enctype: 'multipart/form-data',
+					processData: false,  // Important!
+					cacheData: false,
+					contentType: false,
+					data: fd,
+				}).then(
+					(data) => {
+						const o = {};
+						o[insBack] = JSON.parse(data)[0];
+						this.setState(o);
+						console.log('success', o);
+					},
+					(error) => {
+						console.log(error);
+					},
+				);
 			}
 		}
 	}
@@ -172,7 +196,7 @@ class ContactInformation extends FormBasePage {
 					<Dropzone
 						accept="image/*"
 						className="button green small w-button"
-						onDrop={(files) => this.onDrop('mri-order', files)}
+						onDrop={(files) => this.onDrop('mriOrder', files)}
 					>{showImageOrPlaceholder(this.state.mriOrder)}
 					</Dropzone>
 				</div>
@@ -190,7 +214,7 @@ class ContactInformation extends FormBasePage {
 					<Dropzone
 						accept="image/*"
 						className="button green small w-button"
-						onDrop={(files) => this.onDrop('ins-front', files)}
+						onDrop={(files) => this.onDrop('insFront', files)}
 					>{showImageOrPlaceholder(this.state.insFront)}
 					</Dropzone>
 				</div>
@@ -208,7 +232,7 @@ class ContactInformation extends FormBasePage {
 					<Dropzone
 						accept="image/*"
 						className="button green small w-button"
-						onDrop={(files) => this.onDrop('ins-back', files)}
+						onDrop={(files) => this.onDrop('insBack', files)}
 					>{showImageOrPlaceholder(this.state.insBack)}
 					</Dropzone>
 				</div>
@@ -258,7 +282,7 @@ class ContactInformation extends FormBasePage {
 
 	private addressBlock() {
 		return (
-			<div>
+			<React.Fragment>
 				<div className="inputrow">
 					{this.field('address1', 'Address', this.state.address1, (address1) => this.setState({address1}))}
 				</div>
@@ -270,7 +294,7 @@ class ContactInformation extends FormBasePage {
 					{this.field('state', 'State', this.state.state, (state) => this.setState({state}))}
 					{this.field('zip', 'Zip', this.state.zip, (zip) => this.setState({zip}))}
 				</div>
-			</div>
+			</React.Fragment>
 		)
 	}
 
@@ -291,7 +315,7 @@ class ContactInformation extends FormBasePage {
 					onChange={(e) => onChange(e.currentTarget.value)}
 				/>
 			</React.Fragment>
-		)
+		);
 	}
 
 	private doctorContact() {
@@ -317,10 +341,10 @@ class ContactInformation extends FormBasePage {
 	private dateOfBirth() {
 		return (
 			<div className="inputrow">
-				<label htmlFor="email">Date of Birth</label>
+				<label htmlFor="email" className="flexlabel">Date of Birth</label>
 				<input
 					type="text"
-					className="w-input centered"
+					className="flexinput w-input"
 					maxLength={256}
 					name="dob"
 					data-name="Date of Birth"
@@ -328,6 +352,42 @@ class ContactInformation extends FormBasePage {
 					required
 					value={this.state.dob}
 					onChange={(e) => this.setState({dob: formatDate(e.currentTarget.value)}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private firstName() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="fname" className="flexlabel">First name</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="fname"
+					data-name="First Name"
+					id="fname"
+					value={this.state.fname}
+					onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private lastName() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="lname" className="flexlabel">Last name</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="lname"
+					data-name="Last Name"
+					id="lname"
+					value={this.state.lname}
+					onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
 				/>
 			</div>
 		);

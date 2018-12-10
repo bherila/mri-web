@@ -34,7 +34,6 @@ class IndexPage extends FormBasePage {
 				<div className="vspace40 centered w-row">
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
 					<div className="w-col w-col-6">
-
 						<div className="w-form">
 							<form action="#" onSubmit={(e) => this.submitLead(e)}>
 								<label htmlFor="fname">First name</label>
@@ -48,6 +47,7 @@ class IndexPage extends FormBasePage {
 									value={this.state.fname}
 									onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.saveState())}
 								/>
+
 								<label htmlFor="lname">Last name</label>
 								<input
 									type="text"
@@ -59,6 +59,7 @@ class IndexPage extends FormBasePage {
 									value={this.state.lname}
 									onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
 								/>
+
 								<label htmlFor="email">Email Address</label>
 								<input
 									type="text"
