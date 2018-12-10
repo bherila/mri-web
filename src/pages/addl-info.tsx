@@ -91,9 +91,6 @@ class ContactInformation extends FormBasePage {
 		console.log(insBack, files);
 		if (files.length) {
 			if (files[0]) {
-				const sObj = {};
-				sObj[insBack] = files[0].name;
-				this.setState(sObj, () => this.saveState());
 				const fd = new FormData();
 				fd.append('file', files[0]);
 				$.ajax({
@@ -108,7 +105,7 @@ class ContactInformation extends FormBasePage {
 					(data) => {
 						const o = {};
 						o[insBack] = JSON.parse(data)[0];
-						this.setState(o);
+						this.setState(o, () => this.saveState());
 						console.log('success', o);
 					},
 					(error) => {
