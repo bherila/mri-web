@@ -4,7 +4,7 @@ import {EditFormBase} from '../../forms';
 
 import Page from '../../components/Page'
 import Container from '../../components/Container'
-import IndexLayout from '../../layouts'
+import AdminLayout from '../../layouts/admin'
 import {AuthApi} from "../../api/api";
 
 class AdminIndex extends React.Component<{}, {name: string, username: string, password: string, sessionId: string, err: string}> {
@@ -15,49 +15,49 @@ class AdminIndex extends React.Component<{}, {name: string, username: string, pa
 
 	public render() {
 		return (
-			<IndexLayout>
-				<Page>
-					<Container className="centered">
-						<h1>Restricted Access</h1>
-						{(this.state.err || '').length > 0 && <div className="breadcrumb-stack">
-							{this.state.err}
-						</div>}
-						<form action="#" onSubmit={(e) => this.doLogin(e)}>
-							<div>
-								{EditFormBase.boundTextboxValue(
-									'Username/email',
-									this.state.username,
-									username => this.setState({username}),
-									'',
-									false,
-									false,
-								)}
+			<AdminLayout>
+			<Page>
+				<Container className="centered">
+					<h1>Restricted Access</h1>
+					{(this.state.err || '').length > 0 && <div className="breadcrumb-stack">
+						{this.state.err}
+					</div>}
+					<form action="#" onSubmit={(e) => this.doLogin(e)}>
+						<div>
+							{EditFormBase.boundTextboxValue(
+								'Username/email',
+								this.state.username,
+								username => this.setState({username}),
+								'',
+								false,
+								false,
+							)}
 
-								{EditFormBase.boundTextboxValue(
-									'Password',
-									this.state.password,
-									password => this.setState({password}),
-									'',
-									false,
-									false,
-									'password'
-								)}
-							</div>
-							<p className="vspace40">
-								<button type="submit" className="button w-button">
-									Sign in
-								</button>
-							</p>
-						</form>
-						<ul>
-							<li>
-								<Link to="/admin/manage-questions">Manage Questions</Link>
-								<Link to="/admin/manage-time-slots">Manage Time Slots</Link>
-							</li>
-						</ul>
-					</Container>
-				</Page>
-			</IndexLayout>
+							{EditFormBase.boundTextboxValue(
+								'Password',
+								this.state.password,
+								password => this.setState({password}),
+								'',
+								false,
+								false,
+								'password'
+							)}
+						</div>
+						<p className="vspace40">
+							<button type="submit" className="button w-button">
+								Sign in
+							</button>
+						</p>
+					</form>
+					<ul>
+						<li>
+							<Link to="/admin/manage-questions">Manage Questions</Link>
+							<Link to="/admin/manage-time-slots">Manage Time Slots</Link>
+						</li>
+					</ul>
+				</Container>
+			</Page>
+			</AdminLayout>
 		);
 	}
 
