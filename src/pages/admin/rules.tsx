@@ -2,7 +2,7 @@ import * as React from 'react'
 import {EditFormBase} from '../../forms';
 import * as Api from '../../api/api';
 import Page from '../../components/Page'
-import IndexLayout from '../../layouts'
+import AdminLayout from '../../layouts/admin'
 import {getAuthToken} from "../../helpers/authToken";
 import {navigate} from "gatsby";
 
@@ -66,11 +66,11 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 
 	public render() {
 		return (
-			<IndexLayout>
+			<AdminLayout>
 				<Page>
 					{this.renderInner()}
 				</Page>
-			</IndexLayout>
+			</AdminLayout>
 		);
 	}
 

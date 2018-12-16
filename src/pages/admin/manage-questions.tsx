@@ -6,7 +6,7 @@ import {isEmpty} from "ucshared";
 
 import Page from '../../components/Page'
 import Container from '../../components/Container'
-import IndexLayout from '../../layouts'
+import AdminLayout from "../../layouts/admin";
 
 interface IQuestionFormProps {
 	otherQuestions: Api.SurveyQuestion[];
@@ -112,7 +112,7 @@ class ManageQuestions extends React.Component<any, {
 
 	public render() {
 		return (
-			<IndexLayout>
+			<AdminLayout>
 				<Page>
 					<Container>
 						<h1>Manage Questions</h1>
@@ -149,7 +149,7 @@ class ManageQuestions extends React.Component<any, {
 						/>
 					</Container>
 				</Page>
-			</IndexLayout>
+			</AdminLayout>
 		);
 	}
 }

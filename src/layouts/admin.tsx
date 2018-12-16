@@ -24,7 +24,7 @@ type StaticQueryProps = {
 const AdminLayout: React.SFC = ({children}) => (
 	<StaticQuery
 		query={graphql`
-      query IndexLayoutQuery {
+      query AdminLayoutQuery {
         site {
           siteMetadata {
             title

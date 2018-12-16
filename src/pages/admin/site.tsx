@@ -2,7 +2,7 @@ import * as React from 'react'
 import {EditFormBase} from '../../forms';
 import * as Api from '../../api/api';
 import Page from '../../components/Page'
-import IndexLayout from '../../layouts'
+import AdminLayout from '../../layouts/admin'
 import { withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import {PatientDetailsForm} from "../../components/patient-details";
@@ -91,11 +91,11 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 
 	public render() {
 		return (
-			<IndexLayout>
+			<AdminLayout>
 				<Page>
 					{this.renderInner()}
 				</Page>
-			</IndexLayout>
+			</AdminLayout>
 		);
 	}
 
