@@ -105,9 +105,13 @@ class SafetyQuestions extends FormBasePage {
 						</div>
 					</div>
 
-					<h2>We need to ask some safety questions before we can finish scheduling you.</h2>
+					<h3>We need to ask some safety questions before we can finish scheduling you.</h3>
 
-					<h3>Do you have...</h3>
+					<div className="inputrow" style={{paddingTop: '1em'}}>
+						<label htmlFor="DoctorName" className="flexlabel">
+							Do you have...
+						</label>
+					</div>
 
 					{this.renderQuestionSet(qs)}
 
@@ -126,20 +130,21 @@ class SafetyQuestions extends FormBasePage {
 						</p>
 					</ReactModal>
 
-					<div>
-						<YesNoQuestion
+					<YesNoQuestion
+						id="implants"
+						text="any other implants?"
+						onChange={(val) => this.ans('implants', val)}
+						val={this.getAns('implants')}
+					>
+						<TextQuestion
 							id="implants"
-							text="Do you have any other implants?"
-							onChange={(val) => this.ans('implants', val)}
-							val={this.getAns('implants')}
-						>
-							<TextQuestion
-								id="implants"
-								val={this.state.currentImplant}
-								onChange={(currentImplant) => this.setState({currentImplant})}
-								text="Tell us as much as you can about them."
-							/>
-						</YesNoQuestion>
+							val={this.state.currentImplant}
+							onChange={(currentImplant) => this.setState({currentImplant})}
+							text="Tell us as much as you can about them."
+						/>
+					</YesNoQuestion>
+
+					<div style={{paddingTop: '1em'}}>
 
 						<YesNoQuestion
 							id="eye"
@@ -177,7 +182,7 @@ class SafetyQuestions extends FormBasePage {
 					{(this.isValid() || this.state.overrideSafetyWarning) && this.isComplete(qs) ? (
 						<div className="cta-subitem distributed">
 							<BigButton
-								href="/done"
+								href="/questions-2"
 								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 								text="Continue to Schedule"
 								wide

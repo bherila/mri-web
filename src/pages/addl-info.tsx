@@ -46,14 +46,14 @@ class ContactInformation extends FormBasePage {
 									action="#"
 									onSubmit={(e) => this.handleSubmit(e)}
 								>
-									<h3>Additional Information</h3>
-									<p>
-										<strong>Thanks! You're all set. </strong>We will give you
-										a call to confirm any details. &nbsp;We'll also send you a
-										reminder before your scan. &nbsp;You can fill out this
-										additional information now, to save time. It takes about 2
-										or 3 more minutes.
-									</p>
+									<h3>Just A Little More Information To Complete Your Reservation</h3>
+									{/*<p>*/}
+										{/*<strong>Thanks! You're all set. </strong>We will give you*/}
+										{/*a call to confirm any details. &nbsp;We'll also send you a*/}
+										{/*reminder before your scan. &nbsp;You can fill out this*/}
+										{/*additional information now, to save time. It takes about 2*/}
+										{/*or 3 more minutes.*/}
+									{/*</p>*/}
 									{this.dateOfBirth()}
 									{/*{this.height()}*/}
 									{this.weight()}
@@ -196,6 +196,7 @@ class ContactInformation extends FormBasePage {
 						onDrop={(files) => this.onDrop('mriOrder', files)}
 					>{showImageOrPlaceholder(this.state.mriOrder)}
 					</Dropzone>
+					&nbsp;(optional)
 				</div>
 			</div>
 		);

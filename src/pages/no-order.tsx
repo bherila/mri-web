@@ -26,8 +26,8 @@ class HaveOrder extends FormBasePage {
 					<div className="vspace40 centered w-row animated fadeIn">
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 						<div className="w-col w-col-6">
-							<h3>That's OK.</h3>
-							<p>Insurance will not cover a scan without a doctor's order, but our scans are priced at $497. You also won't be able to recieve any contrast. Don't worry, we'll help you figure out what you need.</p>
+							<h3>We recommend getting an order from your doctor</h3>
+							<p>Insurance will not cover a scan without a doctor's order, but our scans are priced at $497. You also won't be able to recieve any contrast.</p>
 							<div className="cta-subitem distributed">
 								<BigButton
 									href="/mri-type"

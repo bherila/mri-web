@@ -28,6 +28,7 @@ class IndexPage extends FormBasePage {
 				<div className="vspace40 centered w-row">
 					<div>
 						<h3>Ready to schedule your MRI?</h3>
+						<p>It's easy, we'll walk you through it step by step.</p>
 					</div>
 				</div>
 				<div className="vspace40 centered w-row">

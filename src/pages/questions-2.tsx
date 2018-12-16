@@ -2,6 +2,7 @@ import * as React from 'react';
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
 import {BigButton} from "../components/BigBtn";
 import {FormBasePage} from "../helpers/FormBasePage";
+import IndexLayout from "../layouts";
 
 class Questions2 extends FormBasePage {
 	constructor(props, context) {
@@ -13,7 +14,7 @@ class Questions2 extends FormBasePage {
 
 	public render() {
 		return (
-			<div>
+			<IndexLayout>
 				<h3>Tell us a little more about your medical history.</h3>
 				<p>This information improves the accuracy of your results, but is optional.</p>
 
@@ -127,7 +128,7 @@ class Questions2 extends FormBasePage {
 						wide
 					/>
 				</div>
-			</div>
+			</IndexLayout>
 		);
 	}
 }
