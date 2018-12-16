@@ -184,7 +184,7 @@ class SafetyQuestions extends FormBasePage {
 							<BigButton
 								href="/questions-2"
 								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-								text="Continue to Schedule"
+								text="Continue"
 								wide
 							/>
 						</div>
