@@ -60,6 +60,16 @@ class SafetyQuestions extends FormBasePage {
 		return true;
 	}
 
+	public isComplete(qArray) {
+		for (let i = 0; i < qArray.length; ++i) {
+			const ans = this.state.answers[qArray[i].q];
+			if (typeof ans === 'undefined') {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public renderQuestionSet(qArray) {
 		return qArray.map((item) => {
 			if (typeof item.q === 'string') {
@@ -151,16 +161,38 @@ class SafetyQuestions extends FormBasePage {
 
 						{this.renderQuestionSet(qPost)}
 
+						<YesNoQuestion
+							text="Are you allergic to IV contrast or MRI contrast?"
+							val={this.getAns('AllergicToContrast')}
+							onChange={(val) => this.ans('AllergicToContrast', val)}
+							id="contrastAllergy"
+						>
+							<div className="alert">
+								If your MRI requires contract, you will need to be premedicated with steriods
+							</div>
+						</YesNoQuestion>
+
 					</div>
 
-					{(this.isValid() || this.state.overrideSafetyWarning) && <div className="cta-subitem distributed">
-						<BigButton
-							href="/done"
-							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-							text="Continue to Schedule"
-							wide
-						/>
-					</div>}
+					{(this.isValid() || this.state.overrideSafetyWarning) && this.isComplete(qs) ? (
+						<div className="cta-subitem distributed">
+							<BigButton
+								href="/done"
+								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
+								text="Continue to Schedule"
+								wide
+							/>
+						</div>
+					) : (
+						<div className="cta-subitem distributed" style={{opacity: 0.5}}>
+							<BigButton
+								href="/safety-questions"
+								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
+								text="All questions are required"
+								wide
+							/>
+						</div>
+					)}
 				</section>
 			</IndexLayout>
 		);

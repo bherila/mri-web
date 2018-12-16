@@ -14,8 +14,8 @@ export const YesNoQuestion = (props: {text: string, val: boolean | null, onChang
 			</div>
 		</div>
 		{props.val === true && typeof props.children !== 'undefined' && <div className="inputrow">
-            <span className="flexlabel">&nbsp;</span>
-            <div className="flexinput">
+            <span className="flexmargin">&nbsp;</span>
+            <div className="flexsubitem">
 			{props.children}
 			</div>
 		</div>}

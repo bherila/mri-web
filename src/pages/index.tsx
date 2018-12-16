@@ -27,7 +27,6 @@ class IndexPage extends FormBasePage {
 			<section id="Q1" className="vspace80 w-container">
 				<div className="vspace40 centered w-row">
 					<div>
-						<Ez123 num={0} />
 						<h3>Ready to schedule your MRI?</h3>
 					</div>
 				</div>
