@@ -116,14 +116,15 @@ class PickTimePage extends React.Component<{}, IState> {
 					</div>
 				</div>
 				<div className="w-row">
+					{/*<div className="centered w-col w-col-2" />*/}
 					<div className="centered w-col w-col-3">
-						<img
-							src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-							width={150}
-							height={150}
-						/>
+						{/*<img*/}
+							{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"*/}
+							{/*width={150}*/}
+							{/*height={150}*/}
+						{/*/>*/}
 					</div>
-					<div className="w-col w-col-9">
+					<div className="centered w-col w-col-6">
 						<h3>Almost done, {this.state.qna.fname}!</h3>
 						<h3>Choose an available time slot to book your {this.state.qna.scan && this.state.qna.scan.time} appointment.</h3>
 						<p>If you're interested in a same day appointment, please call us for same day availability at <a href="tel:+18334332567">1 833-IDEAL-MR</a>.</p>

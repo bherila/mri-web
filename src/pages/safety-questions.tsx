@@ -104,102 +104,112 @@ class SafetyQuestions extends FormBasePage {
 							<TimeslotBreadcrumb slot={this.state.timeSlot} reserved={true} />
 						</div>
 					</div>
-
-					<h3>We need to ask some safety questions before we can finish scheduling you.</h3>
-
-					<div className="inputrow" style={{paddingTop: '1em'}}>
-						<label htmlFor="DoctorName" className="flexlabel">
-							Do you have...
-						</label>
+					<div className="w-col w-col-3"/>
+					<div className="w-col w-col-6">
+						{this.renderInner()}
 					</div>
-
-					{this.renderQuestionSet(qs)}
-
-					<ReactModal
-						isOpen={!this.isValid() && !this.state.overrideSafetyWarning}
-								className="modal-content animated fadeInUp"
-								overlayClassName="modal-wrapper"
-					>
-						<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
-						<p>
-							<button type="button"
-									className="button w-button"
-									onClick={() => this.setState({overrideSafetyWarning: true})}>
-								Continue Anyway
-							</button>
-						</p>
-					</ReactModal>
-
-					<YesNoQuestion
-						id="implants"
-						text="any other implants?"
-						onChange={(val) => this.ans('implants', val)}
-						val={this.getAns('implants')}
-					>
-						<TextQuestion
-							id="implants"
-							val={this.state.currentImplant}
-							onChange={(currentImplant) => this.setState({currentImplant})}
-							text="Tell us as much as you can about them."
-						/>
-					</YesNoQuestion>
-
-					<div style={{paddingTop: '1em'}}>
-
-						<YesNoQuestion
-							id="eye"
-							text="Have you ever had injury to your eye with metal, or metal in your eye?"
-							onChange={(val) => this.ans('MetalInEye', val)}
-							val={this.getAns('MetalInEye')}
-						>
-
-							{this.renderQuestionSet(qEye)}
-
-							<TextQuestion
-								id="eyeDetails"
-								val={this.state.currentImplant}
-								onChange={(currentImplant) => this.setState({currentImplant})}
-								text="Additional details"
-							/>
-
-						</YesNoQuestion>
-
-						{this.renderQuestionSet(qPost)}
-
-						<YesNoQuestion
-							text="Are you allergic to IV contrast or MRI contrast?"
-							val={this.getAns('AllergicToContrast')}
-							onChange={(val) => this.ans('AllergicToContrast', val)}
-							id="contrastAllergy"
-						>
-							<div className="alert">
-								If your MRI requires contract, you will need to be premedicated with steriods
-							</div>
-						</YesNoQuestion>
-
-					</div>
-
-					{(this.isValid() || this.state.overrideSafetyWarning) && this.isComplete(qs) ? (
-						<div className="cta-subitem distributed">
-							<BigButton
-								href="/questions-2"
-								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-								text="Continue"
-								wide
-							/>
-						</div>
-					) : (
-						<div className="cta-subitem distributed" style={{opacity: 0.5}}>
-							<BigButton
-								href="/safety-questions"
-								img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
-								text="All questions are required"
-								wide
-							/>
-						</div>
-					)}
 				</section>
 			</IndexLayout>
+		);
+	}
+
+	public renderInner() {
+		return (
+			<React.Fragment>
+				<h3>We need to ask some safety questions before we can finish scheduling you.</h3>
+
+				<div className="inputrow" style={{paddingTop: '1em'}}>
+					<label htmlFor="DoctorName" className="flexlabel">
+						Do you have...
+					</label>
+				</div>
+
+				{this.renderQuestionSet(qs)}
+
+				<ReactModal
+					isOpen={!this.isValid() && !this.state.overrideSafetyWarning}
+					className="modal-content animated fadeInUp"
+					overlayClassName="modal-wrapper"
+				>
+					<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
+					<p>
+						<button type="button"
+								className="button w-button"
+								onClick={() => this.setState({overrideSafetyWarning: true})}>
+							Continue Anyway
+						</button>
+					</p>
+				</ReactModal>
+
+				<YesNoQuestion
+					id="implants"
+					text="any other implants?"
+					onChange={(val) => this.ans('implants', val)}
+					val={this.getAns('implants')}
+				>
+					<TextQuestion
+						id="implants"
+						val={this.state.currentImplant}
+						onChange={(currentImplant) => this.setState({currentImplant})}
+						text="Tell us as much as you can about them."
+					/>
+				</YesNoQuestion>
+
+				<div style={{paddingTop: '1em'}}>
+
+					<YesNoQuestion
+						id="eye"
+						text="Have you ever had injury to your eye with metal, or metal in your eye?"
+						onChange={(val) => this.ans('MetalInEye', val)}
+						val={this.getAns('MetalInEye')}
+					>
+
+						{this.renderQuestionSet(qEye)}
+
+						<TextQuestion
+							id="eyeDetails"
+							val={this.state.currentImplant}
+							onChange={(currentImplant) => this.setState({currentImplant})}
+							text="Additional details"
+						/>
+
+					</YesNoQuestion>
+
+					{this.renderQuestionSet(qPost)}
+
+					<YesNoQuestion
+						text="Are you allergic to IV contrast or MRI contrast?"
+						val={this.getAns('AllergicToContrast')}
+						onChange={(val) => this.ans('AllergicToContrast', val)}
+						id="contrastAllergy"
+					>
+						<div className="alert">
+							If your MRI requires contract, you will need to be premedicated with steriods
+						</div>
+					</YesNoQuestion>
+
+				</div>
+
+				{(this.isValid() || this.state.overrideSafetyWarning) && this.isComplete(qs) ? (
+					<div className="cta-subitem distributed">
+						<BigButton
+							href="/questions-2"
+							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
+							text="Continue"
+							wide
+						/>
+					</div>
+				) : (
+					<div className="cta-subitem distributed" style={{opacity: 0.5}}>
+						<BigButton
+							href="/safety-questions"
+							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
+							text="All questions are required"
+							wide
+						/>
+					</div>
+				)}
+			</React.Fragment>
 		);
 	}
 }

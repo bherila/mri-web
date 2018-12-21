@@ -289,8 +289,8 @@ class ContactInformation extends FormBasePage {
 				</div>
 				<div className="inputrow">
 					{this.field('city', 'City', this.state.city, (city) => this.setState({city}))}
-					{this.field('state', 'State', this.state.state, (state) => this.setState({state}))}
-					{this.field('zip', 'Zip', this.state.zip, (zip) => this.setState({zip}))}
+					&nbsp;&nbsp;{this.field('state', 'State', this.state.state, (state) => this.setState({state}))}
+					&nbsp;&nbsp;{this.field('zip', 'Zip', this.state.zip, (zip) => this.setState({zip}))}
 				</div>
 			</React.Fragment>
 		)

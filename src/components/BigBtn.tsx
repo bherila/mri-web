@@ -9,6 +9,7 @@ export const BigButton = ({href, img, wide, text}) => (
 		<img
 			src={img}
 			className="image"
+			style={{marginRight: '8px'}}
 		/>
 		<div>{text}</div>
 	</Link>

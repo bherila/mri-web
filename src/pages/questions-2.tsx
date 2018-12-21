@@ -3,6 +3,7 @@ import {TextQuestion, YesNoQuestion} from "../components/Questions";
 import {BigButton} from "../components/BigBtn";
 import {FormBasePage} from "../helpers/FormBasePage";
 import IndexLayout from "../layouts";
+import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 
 class Questions2 extends FormBasePage {
 	constructor(props, context) {
@@ -15,6 +16,27 @@ class Questions2 extends FormBasePage {
 	public render() {
 		return (
 			<IndexLayout>
+				<section id="Q2" className="vspace80 w-container">
+					<div>
+						<Ez123 num={3} />
+						<div className="breadcrumb-stack">
+							<OrderBreadcrumb value={this.state.haveOrder}/>
+							<MriTypeBreadcrumb value={this.state.scan}/>
+							<TimeslotBreadcrumb slot={this.state.timeSlot} reserved={true} />
+						</div>
+					</div>
+					<div className="w-col w-col-3"/>
+					<div className="w-col w-col-6">
+						{this.renderInner()}
+					</div>
+				</section>
+			</IndexLayout>
+		);
+	}
+
+	public renderInner() {
+		return (
+			<React.Fragment>
 				<h3>Tell us a little more about your medical history.</h3>
 				<p>This information improves the accuracy of your results, but is optional.</p>
 
@@ -128,7 +150,7 @@ class Questions2 extends FormBasePage {
 						wide
 					/>
 				</div>
-			</IndexLayout>
+			</React.Fragment>
 		);
 	}
 }
