@@ -40,30 +40,21 @@ class Questions2 extends FormBasePage {
 				<h3>Tell us a little more about your medical history.</h3>
 				<p>This information improves the accuracy of your results, but is optional.</p>
 
-				Why are you having an MRI?
+
 
 				<TextQuestion
-					id="eyeDetails"
-					val={this.state.currentImplant}
-					onChange={(currentImplant) => this.setState({currentImplant})}
-					text="Additional details"
+					id="whyMri"
+					val={this.getAns('whyMri')}
+					onChange={(whyMri) => this.ans('whyMri', whyMri)}
+					text="Why are you having an MRI?"
 				/>
-
-				Do you have pain? Where?
 
 				<YesNoQuestion
 					id="pain"
-					text="Do you have pain?"
+					text="Do you have pain in the area being scanned?"
 					onChange={(val) => this.ans('pain', val)}
 					val={this.getAns('pain')}
-				>
-					<TextQuestion
-						id="painDetails"
-						val={this.getAns('painDetails')}
-						onChange={(val) => this.ans('painDetails', val)}
-						text="Where?"
-					/>
-				</YesNoQuestion>
+				/>
 
 				<YesNoQuestion
 					id="injury"
