@@ -1,10 +1,25 @@
 import * as React from 'react';
 import {SafetyState} from "../models/SafetyState";
+import {Appointment} from "../api/api";
 
 export abstract class FormBasePage extends React.Component<{}, SafetyState> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = SafetyState.loadState();
+	}
+
+	public static setAppointment(appt: Appointment | null) {
+		if (typeof sessionStorage !== 'undefined') {
+			sessionStorage.setItem('appointmentEntity', JSON.stringify(appt || null));
+		}
+	}
+
+	public static getAppointment(): Appointment {
+		if (typeof sessionStorage !== 'undefined') {
+			const json = sessionStorage.getItem('appointmentEntity') || '{}';
+			return JSON.parse(json);
+		}
+		return {};
 	}
 
 	public getAns(q) {

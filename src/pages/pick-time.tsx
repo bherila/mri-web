@@ -5,6 +5,8 @@ import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
 import {navigate} from "gatsby";
 import {SafetyState} from "../models/SafetyState";
 import ReactModal from 'react-modal';
+import {ScheduleApi} from "../api/api";
+import {FormBasePage} from "../helpers/FormBasePage";
 
 const take = 4;
 
@@ -171,6 +173,13 @@ class PickTimePage extends React.Component<{}, IState> {
 	private pickTime(timeSlot: Api.SlotAvailabilityTime, needConfirm: boolean) {
 		if (timeSlot.isAvailable) {
 			sessionStorage.setItem('timeSlot', JSON.stringify(timeSlot));
+
+			// attempt to release the time slot
+			new ScheduleApi().appointmentHandlerDELETE({
+				authToken: '',
+				req: FormBasePage.getAppointment()
+			});
+
 			if (needConfirm) {
 				this.setState({showModal: true});
 			} else {

@@ -154,7 +154,7 @@ class ContactInformation extends FormBasePage {
 			locationId: ''
 		}).then((res) => {
 			if (res.success && !!res.value && !!res.value.length) {
-				sessionStorage.setItem('appointmentEntity', JSON.stringify(res.value[0] || null));
+				FormBasePage.setAppointment(res.value[0] || null);
 				navigate('/safety-questions');
 			} else {
 				this.setState({err: res.message || ''});
