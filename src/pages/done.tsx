@@ -11,78 +11,49 @@ class FinishedPage extends FormBasePage {
 	}
 
 	public render() {
+		// validate
+		if (!this.state.timeSlot) {
+			if (typeof location !== 'undefined') {
+				location.href = '/pick-time';
+			}
+			return false;
+		}
+		if (!this.state.scan) {
+			if (typeof location !== 'undefined') {
+				location.href = '/mri-type';
+			}
+			return false;
+		}
+
+		// compute
+		const time = (this.state.timeSlot.slotId || 'no time selected')
+			.replace(/(\d{4})-(\d{2})-(\d{2})T([^\s]{5}).*/g, "$2/$3/$1 at $4");
+
+		// render
 		return (
 			<IndexLayout>
 				<section id="Q2" className="vspace80 w-container">
 					<div className="vspace80 centered w-row" style={{marginBottom: '5em'}}>
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
-						<div className="w-col w-col-6">
-							<h2>All Done</h2>
+						<div className="w-col w-col-6" style={{paddingBottom: '5em', paddingTop: '3em'}}>
+							<h2>All Done, {this.state.fname}!</h2>
+							<p>Scheduled for:</p>
+							<p><b>{this.state.scan.name}</b></p>
+							<p><b>{time}</b></p>
 							<p>
 								We'll email you a confirmation of your appointment. And if
 								there's anything else we need, we'll get in touch.
 							</p>
+							<p>
+								On the day of your scan, wear comfortable clothes without metal of any kind.
+								If you're using insurance, don't forget your card.
+							</p>
+							<h3>
+								We can't wait to see you!
+							</h3>
 						</div>
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
 					</div>
-					{/*<aside id="FurtherResources" className="centered">*/}
-						{/*<h3>Further Resources Below</h3>*/}
-						{/*<div className="cta-subitem distributed">*/}
-							{/*<a href="/why-ideal-mri" className="cta-link w-inline-block">*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead31fb9e09c21b36b101_Why.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>Why idealMRI?</div>*/}
-							{/*</a>*/}
-							{/*<a href="/what-to-expect" className="cta-link w-inline-block">*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f69d670128b342c0a_Expect.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>What to Expect</div>*/}
-							{/*</a>*/}
-							{/*<a*/}
-								{/*href="/pricing-and-insurance"*/}
-								{/*className="cta-link w-inline-block"*/}
-							{/*>*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7547b76eee0_Pricing.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>Pricing &amp;&nbsp;Insurance</div>*/}
-							{/*</a>*/}
-						{/*</div>*/}
-						{/*<div className="cta-subitem distributed">*/}
-							{/*<a href="/come-see-us" className="cta-link w-inline-block">*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f08470e4beefa3f54_Find%20Us.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>Find us</div>*/}
-							{/*</a>*/}
-							{/*<a href="/meet-our-team" className="cta-link w-inline-block">*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>Meet our Team</div>*/}
-							{/*</a>*/}
-							{/*<a href="/for-providers" className="cta-link w-inline-block">*/}
-								{/*<img*/}
-									{/*src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7266876eedf_Providers.svg"*/}
-									{/*alt=""*/}
-									{/*className="image"*/}
-								{/*/>*/}
-								{/*<div>Providers</div>*/}
-							{/*</a>*/}
-						{/*</div>*/}
-					{/*</aside>*/}
 				</section>
 
 			</IndexLayout>
