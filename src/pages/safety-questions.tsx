@@ -1,11 +1,12 @@
 import * as React from 'react'
 
 import IndexLayout from '../layouts'
-import {BigButton} from "../components/BigBtn";
+import {BigButton, BigButtonJs} from "../components/BigBtn";
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
 import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
 import ReactModal from 'react-modal';
 import {FormBasePage} from "../helpers/FormBasePage";
+import {navigate} from 'gatsby';
 
 const qs = [
 	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false},
@@ -48,25 +49,32 @@ class SafetyQuestions extends FormBasePage {
 	}
 
 	public validate(qArray) {
-		for (let i = 0; i < qArray.length; ++i) {
+		const problems: string[] = [];
+		for (let i = 0; i < qArray.length; i = i + 1) {
 			const ans = this.state.answers[qArray[i].q];
 			if (typeof ans === 'undefined') {
 				continue;
 			}
 			if (ans !== qArray[i].r) {
-				return false;
+				problems.push(qArray[i].q);
 			}
 		}
-		return true;
+		return {
+			problems,
+			isValid: problems.length === 0,
+		};
 	}
 
 	public isComplete(qArray) {
-		for (let i = 0; i < qArray.length; ++i) {
+		for (let i = 0; i < qArray.length; i = i + 1) {
 			const ans = this.state.answers[qArray[i].q];
 			if (typeof ans === 'undefined') {
 				return false;
 			}
 		}
+		if (typeof this.getAns('MetalInEye') === 'undefined') return false;
+		if (typeof this.getAns('AllergicToContrast') === 'undefined') return false;
+		if (typeof this.getAns('implants') === 'undefined') return false;
 		return true;
 	}
 
@@ -86,10 +94,36 @@ class SafetyQuestions extends FormBasePage {
 		});
 	}
 
-	public isValid() {
-		if (!this.validate(qs)) return false;
-		if (!this.validate(qEye)) return false;
-		return true;
+	public validateAll() {
+		const v1 = this.validate(qs);
+		const v2 = this.validate(qEye);
+		const validationResult = v1.problems.concat(v2.problems);
+		this.setState({validationResult});
+		return validationResult;
+	}
+
+	public renderValidationError() {
+		const val = this.state.validationResult || [];
+		return (
+			<ReactModal isOpen={val.length > 0 && !this.state.overrideSafetyWarning}
+				className="modal-content animated fadeInUp"
+				overlayClassName="modal-wrapper">
+				<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
+				<ul>{val.map((li) => (<li>{li}</li>))}</ul>
+				<p>
+					<button type="button"
+							className="button w-button"
+							onClick={() => this.setState({overrideSafetyWarning: true}, () => this.doSubmit())}>
+						Continue Anyway
+					</button>
+					<button type="button"
+							className="button w-button"
+							onClick={() => this.setState({overrideSafetyWarning: false, validationResult: []})}>
+						Cancel
+					</button>
+				</p>
+			</ReactModal>
+		);
 	}
 
 	public render() {
@@ -107,6 +141,7 @@ class SafetyQuestions extends FormBasePage {
 					<div className="w-col w-col-3"/>
 					<div className="w-col w-col-6">
 						{this.renderInner()}
+						{this.renderValidationError()}
 					</div>
 				</section>
 			</IndexLayout>
@@ -125,21 +160,6 @@ class SafetyQuestions extends FormBasePage {
 				</div>
 
 				{this.renderQuestionSet(qs)}
-
-				<ReactModal
-					isOpen={!this.isValid() && !this.state.overrideSafetyWarning}
-					className="modal-content animated fadeInUp"
-					overlayClassName="modal-wrapper"
-				>
-					<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
-					<p>
-						<button type="button"
-								className="button w-button"
-								onClick={() => this.setState({overrideSafetyWarning: true})}>
-							Continue Anyway
-						</button>
-					</p>
-				</ReactModal>
 
 				<YesNoQuestion
 					id="implants"
@@ -190,10 +210,10 @@ class SafetyQuestions extends FormBasePage {
 
 				</div>
 
-				{(this.isValid() || this.state.overrideSafetyWarning) && this.isComplete(qs) ? (
+				{this.isComplete(qs) ? (
 					<div className="cta-subitem distributed">
-						<BigButton
-							href="/questions-2"
+						<BigButtonJs
+							onClick={() => this.doSubmit()}
 							img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 							text="Continue"
 							wide
@@ -211,6 +231,13 @@ class SafetyQuestions extends FormBasePage {
 				)}
 			</React.Fragment>
 		);
+	}
+
+	private doSubmit() {
+		const val = this.validateAll();
+		if (this.state.overrideSafetyWarning || val.length === 0) {
+			navigate('/questions-2');
+		}
 	}
 }
 

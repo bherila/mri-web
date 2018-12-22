@@ -3,14 +3,14 @@ import {IScan} from "./Scan";
 
 export class SafetyState {
 	constructor() {
-		this.fname =  '';
-		this.lname =  '';
-		this.answers =  {};
-		this.implants =  [];
-		this.currentImplant =  '';
-		this.scan =  null;
-		this.haveOrder =  false;
-		this.overrideSafetyWarning =  false;
+		this.fname = '';
+		this.lname = '';
+		this.answers = {};
+		this.implants = [];
+		this.currentImplant = '';
+		this.scan = null;
+		this.haveOrder = false;
+		this.overrideSafetyWarning = false;
 		this.email = '';
 		this.phone = '';
 		this.height = '';
@@ -36,7 +36,9 @@ export class SafetyState {
 		this.state = '';
 		this.zip = '';
 		this.optedIn = true;
+		this.validationResult = [];
 	}
+
 	public fname: string;
 	public lname: string;
 	public email: string;
@@ -66,6 +68,7 @@ export class SafetyState {
 	public state: string;
 	public zip: string;
 	public optedIn: boolean;
+	public validationResult: string[];
 
 	public static loadState(): SafetyState {
 		if (typeof sessionStorage !== 'undefined') {
