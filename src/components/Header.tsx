@@ -15,7 +15,7 @@ const Header: React.SFC<{}> = ({}) => (
 		<div className="nav-grid">
 			<div id="w-node-82dfbff5e208-14f3913a" className="header-cta-top">
 				<div className="header-inline-block">
-					<div className="cta-heading inline-block blue">Call :</div>
+					<div className="cta-heading inline-block blue">Call :&nbsp;</div>
 					<div className="cta-heading inline-block"><a href="tel:+18334332567" className="white">833-IDEAL-MR</a></div>
 				</div>
 				<a href="/schedule" className="button-3">Schedule Online</a></div>
