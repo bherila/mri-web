@@ -9,7 +9,7 @@ import {FormBasePage} from "../helpers/FormBasePage";
 import {navigate} from 'gatsby';
 
 const qs = [
-	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false},
+	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false, m: 'You have a cardiac pacemaker.'},
 	{id: 'defibrillatorImplant', q: 'implanted defibrillator (also called ICD or AICD)?', r: false},
 	{id: 'spinalStimulator', q: 'a spinal stimulator?', r: false},
 	{id: 'loopRecorder', q: 'a loop recorder?', r: false},
@@ -18,15 +18,14 @@ const qs = [
 
 const qEye = [
 	{id: 'e1', q: 'Was it completely removed?', r: true },
-	{id: 'e2', q: 'Have you had an xray of your eyes showing no metal?', r: false },
-	{id: 'e3', q: 'Have you had an MRI since the injury?', r: false },
+	{id: 'e2', q: 'Have you had an xray of your eyes showing no metal?', r: true },
+	{id: 'e3', q: 'Have you had an MRI since the injury?', r: true },
 ];
 
 const qPost = [
-	{id: 'p1', q: 'Are you claustrophobic?', r: false},
-	{id: 'p2', q: 'Are you allergic to IV contrast or MRI contrast?', r: false},
-	{id: 'p3', q: 'Do you have any kidney disease?', r: false},
-	{id: 'p4', q: 'Do you have diabetes?', r: false},
+	{id: 'p1', q: 'Are you claustrophobic?', r: false, m: 'We recommend having your doctor prescribe a medicine for anxiety. We recommend 1mg of Xanax.'},
+	{id: 'p2', q: 'Do you have any kidney disease?', r: false},
+	{id: 'p3', q: 'Do you have diabetes?', r: false},
 ];
 
 
@@ -96,8 +95,8 @@ class SafetyQuestions extends FormBasePage {
 
 	public validateAll() {
 		const v1 = this.validate(qs);
-		const v2 = this.validate(qEye);
-		const validationResult = v1.problems.concat(v2.problems);
+		// const v2 = this.validate(qEye); // Carl says not to validate the eye items
+		const validationResult = v1.problems;
 		this.setState({validationResult});
 		return validationResult;
 	}
@@ -204,7 +203,7 @@ class SafetyQuestions extends FormBasePage {
 						id="contrastAllergy"
 					>
 						<div className="alert">
-							If your MRI requires contract, you will need to be premedicated with steriods
+							If your MRI requires contrast, you will need to be premedicated with steriods.
 						</div>
 					</YesNoQuestion>
 
