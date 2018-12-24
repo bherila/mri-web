@@ -10,6 +10,7 @@ import {PatientConfirmForm} from "../../components/patient-confirm";
 import {SignOutButton} from "../../components/sign-out";
 import {getAuthToken} from "../../helpers/authToken";
 import {navigate} from "gatsby";
+import {PatientReleaseForm} from "../../components/patient-release";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -20,6 +21,7 @@ interface ISiteFormState {
 	search: string;
 	modal: 'confirm' | 'edit' | 'release' | null;
 	data: Api.SlotAvailabilityDate[];
+	selectedItem: Api.SlotAvailabilityTime;
 }
 
 const styles = (theme: any) => ({
@@ -64,29 +66,30 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		});
 	}
 
-	public doConfirm(e) {
+	public doConfirm(e, selectedItem: Api.SlotAvailabilityTime) {
 		if (e) {
 			e.preventDefault();
 		}
-		this.setState({modal: 'confirm'});
+		this.setState({selectedItem, modal: 'confirm'});
 	}
 
-	public doEdit(e) {
+	public doEdit(e, selectedItem: Api.SlotAvailabilityTime) {
 		if (e) {
 			e.preventDefault();
 		}
-		this.setState({modal: 'edit'});
+		this.setState({selectedItem, modal: 'edit'});
 	}
 
-	public doRelease(e) {
+	public doRelease(e, selectedItem: Api.SlotAvailabilityTime) {
 		if (e) {
 			e.preventDefault();
 		}
-		this.setState({modal: 'release'});
+		this.setState({selectedItem, modal: 'release'});
 	}
 
 	public closeModal() {
 		this.setState({modal: null});
+		this.componentDidMount();
 	}
 
 	public render() {
@@ -109,7 +112,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (this.state.hideAvailable && slot.isAvailable) {
 			return false;
 		}
-		if (this.state.reservedUnconfirmed && slot.isAvailable) {
+		if (this.state.reservedUnconfirmed && slot.linkedAppointment === null) {
 			return false;
 		}
 		if (this.state.confirmed && slot.isAvailable) {
@@ -165,30 +168,29 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				))}
 
 				<Modal open={this.state.modal === 'release'} onClose={() => this.closeModal()}>
-					<div className="centered white-box radiologist">
-						<h3>Release Reservation?</h3>
-						<h3>12 May 2016 8:00 am John Doe</h3>
-						<p>This will open the time slot for future booking.</p>
-						<p>Patient data will be removed from this time slot.</p>
-						<p><b>Please make sure this time slot is also open in the RIS!</b></p>
-						<div className="centered">
-							<button className="button w-button" type="button">Release</button>
-							<button className="button w-button" type="button">Nevermind</button>
-						</div>
-					</div>
-				</Modal>
-
-				<Modal open={this.state.modal === 'confirm'} onClose={() => this.closeModal()}>
-					<PatientConfirmForm
+					<PatientReleaseForm
+						selectedSlot={this.state.selectedItem}
 						onConfirm={() => this.closeModal()}
 						onCancel={() => this.closeModal()}
 						onRequestEdit={() => this.closeModal()}
 					/>
 				</Modal>
 
+				{(this.state.selectedItem || {}).linkedAppointment && (
+					<Modal open={this.state.modal === 'confirm'} onClose={() => this.closeModal()}>
+						<PatientConfirmForm
+							selectedAppointment={this.state.selectedItem.linkedAppointment || {}}
+							onConfirm={() => this.closeModal()}
+							onCancel={() => this.closeModal()}
+							onRequestEdit={() => this.closeModal()}
+						/>
+					</Modal>
+				)}
+
 				<Modal open={this.state.modal === 'edit'} onClose={() => this.closeModal()}>
 				<div className="centered white-box">
 					<PatientDetailsForm
+						selectedAppointment={this.state.selectedItem}
 						onConfirm={() => this.closeModal()}
 						onCancel={() => this.closeModal()}
 					/>
@@ -203,7 +205,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (slot.isAvailable) {
 			return (
 				<td>
-					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>
+					<button className="w-button" type="button" onClick={(e) => this.doEdit(e, slot)}>
 						Manual Schedule
 					</button>
 				</td>
@@ -212,9 +214,9 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (!!slot.linkedAppointment) {
 			return (
 				<td>
-					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e)}>Confirm</button>
-					<button className="w-button" type="button" onClick={(e) => this.doRelease(e)}>Release</button>
-					<button className="w-button" type="button" onClick={(e) => this.doEdit(e)}>View</button>
+					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e, slot)}>Confirm</button>
+					<button className="w-button" type="button" onClick={(e) => this.doRelease(e, slot)}>Release</button>
+					<button className="w-button" type="button" onClick={(e) => this.doEdit(e, slot)}>View</button>
 				</td>
 			);
 		}

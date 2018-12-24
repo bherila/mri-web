@@ -1,93 +1,73 @@
 import * as React from 'react';
 import {EditFormBase} from "../forms";
-import {ScheduleApi} from "../api/api";
+import {Appointment, ScheduleApi, SlotAvailabilityTime} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
+import copyAppointment from "../helpers/copyAppointment";
 
 export interface PatientDetailsFormProps {
+	selectedAppointment: SlotAvailabilityTime;
 	onConfirm: () => any;
 	onCancel: () => any;
 }
 
-export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, any> {
+export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {
-			first: '',
-			last: '',
-			dob: '',
-			phone: '',
-			email: '',
-			weight: '',
-			address: '',
-			city: '',
-			state: '',
-			zip: '',
-			physician: '',
-			contact: '',
-			view: '',
-			carrier: '',
-			group: '',
-			policy: '',
-		};
+		this.state = this.props.selectedAppointment.linkedAppointment || {};
+	}
+
+	public componentWillReceiveProps(nextProps: Readonly<PatientDetailsFormProps>): void {
+		const {selectedAppointment} = nextProps;
+		if (selectedAppointment !== this.props.selectedAppointment) {
+			this.setState(selectedAppointment.linkedAppointment || {});
+		}
 	}
 
 	public render() {
 		const isReadOnly = false;
 		const isDisabled = false;
-		const {
-			first,
-			last,
-			dob,
-			phone,
-			email,
-			weight,
-			address,
-			city,
-			state,
-			zip,
-			physician,
-			contact,
-			view,
-			carrier,
-			group,
-			policy,
-		} = this.state;
 		return (
 			<div>
 				<h3>View Details</h3>
 				<table>
+					<tbody>
 					<tr>
-						<td>{EditFormBase.boundTextboxValue('First', first, (first) => this.setState({first}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Last', last, (last) => this.setState({last}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('DOB', dob, (dob) => this.setState({dob}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('First', this.state.firstName || '', (firstName) => this.setState({firstName}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Last', this.state.lastName || '', (lastName) => this.setState({lastName}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('DOB', this.state.birthday || '', (birthday) => this.setState({birthday}), '', isReadOnly, isDisabled)}</td>
 					</tr>
 					<tr>
-						<td>{EditFormBase.boundTextboxValue('Phone', phone, (phone) => this.setState({phone}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Email', email, (email) => this.setState({email}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Weight', weight, (weight) => this.setState({weight}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Phone', this.state.phone || '', (phone) => this.setState({phone}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Email', this.state.email || '', (email) => this.setState({email}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Weight', this.state.weight || '', (weight) => this.setState({weight}), '', isReadOnly, isDisabled)}</td>
 					</tr>
 					<tr>
-						<td>{EditFormBase.boundTextareaValue('Address', address, (address) => this.setState({address}))}</td>
-						<td>{EditFormBase.boundTextboxValue('City', city, (city) => this.setState({city}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('State', state, (state) => this.setState({state}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Zip', zip, (zip) => this.setState({zip}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextareaValue('Address', this.state.address1 || '', (address1) => this.setState({address1}))}</td>
+						<td>{EditFormBase.boundTextboxValue('City', this.state.city || '', (city) => this.setState({city}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('State', this.state.state || '', (state) => this.setState({state}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Zip', this.state.zip || '', (zip) => this.setState({zip}), '', isReadOnly, isDisabled)}</td>
 					</tr>
+					</tbody>
 				</table>
 				<hr />
 				<table>
+					<tbody>
 					<tr>
-						<td>{EditFormBase.boundTextboxValue('Physician', physician, (physician) => this.setState({physician}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Contact', contact, (contact) => this.setState({contact}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('View', view, (view) => this.setState({view}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Physician', this.state.doctorName || '', (doctorName) => this.setState({doctorName}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Contact', this.state.doctorPhone || '', (doctorPhone) => this.setState({doctorPhone}), '', isReadOnly, isDisabled)}</td>
+						{/*<td>{EditFormBase.boundTextboxValue('View Order', view, (view) => this.setState({view}), '', isReadOnly, isDisabled)}</td>*/}
 					</tr>
+					</tbody>
 				</table>
 				<hr />
 				<table>
+					<tbody>
 					<tr>
-						<td>{EditFormBase.boundTextboxValue('Carrier', carrier, (carrier) => this.setState({carrier}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Group', group, (group) => this.setState({group}), '', isReadOnly, isDisabled)}</td>
-						<td>{EditFormBase.boundTextboxValue('Policy', policy, (policy) => this.setState({policy}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Carrier', this.state.insuranceCarrier || '', (insuranceCarrier) => this.setState({insuranceCarrier}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Group', this.state.insuranceGroupNumber || '', (insuranceGroupNumber) => this.setState({insuranceGroupNumber}), '', isReadOnly, isDisabled)}</td>
+						<td>{EditFormBase.boundTextboxValue('Policy', this.state.insurancePolicyNumber || '', (insurancePolicyNumber) => this.setState({insurancePolicyNumber}), '', isReadOnly, isDisabled)}</td>
 					</tr>
+					</tbody>
 				</table>
 
 				<div className="centered">
@@ -104,7 +84,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		new ScheduleApi().appointmentHandlerPUT({
 			authToken: getAuthToken(),
 			locationId: '',
-			req: this.state,
+			req: copyAppointment(this.state),
 			search: '',
 			withContrast: false,
 		}).then((releaseResp) => {

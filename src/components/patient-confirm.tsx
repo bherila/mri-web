@@ -4,7 +4,7 @@ import {Appointment, ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 
 export interface PatientConfirmFormProps {
-	appointment: Appointment;
+	selectedAppointment: Appointment;
 	onConfirm: () => any;
 	onRequestEdit: () => any;
 	onCancel: () => any;
@@ -14,7 +14,7 @@ export class PatientConfirmForm extends React.Component<PatientConfirmFormProps,
 
 	constructor(props, context) {
 		super(props, context);
-		this.state = props.appointment || {};
+		this.state = props.selectedAppointment || {};
 	}
 
 	public setInsurance(insuranceVerified: boolean) {
