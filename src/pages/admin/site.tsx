@@ -101,8 +101,10 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (this.state.reservedUnconfirmed && slot.linkedAppointment === null) {
 			return false;
 		}
-		if (this.state.confirmed && slot.isAvailable) {
-			return false;
+		if (this.state.confirmed) {
+			if (!slot.linkedAppointment || !slot.linkedAppointment.confirmed) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -131,7 +133,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 						<button>{EditFormBase.boundCheckboxValue('Hide Available', this.state.hideAvailable, (hideAvailable) => this.setState({hideAvailable}), false)}</button>
 						<button>{EditFormBase.boundCheckboxValue('Open', this.state.open, (open) => this.setState({open, hideUnavailable: false}), false)}</button>
 						<button>{EditFormBase.boundCheckboxValue('Reserved, Unconfirmed', this.state.reservedUnconfirmed, (reservedUnconfirmed) => this.setState({reservedUnconfirmed}), false)}</button>
-						<button>{EditFormBase.boundCheckboxValue('Confirmed', this.state.confirmed, (confirmed) => this.setState({confirmed, hideAvailable: false}), false)}</button>
+						<button>{EditFormBase.boundCheckboxValue('Confirmed', this.state.confirmed, (confirmed) => this.setConfirmed(confirmed), false)}</button>
 					</div>
 				</div>
 				{(this.state.data || []).map((date) => (
@@ -229,7 +231,15 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			<td>-</td>
 		);
 	}
+
+	private setConfirmed(confirmed: boolean) {
+		this.setState({confirmed, hideAvailable: false});
+		if (confirmed) {
+			this.setState({reservedUnconfirmed: false, open: false});
+		}
+	}
 }
+
 // We need an intermediary variable for handling the recursive nesting.
 const SitePageWrapped = SitePage;
 export default SitePageWrapped;
