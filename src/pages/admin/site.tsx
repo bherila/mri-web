@@ -3,14 +3,13 @@ import {EditFormBase} from '../../forms';
 import * as Api from '../../api/api';
 import Page from '../../components/Page'
 import AdminLayout from '../../layouts/admin'
-import { withStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
 import {PatientDetailsForm} from "../../components/patient-details";
 import {PatientConfirmForm} from "../../components/patient-confirm";
 import {SignOutButton} from "../../components/sign-out";
 import {getAuthToken} from "../../helpers/authToken";
 import {navigate} from "gatsby";
 import {PatientReleaseForm} from "../../components/patient-release";
+import ReactModal from 'react-modal';
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -21,21 +20,8 @@ interface ISiteFormState {
 	search: string;
 	modal: 'confirm' | 'edit' | 'release' | null;
 	data: Api.SlotAvailabilityDate[];
-	selectedItem: Api.SlotAvailabilityTime;
+	selectedItem: Api.SlotAvailabilityTime | null;
 }
-
-const styles = (theme: any) => ({
-	paper: {
-		position: 'absolute',
-		width: theme.spacing.unit * 50,
-		backgroundColor: theme.palette.background.paper,
-		boxShadow: theme.shadows[5],
-		padding: theme.spacing.unit * 4,
-	},
-	table: {
-		minWidth: 700,
-	},
-});
 
 class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	constructor(props, context) {
@@ -49,6 +35,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			search: '',
 			modal: null,
 			data: [],
+			selectedItem: null,
 		};
 	}
 
@@ -62,7 +49,6 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			this.setState({data: result.value || []});
 		}, (err) => {
 			console.log(err);
-			// TODO: loginRedirect()
 		});
 	}
 
@@ -125,9 +111,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		const {classes} = this.props;
 		return (
 			<div>
-				<h1>Default Location</h1>
-
-
+				<h1>Waco Location</h1>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
 						[Date picker]
@@ -153,49 +137,70 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				{(this.state.data || []).map((date) => (
 					<div key={date.friendlyBegin}>
 					<h3>{date.friendlyBegin}</h3>
-					<table className="blue">
+					<table className="blue" style={{fontSize: '12pt'}}>
 						<tbody>
-							{(date.times || []).map((slot) => this.applies(slot) && (
-								<tr key={slot.slotId}>
-									<td>{date.friendlyBegin}, {slot.time} CST</td>
-									<td>{slot.isAvailable ? 'Available' : 'Unavailable'}</td>
-									{this.renderSlotActionCell(slot)}
-								</tr>
-							))}
+							{(date.times || []).map((slot) => {
+								if (!this.applies(slot)) {
+									return false;
+								}
+								let warnState = 'n/a';
+								if (!!slot.linkedAppointment) {
+									if (!slot.linkedAppointment.surveyDataJson) {
+										warnState = '⚠️';
+									}
+									if (slot.linkedAppointment.confirmed) {
+										warnState = '✅';
+									}
+								}
+								return(
+									<tr key={slot.slotId}>
+										<td>{date.friendlyBegin}, {slot.time} CST</td>
+										<td>{warnState}</td>
+										<td>{slot.isAvailable ? 'Available' : 'Unavailable'}</td>
+										{this.renderSlotActionCell(slot)}
+									</tr>
+								)
+							})}
 						</tbody>
 					</table>
 					</div>
 				))}
 
-				<Modal open={this.state.modal === 'release'} onClose={() => this.closeModal()}>
+				<ReactModal isOpen={this.state.modal === 'release'} onRequestClose={() => this.closeModal()}
+							className="modal-content animated fadeInUp"
+							overlayClassName="modal-wrapper">
 					<PatientReleaseForm
 						selectedSlot={this.state.selectedItem}
 						onConfirm={() => this.closeModal()}
 						onCancel={() => this.closeModal()}
 						onRequestEdit={() => this.closeModal()}
 					/>
-				</Modal>
+				</ReactModal>
 
 				{(this.state.selectedItem || {}).linkedAppointment && (
-					<Modal open={this.state.modal === 'confirm'} onClose={() => this.closeModal()}>
+					<ReactModal isOpen={this.state.modal === 'confirm'} onRequestClose={() => this.closeModal()}
+								className="modal-content animated fadeInUp"
+								overlayClassName="modal-wrapper">
 						<PatientConfirmForm
 							selectedAppointment={this.state.selectedItem.linkedAppointment || {}}
 							onConfirm={() => this.closeModal()}
 							onCancel={() => this.closeModal()}
-							onRequestEdit={() => this.closeModal()}
+							onRequestEdit={() => this.setState({modal: 'edit'})}
 						/>
-					</Modal>
+					</ReactModal>
 				)}
 
-				<Modal open={this.state.modal === 'edit'} onClose={() => this.closeModal()}>
-				<div className="centered white-box">
-					<PatientDetailsForm
-						selectedAppointment={this.state.selectedItem}
-						onConfirm={() => this.closeModal()}
-						onCancel={() => this.closeModal()}
-					/>
-				</div>
-				</Modal>
+				<ReactModal isOpen={this.state.modal === 'edit'} onRequestClose={() => this.closeModal()}
+							className="modal-content-full animated fadeInUp"
+							overlayClassName="modal-wrapper">
+					<div className="centered white-box">
+						<PatientDetailsForm
+							selectedAppointment={this.state.selectedItem}
+							onConfirm={() => this.closeModal()}
+							onCancel={() => this.closeModal()}
+						/>
+					</div>
+				</ReactModal>
 
 			</div>
 		);
@@ -205,7 +210,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (slot.isAvailable) {
 			return (
 				<td>
-					<button className="w-button" type="button" onClick={(e) => this.doEdit(e, slot)}>
+					<button className="button sm w-button" type="button" onClick={(e) => alert('not done yet')}>
 						Manual Schedule
 					</button>
 				</td>
@@ -214,9 +219,9 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (!!slot.linkedAppointment) {
 			return (
 				<td>
-					<button className="w-button" type="button" onClick={(e) => this.doConfirm(e, slot)}>Confirm</button>
-					<button className="w-button" type="button" onClick={(e) => this.doRelease(e, slot)}>Release</button>
-					<button className="w-button" type="button" onClick={(e) => this.doEdit(e, slot)}>View</button>
+					<button className="button sm w-button" type="button" onClick={(e) => this.doConfirm(e, slot)}>Confirm</button>
+					<button className="button sm w-button" type="button" onClick={(e) => this.doRelease(e, slot)}>Release</button>
+					<button className="button sm w-button" type="button" onClick={(e) => this.doEdit(e, slot)}>View</button>
 				</td>
 			);
 		}
@@ -226,5 +231,5 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	}
 }
 // We need an intermediary variable for handling the recursive nesting.
-const SitePageWrapped = withStyles(styles)(SitePage);
+const SitePageWrapped = SitePage;
 export default SitePageWrapped;

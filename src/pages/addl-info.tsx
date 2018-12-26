@@ -5,7 +5,6 @@ import {Ez123, MriTypeBreadcrumb, TimeslotBreadcrumb} from "../components/breadc
 import Dropzone from "react-dropzone";
 import {showImageOrPlaceholder} from "../components/FileUpload";
 import {BASE_PATH, ScheduleApi} from "../api/api";
-import {getAuthToken} from "../helpers/authToken";
 import {SafetyState} from "../models/SafetyState";
 import {FormBasePage} from "../helpers/FormBasePage";
 import {formatDate} from "../helpers/phone";
@@ -196,8 +195,8 @@ class ContactInformation extends FormBasePage {
 						onDrop={(files) => this.onDrop('mriOrder', files)}
 					>{showImageOrPlaceholder(this.state.mriOrder)}
 					</Dropzone>
-					&nbsp;(optional)
 				</div>
+				<div className="flexlabel">(optional)</div>
 			</div>
 		);
 	}
@@ -216,6 +215,7 @@ class ContactInformation extends FormBasePage {
 					>{showImageOrPlaceholder(this.state.insFront)}
 					</Dropzone>
 				</div>
+				<div className="flexlabel">(optional)</div>
 			</div>
 		);
 	}
@@ -234,6 +234,7 @@ class ContactInformation extends FormBasePage {
 					>{showImageOrPlaceholder(this.state.insBack)}
 					</Dropzone>
 				</div>
+				<div className="flexlabel">(optional)</div>
 			</div>
 		);
 	}
@@ -322,8 +323,7 @@ class ContactInformation extends FormBasePage {
 				<label htmlFor="DoctorName" className="flexlabel">
 					Doctor contact information
 				</label>
-				<input
-					type="text"
+				<textarea
 					className="flexinput w-input"
 					maxLength={256}
 					name="doctorContact"
@@ -366,6 +366,7 @@ class ContactInformation extends FormBasePage {
 					name="fname"
 					data-name="First Name"
 					id="fname"
+					required
 					value={this.state.fname}
 					onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.saveState())}
 				/>
@@ -384,6 +385,7 @@ class ContactInformation extends FormBasePage {
 					name="lname"
 					data-name="Last Name"
 					id="lname"
+					required
 					value={this.state.lname}
 					onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
 				/>

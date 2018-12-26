@@ -8,7 +8,7 @@ export function showImageOrPlaceholder(img: string | null) {
 		return <div>Click here to select picture/PDF</div>;
 	}
 	return (
-		<img alt="Uploaded image" src={`https://mrisched9e42.blob.core.windows.net/uploads/${img}`} className="img-fluid" style={{maxHeight: '100px', maxWidth: '100%'}}/>
+		<img alt="Uploaded image" src={`https://mrischedba06.blob.core.windows.net/uploads/${img}`} className="img-fluid" style={{maxHeight: '100px', maxWidth: '100%'}}/>
 	);
 }
 

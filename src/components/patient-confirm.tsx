@@ -2,6 +2,7 @@ import * as React from 'react';
 import {EditFormBase} from "../forms";
 import {Appointment, ScheduleApi} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
+import copyAppointment from "../helpers/copyAppointment";
 
 export interface PatientConfirmFormProps {
 	selectedAppointment: Appointment;
@@ -19,18 +20,30 @@ export class PatientConfirmForm extends React.Component<PatientConfirmFormProps,
 
 	public setInsurance(insuranceVerified: boolean) {
 		this.setState({insuranceVerified});
+		if (!insuranceVerified) {
+			this.setState({confirmed: false});
+		}
 	}
 
 	public setPriorAuth(priorAuthObtained: boolean) {
 		this.setState({priorAuthObtained});
+		if (!priorAuthObtained) {
+			this.setState({confirmed: false});
+		}
 	}
 
 	public setRIS(orderEnteredToRIS: boolean) {
 		this.setState({orderEnteredToRIS});
+		if (!orderEnteredToRIS) {
+			this.setState({confirmed: false});
+		}
 	}
 
 	public setCalled(patientWasCalled: boolean) {
 		this.setState({patientWasCalled});
+		if (!patientWasCalled) {
+			this.setState({confirmed: false});
+		}
 	}
 
 	public setConfirm(confirmed: boolean) {
@@ -40,8 +53,10 @@ export class PatientConfirmForm extends React.Component<PatientConfirmFormProps,
 	public doUpdate() {
 		new ScheduleApi().appointmentHandlerPUT({
 			authToken: getAuthToken(),
-			req: this.state,
+			req: copyAppointment(this.state),
 		}).then((updateResp) => {
+
+			// finish
 			if (updateResp.success) {
 				if (this.props.onConfirm instanceof Function) {
 					this.props.onConfirm();
@@ -55,10 +70,10 @@ export class PatientConfirmForm extends React.Component<PatientConfirmFormProps,
 	public render() {
 		const appt = this.state || {};
 		return (
-			<div className="centered white-box radiologist">
+			<div className="centered">
 				<h3>Confirm Reservation</h3>
-				<p>John Doe</p>
-				<p>Brain MRI <b>without</b> contrast</p>
+				<h3>{this.props.selectedAppointment.rowKey}</h3>
+				<h3>{appt.firstName} {appt.lastName}</h3>
 				{EditFormBase.boundCheckboxValue(
 					'Insurance verified, if applicable',
 					appt.insuranceVerified || false,
@@ -85,11 +100,51 @@ export class PatientConfirmForm extends React.Component<PatientConfirmFormProps,
 					(v) => this.setConfirm(v)
 				)}
 				<div className="centered">
-					<button className="button w-button" type="button">Confirm</button>
-					<button className="button w-button" type="button">View/Edit Details</button>
-					<button className="button w-button" type="button">Nevermind</button>
+					<button className="button w-button" type="button" onClick={(e) => this.confirm(e)}>
+						{this.isValid() ? 'Confirm' : 'Save'}
+					</button>
+					<button className="button w-button" type="button" onClick={(e) => this.viewEdit(e)}>View/Edit Details</button>
+					<button className="button w-button" type="button" onClick={(e) => this.cancel(e)}>Nevermind</button>
 				</div>
 			</div>
 		);
+	}
+
+	private isValid() {
+		if (!this.state.insuranceVerified) {
+			return false;
+		}
+		if (!this.state.priorAuthObtained) {
+			return false;
+		}
+		if (!this.state.orderEnteredToRIS) {
+			return false;
+		}
+		if (!this.state.patientWasCalled) {
+			return false;
+		}
+		if (!this.state.confirmed) {
+			return false;
+		}
+		return true;
+	}
+
+	private confirm(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		this.doUpdate();
+	}
+
+	private cancel(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		if (this.props.onCancel instanceof Function) {
+			this.props.onCancel();
+		}
+	}
+
+	private viewEdit(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+		if (this.props.onRequestEdit instanceof Function) {
+			this.props.onRequestEdit();
+		}
 	}
 }

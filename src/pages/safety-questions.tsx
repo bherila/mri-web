@@ -7,6 +7,8 @@ import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb, TimeslotBreadcrumb} from "../
 import ReactModal from 'react-modal';
 import {FormBasePage} from "../helpers/FormBasePage";
 import {navigate} from 'gatsby';
+import {ScheduleApi} from "../api/api";
+import copyAppointment from "../helpers/copyAppointment";
 
 const qs = [
 	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false, m: 'You have a cardiac pacemaker.'},
@@ -235,7 +237,15 @@ class SafetyQuestions extends FormBasePage {
 	private doSubmit() {
 		const val = this.validateAll();
 		if (this.state.overrideSafetyWarning || val.length === 0) {
-			navigate('/questions-2');
+			if (this.isComplete(qs)) {
+				new ScheduleApi().appointmentHandlerPUT({
+					req: Object.assign(copyAppointment(this.state), {
+						surveyDataJson: JSON.stringify(this.state.answers)
+					}),
+				}).then(() => {
+					navigate('/questions-2');
+				}, (err) => alert(err));
+			}
 		}
 	}
 }

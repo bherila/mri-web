@@ -36,23 +36,26 @@ export class PatientReleaseForm extends React.Component<PatientReleaseFormProps,
 	public render() {
 		const appt = this.props.selectedSlot.linkedAppointment || {};
 		return appt && (
-			<div className="centered white-box radiologist">
+			<div className="centered">
 				<h3>Release Reservation?</h3>
 				<h3>{this.props.selectedSlot.slotId}</h3>
 				<h3>{appt.firstName} {appt.lastName}</h3>
 				<p>This will open the time slot for future booking.</p>
 				<p>Patient data will be removed from this time slot.</p>
-				<p><b>
-					<input
+				<p>
+					<label style={{fontWeight: 'bold'}}>
+						<input
 						type="checkbox"
 						onChange={(e) => this.setState({isConfirmed: e.currentTarget.checked})}
 					/>
-					Please make sure this time slot is also open in the RIS!</b></p>
+					Please make sure this time slot is also open in the RIS!
+					</label>
+				</p>
 				<div className="centered">
 					{(
 						<button
 							disabled={!this.state.isConfirmed}
-							className={'button w-button ' + (!this.state.isConfirmed && 'disabled')}
+							className={(!this.state.isConfirmed ? 'disabled' : 'button') + ' w-button'}
 							type="button"
 							onClick={() => this.doRelease()}>Release</button>
 					)}

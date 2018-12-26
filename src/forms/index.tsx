@@ -79,7 +79,7 @@ export class EditFormBase<TProps, TState> extends React.Component<TProps, TState
 		);
 	}
 
-	public static boundTextboxValue(title: string|null, defaultValue: string | number | Date, bindValFn: (value: string) => any, placeHolder?: string, readOnly?: boolean, isDisabled?: boolean, inputType?: string) {
+	public static boundTextboxValue(title: string|null, defaultValue: string | number | Date, bindValFn: (value: string) => any, placeHolder?: string, readOnly?: boolean, isDisabled?: boolean, inputType?: string, className?: string) {
 		const wrn = EditFormBase.renderWarnings(defaultValue);
 		if (isEmpty(title)) {
 			return (
@@ -87,7 +87,7 @@ export class EditFormBase<TProps, TState> extends React.Component<TProps, TState
 					<input
 						disabled={isDisabled}
 						maxLength={255}
-						className="form-control"
+						className={"form-control " + className || ''}
 						type={inputType || 'text'}
 						onChange={(e) => bindValFn(e.currentTarget.value)}
 						value={defaultValue ? defaultValue.toString() : ''}

@@ -79,7 +79,7 @@ class IndexPage extends FormBasePage {
 											type="checkbox"
 											checked={this.state.optedIn}
 											value="yes"
-											onClick={(e) => this.setState({optedIn: e.currentTarget.checked})}
+											onChange={(e) => this.setState({optedIn: e.currentTarget.checked})}
 										/>&nbsp;
 										It's OK to send me more information about ideal MRI. (We'll never share your information)
 									</label>

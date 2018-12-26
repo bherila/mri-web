@@ -35,7 +35,7 @@ class FinishedPage extends FormBasePage {
 				<section id="Q2" className="vspace80 w-container">
 					<div className="vspace80 centered w-row" style={{marginBottom: '5em'}}>
 						<div className="w-hidden-small w-hidden-tiny w-col w-col-3" />
-						<div className="w-col w-col-6" style={{paddingBottom: '5em', paddingTop: '3em'}}>
+						<div className="w-col w-col-6" style={{paddingBottom: '3em', paddingTop: '3em'}}>
 							<h2>All Done, {this.state.fname}!</h2>
 							<p>Scheduled for:</p>
 							<p><b>{this.state.scan.name}</b></p>
