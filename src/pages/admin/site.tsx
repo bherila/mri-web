@@ -166,7 +166,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					</div>
 				))}
 
-				<ReactModal isOpen={this.state.modal === 'release'} onRequestClose={() => this.closeModal()}
+				{this.state.selectedItem && <ReactModal isOpen={this.state.modal === 'release'} onRequestClose={() => this.closeModal()}
 							className="modal-content animated fadeInUp"
 							overlayClassName="modal-wrapper">
 					<PatientReleaseForm
@@ -175,7 +175,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 						onCancel={() => this.closeModal()}
 						onRequestEdit={() => this.closeModal()}
 					/>
-				</ReactModal>
+				</ReactModal>}
 
 				{(this.state.selectedItem || {}).linkedAppointment && (
 					<ReactModal isOpen={this.state.modal === 'confirm'} onRequestClose={() => this.closeModal()}
@@ -190,7 +190,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					</ReactModal>
 				)}
 
-				<ReactModal isOpen={this.state.modal === 'edit'} onRequestClose={() => this.closeModal()}
+				{this.state.selectedItem && <ReactModal isOpen={this.state.modal === 'edit'} onRequestClose={() => this.closeModal()}
 							className="modal-content-full animated fadeInUp"
 							overlayClassName="modal-wrapper">
 					<div className="centered white-box">
@@ -200,7 +200,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 							onCancel={() => this.closeModal()}
 						/>
 					</div>
-				</ReactModal>
+				</ReactModal>}
 
 			</div>
 		);
