@@ -145,13 +145,16 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 								if (!this.applies(slot)) {
 									return false;
 								}
-								let warnState = 'n/a';
+								let warnState = '';
 								if (!!slot.linkedAppointment) {
 									if (!slot.linkedAppointment.surveyDataJson) {
 										warnState = '⚠️';
 									}
 									if (slot.linkedAppointment.confirmed) {
 										warnState = '✅';
+									}
+									if (false) {
+										warnState = '🛑';
 									}
 								}
 								return(

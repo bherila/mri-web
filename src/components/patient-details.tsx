@@ -46,7 +46,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		return (
 			<React.Fragment>
 				<div style={{color: isComplete ? 'black' : 'red'}}>
-					Is completed: {isComplete ? 'yes' : 'no'}
+					Safety form completed: {isComplete ? 'yes' : 'no'}
 				</div>
 				<div className="qa-container" style={{opacity: isComplete ? 1 : 0.5}}>
 					{keys.map((key) => (
@@ -115,17 +115,24 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 						View Order
 					</button>
 				</div>
+				<div className="inputrow">
+					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.orderImageUrl}`} />
+				</div>
 				<hr />
 				<div className="inputrow">
 					{this.field('insuranceCarrier', 'insuranceCarrier', this.state.insuranceCarrier, (insuranceCarrier) => this.setState({insuranceCarrier}))}
 					{this.field('insuranceGroupNumber', 'insuranceGroupNumber', this.state.insuranceGroupNumber, (insuranceGroupNumber) => this.setState({insuranceGroupNumber}))}
 					{this.field('insurancePolicyNumber', 'insurancePolicyNumber', this.state.insurancePolicyNumber, (insurancePolicyNumber) => this.setState({insurancePolicyNumber}))}
-					<button className="w-button">
+					<a className="w-button" href={''}>
 						View Card Front
-					</button>
+					</a>
 					<button className="w-button">
 						View Card Back
 					</button>
+				</div>
+				<div className="inputrow">
+					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceFrontUrl}`} />
+					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceBackUrl}`} />
 				</div>
 				<hr />
 				{this.renderSafetyAnswers()}
