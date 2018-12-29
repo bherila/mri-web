@@ -1120,7 +1120,7 @@ export const ScheduleApiFetchParamCreator = {
      * @param length
      * @param locationId
      */
-    timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; }, options?: any): FetchArgs {
+    timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; "skip"?: number; }, options?: any): FetchArgs {
         const baseUrl = `/api/timeslots`;
         let urlObj = url.parse(baseUrl, true);
         urlObj.query = assign({}, urlObj.query, {
@@ -1128,6 +1128,7 @@ export const ScheduleApiFetchParamCreator = {
             "withContrast": params["withContrast"],
             "length": params["length"],
             "locationId": params["locationId"],
+            "skip": params["skip"],
         });
         let fetchOptions: RequestInit = assign({}, { method: "GET" }, options);
 
@@ -1237,7 +1238,7 @@ export const ScheduleApiFp = {
      * @param length
      * @param locationId
      */
-    timeSlotsGET(params: { "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string;  }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListSlotAvailabilityDate> {
+    timeSlotsGET(params: { "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; "skip"?: number; }, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiResultListSlotAvailabilityDate> {
         const fetchArgs = ScheduleApiFetchParamCreator.timeSlotsGET(params, options);
         return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
             return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -1310,7 +1311,7 @@ export class ScheduleApi extends BaseAPI {
      * @param length
      * @param locationId
      */
-    timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; }, options?: any) {
+    timeSlotsGET(params: {  "authToken"?: string; "withContrast"?: boolean; "length"?: number; "locationId"?: string; "skip"?: number; }, options?: any) {
         return ScheduleApiFp.timeSlotsGET(params, options)(this.fetch, this.basePath);
     }
 };
