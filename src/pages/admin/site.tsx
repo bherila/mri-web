@@ -10,6 +10,7 @@ import {getAuthToken} from "../../helpers/authToken";
 import {navigate} from "gatsby";
 import {PatientReleaseForm} from "../../components/patient-release";
 import ReactModal from 'react-modal';
+import {isEmpty} from 'ucshared';
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -110,7 +111,6 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 	}
 
 	public renderInner() {
-		const {classes} = this.props;
 		return (
 			<div>
 				<h1>Waco Location</h1>
@@ -153,7 +153,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 									if (slot.linkedAppointment.confirmed) {
 										warnState = '✅';
 									}
-									if (false) {
+									if (!isEmpty(slot.linkedAppointment.safetyWarnings)) {
 										warnState = '🛑';
 									}
 								}
@@ -170,43 +170,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					</table>
 					</div>
 				))}
-
-				{this.state.selectedItem && <ReactModal isOpen={this.state.modal === 'release'} onRequestClose={() => this.closeModal()}
-							className="modal-content animated fadeInUp"
-							overlayClassName="modal-wrapper">
-					<PatientReleaseForm
-						selectedSlot={this.state.selectedItem}
-						onConfirm={() => this.closeModal()}
-						onCancel={() => this.closeModal()}
-						onRequestEdit={() => this.closeModal()}
-					/>
-				</ReactModal>}
-
-				{(this.state.selectedItem || {}).linkedAppointment && (
-					<ReactModal isOpen={this.state.modal === 'confirm'} onRequestClose={() => this.closeModal()}
-								className="modal-content animated fadeInUp"
-								overlayClassName="modal-wrapper">
-						<PatientConfirmForm
-							selectedAppointment={this.state.selectedItem.linkedAppointment || {}}
-							onConfirm={() => this.closeModal()}
-							onCancel={() => this.closeModal()}
-							onRequestEdit={() => this.setState({modal: 'edit'})}
-						/>
-					</ReactModal>
-				)}
-
-				{this.state.selectedItem && <ReactModal isOpen={this.state.modal === 'edit'} onRequestClose={() => this.closeModal()}
-							className="modal-content-full animated fadeInUp"
-							overlayClassName="modal-wrapper">
-					<div className="centered white-box">
-						<PatientDetailsForm
-							selectedAppointment={this.state.selectedItem}
-							onConfirm={() => this.closeModal()}
-							onCancel={() => this.closeModal()}
-						/>
-					</div>
-				</ReactModal>}
-
+				{this.renderModals()}
 			</div>
 		);
 	}
@@ -231,7 +195,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			);
 		}
 		return (
-			<td>-</td>
+			<td>&nbsp;</td>
 		);
 	}
 
@@ -240,6 +204,51 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (confirmed) {
 			this.setState({reservedUnconfirmed: false, open: false});
 		}
+	}
+
+	private renderModals() {
+		if (!this.state.selectedItem) {
+			return false;
+		}
+		return (
+			<React.Fragment>
+				<ReactModal isOpen={this.state.modal === 'release'} onRequestClose={() => this.closeModal()}
+							className="modal-content animated fadeInUp"
+							overlayClassName="modal-wrapper">
+					<PatientReleaseForm
+						selectedSlot={this.state.selectedItem}
+						onConfirm={() => this.closeModal()}
+						onCancel={() => this.closeModal()}
+						onRequestEdit={() => this.closeModal()}
+					/>
+				</ReactModal>
+
+				{this.state.selectedItem.linkedAppointment && (
+					<ReactModal isOpen={this.state.modal === 'confirm'} onRequestClose={() => this.closeModal()}
+								className="modal-content animated fadeInUp"
+								overlayClassName="modal-wrapper">
+						<PatientConfirmForm
+							selectedAppointment={this.state.selectedItem.linkedAppointment}
+							onConfirm={() => this.closeModal()}
+							onCancel={() => this.closeModal()}
+							onRequestEdit={() => this.setState({modal: 'edit'})}
+						/>
+					</ReactModal>
+				)}
+
+				<ReactModal isOpen={this.state.modal === 'edit'} onRequestClose={() => this.closeModal()}
+							className="modal-content-full animated fadeInUp"
+							overlayClassName="modal-wrapper">
+					<div className="centered white-box">
+						<PatientDetailsForm
+							selectedAppointment={this.state.selectedItem}
+							onConfirm={() => this.closeModal()}
+							onCancel={() => this.closeModal()}
+						/>
+					</div>
+				</ReactModal>
+			</React.Fragment>
+		);
 	}
 }
 

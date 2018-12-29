@@ -25,6 +25,14 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 	}
 
 	public renderSafetyAnswers() {
+		if (!this.props.selectedAppointment) {
+			console.log('!this.props.selectedAppointment');
+			return false;
+		}
+		if (!this.props.selectedAppointment.linkedAppointment) {
+			console.log('!this.props.selectedAppointment.linkedAppointment');
+			return false;
+		}
 		const json = this.props.selectedAppointment.linkedAppointment.surveyDataJson;
 		const isComplete = !isEmpty(json);
 		const q = JSON.parse(json || '{}');
@@ -84,8 +92,8 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 	}
 
 	public render() {
-		const isReadOnly = false;
-		const isDisabled = false;
+		// const isReadOnly = false;
+		// const isDisabled = false;
 		return (
 			<div>
 				<h3>View Details</h3>
