@@ -9,27 +9,28 @@ import {FormBasePage} from "../helpers/FormBasePage";
 import {navigate} from 'gatsby';
 import {ScheduleApi} from "../api/api";
 import copyAppointment from "../helpers/copyAppointment";
+import {isEmpty} from "ucshared";
 
 const qs = [
-	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false, m: 'You have a cardiac pacemaker.'},
-	{id: 'defibrillatorImplant', q: 'implanted defibrillator (also called ICD or AICD)?', r: false},
-	{id: 'spinalStimulator', q: 'a spinal stimulator?', r: false},
-	{id: 'loopRecorder', q: 'a loop recorder?', r: false},
-	{id: 'neurostimulator', q: 'a brain neurostimulator?', r: false},
+	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false, e: 'You have a cardiac pacemaker.'},
+	{id: 'defibrillatorImplant', q: 'implanted defibrillator (also called ICD or AICD)?', r: false, e: 'You have an implanted defibrillator.'},
+	{id: 'spinalStimulator', q: 'a spinal stimulator?', r: false, e: 'You have a spinal stimulator'},
+	{id: 'loopRecorder', q: 'a loop recorder?', r: false, e: 'You have a loop recorder.'},
+	{id: 'neurostimulator', q: 'a brain neurostimulator?', r: false, e: 'You have a brain neurostimulator.'},
 ];
 
 const qEye = [
-	{id: 'e1', q: 'Was it completely removed?', r: true },
-	{id: 'e2', q: 'Have you had an xray of your eyes showing no metal?', r: true },
-	{id: 'e3', q: 'Have you had an MRI since the injury?', r: true },
+	{id: 'e1', q: 'Was it completely removed?', r: true, e: 'Metal in your eye may not be completely removed.' },
+	{id: 'e2', q: 'Have you had an xray of your eyes showing no metal?', r: true, e: 'Metal in your eye may not be completely removed.' },
+	{id: 'e3', q: 'Have you had an MRI since the injury?', r: true, e: 'You have not had a MRI since getting metal in your eye.' },
 ];
 
 const qPost = [
 	{id: 'p1', q: 'Are you claustrophobic?', r: false, m: 'We recommend having your doctor prescribe a medicine for anxiety. We recommend 1mg of Xanax.'},
 	{id: 'p2', q: 'Do you have any kidney disease?', r: false},
 	{id: 'p3', q: 'Do you have diabetes?', r: false},
+	{id: 'AllergicToContrast', q: 'Are you allergic to IV contrast or MRI contrast?', r: false, m: 'If your MRI requires contrast, you will need to be premedicated with steriods.'}
 ];
-
 
 class SafetyQuestions extends FormBasePage {
 	constructor(props, context) {
@@ -52,12 +53,13 @@ class SafetyQuestions extends FormBasePage {
 	public validate(qArray) {
 		const problems: string[] = [];
 		for (let i = 0; i < qArray.length; i = i + 1) {
-			const ans = this.state.answers[qArray[i].q];
+			const qObj = qArray[i];
+			const ans = this.state.answers[qObj.q];
 			if (typeof ans === 'undefined') {
 				continue;
 			}
-			if (ans !== qArray[i].r) {
-				problems.push(qArray[i].q);
+			if (ans !== qObj.r) {
+				problems.push(qObj.e || qObj.q);
 			}
 		}
 		return {
@@ -74,7 +76,7 @@ class SafetyQuestions extends FormBasePage {
 			}
 		}
 		if (typeof this.getAns('MetalInEye') === 'undefined') return false;
-		if (typeof this.getAns('AllergicToContrast') === 'undefined') return false;
+		// if (typeof this.getAns('AllergicToContrast') === 'undefined') return false;
 		if (typeof this.getAns('implants') === 'undefined') return false;
 		return true;
 	}
@@ -89,7 +91,13 @@ class SafetyQuestions extends FormBasePage {
 						val={this.getAns(item.q)}
 						onChange={(val) => this.ans(item.q, val)}
 						text={item.q}
-					/>
+					>
+						{!!item.m ? (
+							<div className="alert">
+								{item.m}
+							</div>
+						) : undefined}
+					</YesNoQuestion>
 				);
 			}
 		});
@@ -170,9 +178,10 @@ class SafetyQuestions extends FormBasePage {
 				>
 					<TextQuestion
 						id="implants"
-						val={this.state.currentImplant}
-						onChange={(currentImplant) => this.setState({currentImplant})}
+						onChange={(val) => this.ans('implantDetails', val)}
+						val={this.getAns('implantDetails')}
 						text="Tell us as much as you can about them."
+						required={true}
 					/>
 				</YesNoQuestion>
 
@@ -189,26 +198,15 @@ class SafetyQuestions extends FormBasePage {
 
 						<TextQuestion
 							id="eyeDetails"
-							val={this.state.currentImplant}
-							onChange={(currentImplant) => this.setState({currentImplant})}
+							val={this.getAns('eyeDetails')}
+							onChange={(eyeDetails) => this.ans('eyeDetails', eyeDetails)}
 							text="Additional details"
+							required={false}
 						/>
 
 					</YesNoQuestion>
 
 					{this.renderQuestionSet(qPost)}
-
-					<YesNoQuestion
-						text="Are you allergic to IV contrast or MRI contrast?"
-						val={this.getAns('AllergicToContrast')}
-						onChange={(val) => this.ans('AllergicToContrast', val)}
-						id="contrastAllergy"
-					>
-						<div className="alert">
-							If your MRI requires contrast, you will need to be premedicated with steriods.
-						</div>
-					</YesNoQuestion>
-
 				</div>
 
 				{this.isComplete(qs) ? (
@@ -240,7 +238,8 @@ class SafetyQuestions extends FormBasePage {
 			if (this.isComplete(qs)) {
 				new ScheduleApi().appointmentHandlerPUT({
 					req: Object.assign(copyAppointment(this.state), {
-						surveyDataJson: JSON.stringify(this.state.answers)
+						surveyDataJson: JSON.stringify(this.state.answers),
+						safetyWarnings: isEmpty(this.state.validationResult) ? null : JSON.stringify(this.state.validationResult),
 					}),
 				}).then(() => {
 					navigate('/questions-2');

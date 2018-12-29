@@ -47,6 +47,7 @@ class Questions2 extends FormBasePage {
 					val={this.getAns('whyMri')}
 					onChange={(whyMri) => this.ans('whyMri', whyMri)}
 					text="Why are you having an MRI?"
+					required={false}
 				/>
 
 				<YesNoQuestion
@@ -67,6 +68,7 @@ class Questions2 extends FormBasePage {
 						val={this.getAns('injuryDetails')}
 						onChange={(val) => this.ans('injuryDetails', val)}
 						text="Please add details"
+						required={false}
 					/>
 				</YesNoQuestion>
 
@@ -81,6 +83,7 @@ class Questions2 extends FormBasePage {
 						val={this.getAns('cancerDetails')}
 						onChange={(val) => this.ans('cancerDetails', val)}
 						text="What type?"
+						required={true}
 					/>
 				</YesNoQuestion>
 
@@ -95,6 +98,7 @@ class Questions2 extends FormBasePage {
 						val={this.getAns('priorImaging_MriDetails')}
 						onChange={(val) => this.ans('priorImaging_MriDetails', val)}
 						text=" When/where?"
+						required={false}
 					/>
 				</YesNoQuestion>
 
@@ -109,6 +113,7 @@ class Questions2 extends FormBasePage {
 						val={this.getAns('priorImaging_BodyPartImgDetails')}
 						onChange={(val) => this.ans('priorImaging_BodyPartImgDetails', val)}
 						text="How/when/where"
+						required={false}
 					/>
 				</YesNoQuestion>
 
@@ -123,6 +128,7 @@ class Questions2 extends FormBasePage {
 						val={this.getAns('priorSurgery_when')}
 						onChange={(val) => this.ans('priorSurgery_when', val)}
 						text="When?"
+						required={true}
 					/>
 				</YesNoQuestion>
 
@@ -131,6 +137,7 @@ class Questions2 extends FormBasePage {
 					val={this.getAns('priorSurgery_Other')}
 					onChange={(val) => this.ans('priorSurgery_Other', val)}
 					text="What other surgeries have you had?"
+					required={false}
 				/>
 
 				<div className="cta-subitem distributed">

@@ -22,14 +22,15 @@ export const YesNoQuestion = (props: {text: string, val: boolean | null, onChang
 	</div>
 );
 
-export const TextQuestion = ({text, val, onChange, id}) => (
+export const TextQuestion = ({text, val, onChange, id, required}) => (
 	<div className="inputrow"><label htmlFor={id} className="flexlabel">{text}<br /></label>
 		<input
 			type="text"
 			className="flexinput w-input"
 			maxLength={256}
 			name={id}
-			onClick={(e) => onChange(e.currentTarget.value)}
+			required={required}
+			onChange={(e) => onChange(e.currentTarget.value)}
 			value={val || ''}
 			data-name={id}
 			id={id}

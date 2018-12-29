@@ -87,6 +87,7 @@ export interface Appointment {
     "insuranceFrontUrl"?: string;
     "insuranceBackUrl"?: string;
     "surveyDataJson"?: string;
+    "safetyWarnings"?: string;
     "approvedDate"?: Date;
     "submittedDate"?: Date;
     "confirmedDate"?: Date;

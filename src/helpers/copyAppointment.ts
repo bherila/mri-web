@@ -43,6 +43,7 @@ function copyAppointment(o): Appointment {
 		partitionKey: o.partitionKey,
 		rowKey: o.rowKey,
 		timestamp: o.timestamp,
+		safetyWarnings: o.safetyWarnings,
 		eTag: '*',
 	};
 }
