@@ -29,6 +29,7 @@ export abstract class FormBasePage extends React.Component<{}, SafetyState> {
 	public componentDidMount() {
 		const state = SafetyState.loadState();
 		this.setState(state);
+		console.log('Loaded SafetyState', state);
 	}
 
 	public ans(q, val) {

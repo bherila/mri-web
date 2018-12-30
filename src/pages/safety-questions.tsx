@@ -118,7 +118,7 @@ class SafetyQuestions extends FormBasePage {
 				className="modal-content animated fadeInUp"
 				overlayClassName="modal-wrapper">
 				<p>Due to your medical history, we are unable to safely perform an MRI. If you feel that you are still a candidate for an MRI, you may submit the form anyway and we will contact you for further information.</p>
-				<ul>{val.map((li) => (<li>{li}</li>))}</ul>
+				<ul>{val.map((li) => (<li key={li}>{li}</li>))}</ul>
 				<p>
 					<button type="button"
 							className="button w-button"
@@ -237,7 +237,7 @@ class SafetyQuestions extends FormBasePage {
 		if (this.state.overrideSafetyWarning || val.length === 0) {
 			if (this.isComplete(qs)) {
 				new ScheduleApi().appointmentHandlerPUT({
-					req: Object.assign(copyAppointment(this.state), {
+					req: Object.assign({}, copyAppointment(FormBasePage.getAppointment()), {
 						surveyDataJson: JSON.stringify(this.state.answers),
 						safetyWarnings: isEmpty(this.state.validationResult) ? null : JSON.stringify(this.state.validationResult),
 					}),
