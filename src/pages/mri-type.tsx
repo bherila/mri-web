@@ -20,7 +20,12 @@ class MriType extends React.Component<{}, IScanTypeState> {
 
 	public componentDidMount() {
 		if (typeof sessionStorage !== 'undefined') {
-			this.setState({safetyState: SafetyState.loadState()});
+			this.setState({
+				safetyState: SafetyState.loadState(),
+				mriName: '',
+				matches: scanTypes,
+				oops: null,
+			});
 		}
 	}
 
