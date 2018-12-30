@@ -145,7 +145,7 @@ class ContactInformation extends FormBasePage {
 				serviceType: JSON.stringify(this.state.scan),
 				weight: this.state.weight,
 				birthday: this.state.dob,
-				serviceLength: 45, // TODO: Update service length?
+				serviceLength: 30, // TODO: Update service length?
 			},
 			search: '',
 			authToken: '',
