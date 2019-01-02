@@ -9,10 +9,10 @@ const Footer: React.SFC<{}> = ({}) => (
 				<h2 className="cta-heading inline-block"><a href="tel:+18334332567" className="white">833-IDEAL-MR</a>
 				</h2>
 			</div>
-			<a href="/schedule" className="button large">Schedule Online</a></div>
+			<a href="https://schedule.idealmri.com" className="button large">Schedule Online</a></div>
 		<div className="cta-footer"><img
 			src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba3081aff7d475f9a6fa6d1_Logo%20Dark.svg"
-			height="60" alt="" className="cta-branding"/><a href="/policies-and-hipaa-notice">Policies and
+			height="60" alt="" className="cta-branding"/><a href="https://www.idealmri.com/policies-and-hipaa-notice">Policies and
 			Information</a></div>
 		<Helmet>
 			<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"
