@@ -11,6 +11,8 @@ import {navigate} from "gatsby";
 import {PatientReleaseForm} from "../../components/patient-release";
 import ReactModal from 'react-modal';
 import {isEmpty} from 'ucshared';
+import {SlotAvailabilityTime} from "../../api/api";
+import copyAppointment from "../../helpers/copyAppointment";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -65,6 +67,34 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			e.preventDefault();
 		}
 		this.setState({selectedItem, modal: 'edit'});
+	}
+
+	private doManualSchedule(e: React.MouseEvent<HTMLButtonElement>, slot: SlotAvailabilityTime) {
+		if (e) {
+			e.preventDefault();
+		}
+		if (!slot.slotId) {
+			alert('no slotId!');
+			return;
+		}
+		this.setState({
+			modal: 'edit',
+			selectedItem: {
+				slotId: slot.slotId,
+				linkedAppointment: {
+					partitionKey: slot.slotId.split(' ')[1],
+					rowKey: slot.slotId,
+					resourceId: slot.resourceId,
+					serviceLength: 30,
+				},
+				isAvailable: false,
+				isContrastAvailable: true,
+				isContrastRequired: false,
+				isHidden: false,
+				resourceId: slot.resourceId,
+				time: slot.time,
+			},
+		});
 	}
 
 	public doRelease(e, selectedItem: Api.SlotAvailabilityTime) {
@@ -179,7 +209,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (slot.isAvailable) {
 			return (
 				<td>
-					<button className="button sm w-button" type="button" onClick={(e) => alert('not done yet')}>
+					<button className="button sm w-button" type="button" onClick={(e) => this.doManualSchedule(e, slot)}>
 						Manual Schedule
 					</button>
 				</td>

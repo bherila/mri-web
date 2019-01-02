@@ -84,7 +84,7 @@ export class TimePickWidget extends React.Component<{scan: IScan, onPick: (time:
 				<p>
 					<button type="button"
 							className="button w-button"
-							onClick={() => navigate('/addl-info')}>
+							onClick={() => this.props.onPick(this.state.selectedTime)}>
 						Yes, continue
 					</button>
 					<button type="button"

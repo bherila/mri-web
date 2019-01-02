@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {EditFormBase} from "../forms";
 import {Appointment, ScheduleApi, SlotAvailabilityTime} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 import copyAppointment from "../helpers/copyAppointment";
 import {isEmpty} from "ucshared";
+import ReactModal from 'react-modal';
+import {TimePickWidget} from "./pick-time-component";
 
 export interface PatientDetailsFormProps {
 	selectedAppointment: SlotAvailabilityTime;
@@ -11,7 +12,7 @@ export interface PatientDetailsFormProps {
 	onCancel: () => any;
 }
 
-export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment> {
+export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment & {isPickTime?: boolean}> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = this.props.selectedAppointment.linkedAppointment || {};
@@ -97,6 +98,9 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		return (
 			<div>
 				<h3>View Details</h3>
+				<button onClick={(e) => this.pickNewTime()}>
+					{this.state.rowKey}
+				</button>
 				<div className="inputrow">
 					{this.field('first', 'First', this.state.firstName, (firstName) => this.setState({firstName}))}
 					{this.field('last', 'Last', this.state.lastName, (lastName) => this.setState({lastName}))}
@@ -150,13 +154,14 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 					<button type="button" onClick={(e) => this.doPrint(e)}>Print Data</button>
 					<button type="button" onClick={(e) => this.doCancel(e)}>Nevermind</button>
 				</div>
+				{this.renderTimePickModal()}
 			</div>
 		);
 	}
 
 	private doUpdate(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
-		new ScheduleApi().appointmentHandlerPUT({
+		new ScheduleApi().appointmentHandlerPOST({
 			authToken: getAuthToken(),
 			locationId: '',
 			req: copyAppointment(this.state),
@@ -185,4 +190,42 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		}
 	}
 
+	private renderTimePickModal() {
+		return (this.state.isPickTime && (
+			<ReactModal isOpen={true} onRequestClose={() => this.setState({isPickTime: false})}
+						className="modal-content-full animated fadeInUp"
+						overlayClassName="modal-wrapper">
+				<div className="centered white-box">
+					<TimePickWidget
+						scan={{
+							contrast: this.state.serviceType || '',
+							name: this.state.serviceType || 'Unknown',
+							name2: '',
+							name3: '',
+							name4: '',
+							time: '30'
+						}}
+						onPick={(slotAvailabilityTime) => this.setTime(slotAvailabilityTime)}
+					/>
+				</div>
+			</ReactModal>
+		))
+	}
+
+	private setTime(slotAvailabilityTime: SlotAvailabilityTime) {
+		if (typeof slotAvailabilityTime.slotId !== 'string') {
+			alert('No slotId was specified!');
+			return;
+		}
+		this.setState({
+			partitionKey: slotAvailabilityTime.slotId.split(' ')[1],
+			rowKey: slotAvailabilityTime.slotId
+		});
+	}
+
+	private pickNewTime() {
+		this.setState({
+			isPickTime: true,
+		});
+	}
 }
