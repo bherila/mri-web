@@ -3022,6 +3022,12 @@ html.w-mod-js *[data-ix="scale-on-scroll"] {
     margin-top: 10px;
     text-align: center;
   }
+  .breadcrumb-stack {
+    width: 100%;
+  }
+  .breadcrumb-row {
+    width: 100%;
+  }
   .accordion-body {
     padding-left: 56px;
   }

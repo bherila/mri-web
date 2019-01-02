@@ -44,6 +44,20 @@ class PickTimePage extends React.Component<{}, IState> {
 						<MriTypeBreadcrumb value={this.state.qna.scan}/>
 					</div>
 				</div>
+				<div className="w-row">
+					<div className="centered w-col w-col-3 w-hidden-tiny" />
+					<div className="centered w-col w-col-6">
+						<h3>Almost done, {this.state.qna.fname}!</h3>
+						<h3>
+							Choose an available time slot to book
+							your {this.state.qna.scan && this.state.qna.scan.time} appointment.
+						</h3>
+						<p>
+							If you're interested in a same day appointment, please call us at
+							<a href="tel:+18334332567">1 833-IDEAL-MR</a>.
+						</p>
+					</div>
+				</div>
 				{this.state.qna.scan && (
 					<TimePickWidget
 						onPick={(timeSlot) => this.pickTime(timeSlot)}
