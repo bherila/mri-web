@@ -94,7 +94,6 @@ class MriType extends React.Component<{}, IScanTypeState> {
 						<thead>
 						<tr>
 							<th>Service Type</th>
-							<th>Contrast</th>
 							<th>Time Needed</th>
 						</tr>
 						</thead>
@@ -105,8 +104,9 @@ class MriType extends React.Component<{}, IScanTypeState> {
 									{row.name}
 									{row.name2.length > 0 && `/${row.name2}`}
 									{row.name3.length > 0 && `/${row.name3}`}
+									{' '}
+									{row.contrast}
 								</td>
-								<td>{row.contrast}</td>
 								<td>{row.time}</td>
 								<td><button
 									onClick={() => this.select(JSON.stringify(row))}

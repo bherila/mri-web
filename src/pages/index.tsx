@@ -104,6 +104,7 @@ class IndexPage extends FormBasePage {
 									data-wait="Please wait..."
 									className={`${err ? 'disabled ' : ''}w-button`}
 									disabled={!!err}
+									onClick={(e) => this.submitLead(e)}
 								/>
 							</form>
 						</div>
@@ -114,7 +115,7 @@ class IndexPage extends FormBasePage {
 		</IndexLayout>;
 	}
 
-	private submitLead(e: React.FormEvent<HTMLFormElement>) {
+	private submitLead(e) { //  React.FormEvent<HTMLFormElement>
 		e.preventDefault();
 		new LeadGenApi().runPOST({
 			req: {
