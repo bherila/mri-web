@@ -106,7 +106,8 @@ class SafetyQuestions extends FormBasePage {
 	public validateAll() {
 		const v1 = this.validate(qs);
 		// const v2 = this.validate(qEye); // Carl says not to validate the eye items
-		const validationResult = v1.problems;
+		const v3 = this.validate(qPost);
+		const validationResult = v1.problems.concat(v3.problems);
 		this.setState({validationResult});
 		return validationResult;
 	}
