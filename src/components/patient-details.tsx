@@ -5,6 +5,7 @@ import copyAppointment from "../helpers/copyAppointment";
 import {isEmpty} from "ucshared";
 import ReactModal from 'react-modal';
 import {TimePickWidget} from "./pick-time-component";
+import {IScan, scanTypes} from "../models/Scan";
 
 export interface PatientDetailsFormProps {
 	selectedAppointment: SlotAvailabilityTime;
@@ -95,10 +96,21 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 	public render() {
 		// const isReadOnly = false;
 		// const isDisabled = false;
+		const scan: IScan = JSON.parse(this.state.serviceType || '{}') || {};
 		return (
 			<div>
-				<h3>View Details</h3>
-				<button onClick={(e) => this.pickNewTime()}>
+				<div className="centered">
+					<select>
+						{scanTypes.map((tt) => {
+							const val = JSON.stringify(tt);
+							const selected = tt.name === scan.name && tt.contrast === scan.contrast;
+							return (
+								<option key={val} value={val} selected={selected}>{tt.name} {tt.contrast} ({tt.time})</option>
+							);
+						})}
+					</select>
+				</div>
+				<button onClick={(e) => this.pickNewTime()} className="link centered">
 					{this.state.rowKey}
 				</button>
 				<div className="inputrow">
