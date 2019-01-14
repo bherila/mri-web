@@ -1,9 +1,13 @@
 import * as React from 'react';
 import {TextQuestion, YesNoQuestion} from "../components/Questions";
-import {BigButton} from "../components/BigBtn";
+import {BigButton, BigButtonJs} from "../components/BigBtn";
 import {FormBasePage} from "../helpers/FormBasePage";
 import IndexLayout from "../layouts";
 import {Ez123, MriTypeBreadcrumb, OrderBreadcrumb, TimeslotBreadcrumb} from "../components/breadcrumb";
+import {ScheduleApi} from "../api/api";
+import copyAppointment from "../helpers/copyAppointment";
+import {isEmpty} from "ucshared";
+import {navigate} from "gatsby";
 
 class Questions2 extends FormBasePage {
 	constructor(props, context) {
@@ -141,8 +145,8 @@ class Questions2 extends FormBasePage {
 				/>
 
 				<div className="cta-subitem distributed">
-					<BigButton
-						href="/done"
+					<BigButtonJs
+						onClick={() => this.doSubmit()}
 						img="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 						text="Continue"
 						wide
@@ -150,6 +154,17 @@ class Questions2 extends FormBasePage {
 				</div>
 			</React.Fragment>
 		);
+	}
+
+	private doSubmit() {
+		new ScheduleApi().appointmentHandlerPUT({
+			req: Object.assign({}, copyAppointment(FormBasePage.getAppointment()), {
+				surveyDataJson: JSON.stringify(this.state.answers),
+				safetyWarnings: isEmpty(this.state.validationResult) ? null : JSON.stringify(this.state.validationResult),
+			}),
+		}).then(() => {
+			navigate('/done');
+		}, (err) => alert(err));
 	}
 }
 

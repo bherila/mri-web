@@ -8,7 +8,7 @@ import {TimePickWidget} from "./pick-time-component";
 import {IScan, scanTypes} from "../models/Scan";
 
 export interface PatientDetailsFormProps {
-	selectedAppointment: SlotAvailabilityTime;
+	selectedSlotAvailabilityTime: SlotAvailabilityTime;
 	onConfirm: () => any;
 	onCancel: () => any;
 }
@@ -16,26 +16,31 @@ export interface PatientDetailsFormProps {
 export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment & {isPickTime?: boolean}> {
 	constructor(props, context) {
 		super(props, context);
-		this.state = this.props.selectedAppointment.linkedAppointment || {};
+		const appointment = this.props.selectedSlotAvailabilityTime.linkedAppointment;
+		if (appointment) {
+			// standardize json format
+			appointment.serviceType = JSON.stringify(JSON.parse(appointment.serviceType || '{}'));
+		}
+		this.state = appointment || {};
 	}
 
 	public componentWillReceiveProps(nextProps: Readonly<PatientDetailsFormProps>): void {
-		const {selectedAppointment} = nextProps;
-		if (selectedAppointment !== this.props.selectedAppointment) {
-			this.setState(selectedAppointment.linkedAppointment || {});
+		const {selectedSlotAvailabilityTime} = nextProps;
+		if (selectedSlotAvailabilityTime !== this.props.selectedSlotAvailabilityTime) {
+			this.setState(selectedSlotAvailabilityTime.linkedAppointment || {});
 		}
 	}
 
 	public renderSafetyAnswers() {
-		if (!this.props.selectedAppointment) {
-			console.log('!this.props.selectedAppointment');
+		if (!this.props.selectedSlotAvailabilityTime) {
+			console.log('!this.props.selectedSlotAvailabilityTime');
 			return false;
 		}
-		if (!this.props.selectedAppointment.linkedAppointment) {
-			console.log('!this.props.selectedAppointment.linkedAppointment');
+		if (!this.props.selectedSlotAvailabilityTime.linkedAppointment) {
+			console.log('!this.props.selectedSlotAvailabilityTime.linkedAppointment');
 			return false;
 		}
-		const json = this.props.selectedAppointment.linkedAppointment.surveyDataJson;
+		const json = this.props.selectedSlotAvailabilityTime.linkedAppointment.surveyDataJson;
 		const isComplete = !isEmpty(json);
 		const q = JSON.parse(json || '{}');
 		const safetyItems = {
@@ -94,23 +99,21 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 	}
 
 	public render() {
-		// const isReadOnly = false;
-		// const isDisabled = false;
-		const scan: IScan = JSON.parse(this.state.serviceType || '{}') || {};
+		// const scan: IScan = JSON.parse(this.state.serviceType || '{}') || {};
 		return (
 			<div>
 				<div className="centered">
-					<select>
+					<select onChange={(e) => this.setState({serviceType: e.currentTarget.value})}
+							value={this.state.serviceType}>
 						{scanTypes.map((tt) => {
 							const val = JSON.stringify(tt);
-							const selected = tt.name === scan.name && tt.contrast === scan.contrast;
 							return (
-								<option key={val} value={val} selected={selected}>{tt.name} {tt.contrast} ({tt.time})</option>
+								<option key={val} value={val}>{tt.name} {tt.contrast} ({tt.time})</option>
 							);
 						})}
 					</select>
 				</div>
-				<button onClick={(e) => this.pickNewTime()} className="link centered">
+				<button onClick={(e) => this.pickNewTime(e)} className="link centered">
 					{this.state.rowKey}
 				</button>
 				<div className="inputrow">
@@ -130,43 +133,47 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 					{this.field('State', 'State', this.state.state, (state) => this.setState({state}))}
 					{this.field('Zip', 'Zip', this.state.zip, (zip) => this.setState({zip}))}
 				</div>
-				<hr />
+				<hr/>
 				<div className="inputrow">
 					{this.field('doctorName', 'doctorName', this.state.doctorName, (doctorName) => this.setState({doctorName}))}
 					{this.field('doctorPhone', 'doctorPhone', this.state.doctorPhone, (doctorPhone) => this.setState({doctorPhone}))}
 
-					<button className="w-button">
-						View Order
-					</button>
+					View order image below
+					{/*<button className="w-button">*/}
+						{/*View Order*/}
+					{/*</button>*/}
 				</div>
-				<div className="inputrow">
-					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.orderImageUrl}`} />
-				</div>
-				<hr />
+
+				<hr/>
 				<div className="inputrow">
 					{this.field('insuranceCarrier', 'insuranceCarrier', this.state.insuranceCarrier, (insuranceCarrier) => this.setState({insuranceCarrier}))}
 					{this.field('insuranceGroupNumber', 'insuranceGroupNumber', this.state.insuranceGroupNumber, (insuranceGroupNumber) => this.setState({insuranceGroupNumber}))}
 					{this.field('insurancePolicyNumber', 'insurancePolicyNumber', this.state.insurancePolicyNumber, (insurancePolicyNumber) => this.setState({insurancePolicyNumber}))}
-					<a className="w-button" href={''}>
-						View Card Front
-					</a>
-					<button className="w-button">
-						View Card Back
-					</button>
+					{/*<a className="w-button" href="#">View Card Front</a>*/}
+					{/*<button className="w-button">View Card Back</button>*/}
 				</div>
-				<div className="inputrow">
-					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceFrontUrl}`} />
-					<img src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceBackUrl}`} />
-				</div>
-				<hr />
+				<hr/>
 				{this.renderSafetyAnswers()}
-				<hr />
+				<hr/>
 				<div className="centered">
 					<button type="button" onClick={(e) => this.doUpdate(e)}>Update</button>
 					<button type="button" onClick={(e) => this.doPrint(e)}>Print Data</button>
 					<button type="button" onClick={(e) => this.doCancel(e)}>Nevermind</button>
 				</div>
 				{this.renderTimePickModal()}
+				<hr />
+				<div className="inputrow">
+					<img style={{maxWidth: '700px', maxHeight: '500px'}} src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.orderImageUrl}`}/>
+				</div>
+				<div className="inputrow">
+					<img style={{maxWidth: '700px', maxHeight: '500px'}} src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceFrontUrl}`}/>
+				</div>
+				<div className="inputrow">
+					<img style={{maxWidth: '700px', maxHeight: '500px'}} src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceBackUrl}`}/>
+				</div>
+				<hr />
+				<h3>Extended Safety Form Data</h3>
+				{this.renderSafetyFormTable()}
 			</div>
 		);
 	}
@@ -235,9 +242,66 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		});
 	}
 
-	private pickNewTime() {
+	private pickNewTime(e) {
+		if (e) {
+			e.preventDefault();
+		}
 		this.setState({
 			isPickTime: true,
 		});
 	}
+
+	private renderSafetyFormTable() {
+		const sd = JSON.parse(this.state.surveyDataJson || '{}');
+		return (
+			<table>
+				<tbody>
+				{Object.keys(sd).map((row) => {
+					if (excluded.indexOf(row) > -1) {
+						return false;
+					}
+					return (
+						<tr key={row}>
+							<td>{row}</td>
+							<td>{(typeof sd[row] === 'boolean' ? (sd[row] === true ? <span style={{color: 'red', fontWeight: 'bold'}}>Yes</span> : 'No') : sd[row].toString())}</td>
+						</tr>
+					);
+				})}
+				</tbody>
+			</table>
+		);
+	}
 }
+
+const excluded = [
+	'fname',
+	'lname',
+	'email',
+	'phone',
+	'answers',
+	'implants',
+	'currentImplant',
+	'haveOrder',
+	'scan',
+	'overrideSafetyWarning',
+	'height',
+	'weight',
+	'doctorName',
+	'doctorContact',
+	'insFront',
+	'insBack',
+	'mriOrder',
+	'carrierNumber',
+	'groupNumber',
+	'policyNumber',
+	'timeSlot',
+	'err',
+	'dob',
+	'address1',
+	'address2',
+	'city',
+	'state',
+	'zip',
+	'optedIn',
+	'validationResult',
+];

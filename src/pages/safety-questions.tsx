@@ -243,7 +243,7 @@ class SafetyQuestions extends FormBasePage {
 						safetyWarnings: isEmpty(this.state.validationResult) ? null : JSON.stringify(this.state.validationResult),
 					}),
 				}).then(() => {
-					navigate('/questions-2');
+						navigate('/questions-2');
 				}, (err) => alert(err));
 			}
 		}

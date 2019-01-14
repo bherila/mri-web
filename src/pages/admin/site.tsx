@@ -11,8 +11,6 @@ import {navigate} from "gatsby";
 import {PatientReleaseForm} from "../../components/patient-release";
 import ReactModal from 'react-modal';
 import {isEmpty} from 'ucshared';
-import {SlotAvailabilityTime} from "../../api/api";
-import copyAppointment from "../../helpers/copyAppointment";
 
 interface ISiteFormState {
 	hideUnavailable: boolean;
@@ -66,10 +64,12 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 		if (e) {
 			e.preventDefault();
 		}
-		this.setState({selectedItem, modal: 'edit'});
+		const qs = `appt=${encodeURIComponent(JSON.stringify(selectedItem))}`;
+		navigate(`/admin/details/?${qs}`);
+		// this.setState({selectedItem, modal: 'edit'});
 	}
 
-	private doManualSchedule(e: React.MouseEvent<HTMLButtonElement>, slot: SlotAvailabilityTime) {
+	private doManualSchedule(e: React.MouseEvent<HTMLButtonElement>, slot: Api.SlotAvailabilityTime) {
 		if (e) {
 			e.preventDefault();
 		}
@@ -146,9 +146,10 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				<h1>Waco Location</h1>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
-						[Date picker]
+						<button className="button w-button">&laquo; Previous</button>
+						<button className="button w-button">Next &raquo;</button>
 					</div>
-					<button className="w-button" type="button" onClick={() => navigate('/admin/rules')}>
+					<button className="button w-button" type="button" onClick={() => navigate('/admin/rules')}>
 						Manage availability rules
 					</button>
 
@@ -246,7 +247,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 							className="modal-content animated fadeInUp"
 							overlayClassName="modal-wrapper">
 					<PatientReleaseForm
-						selectedSlot={this.state.selectedItem}
+						selectedSlotAvailabilityTime={this.state.selectedItem}
 						onConfirm={() => this.closeModal()}
 						onCancel={() => this.closeModal()}
 						onRequestEdit={() => this.closeModal()}
@@ -271,7 +272,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 							overlayClassName="modal-wrapper">
 					<div className="centered white-box">
 						<PatientDetailsForm
-							selectedAppointment={this.state.selectedItem}
+							selectedSlotAvailabilityTime={this.state.selectedItem}
 							onConfirm={() => this.closeModal()}
 							onCancel={() => this.closeModal()}
 						/>

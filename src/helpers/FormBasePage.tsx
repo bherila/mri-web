@@ -33,7 +33,7 @@ export abstract class FormBasePage extends React.Component<{}, SafetyState> {
 	}
 
 	public ans(q, val) {
-		const answers = Object.assign(new SafetyState(), this.state.answers);
+		const answers = Object.assign({}, this.state.answers);
 		answers[q] = val;
 		console.log(q, val, answers);
 		this.setState({answers}, () => this.saveState());
