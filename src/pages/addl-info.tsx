@@ -64,6 +64,9 @@ class ContactInformation extends FormBasePage {
 									{this.uploadMri()}
 									{this.insFront()}
 									{this.insBack()}
+									{this.insuranceCarrier()}
+									{this.groupNumber()}
+									{this.policyNumber()}
 									<div className="cta-subitem distributed">
 										<button className="cta-link wider w-inline-block" type="submit">
 											<img
@@ -128,24 +131,29 @@ class ContactInformation extends FormBasePage {
 				rowKey: slotId,
 				lastName: this.state.lname,
 				firstName: this.state.fname,
-				address1: '',
+				address1: this.state.address1,
+				address2: this.state.address2,
+				city: this.state.city,
+				state: this.state.state,
+				zip: this.state.zip,
 				confirmed: false,
 				doctorName: this.state.doctorName,
+				doctorPhone: this.state.doctorContact,
 				email: this.state.email,
 				phone: this.state.phone,
 				height: this.state.height || '',
 				insuranceBackUrl: this.state.insBack,
 				insuranceFrontUrl: this.state.insFront,
-				insuranceCarrier: '',
-				insuranceGroupNumber: '',
-				insurancePolicyNumber: '',
+				insuranceCarrier: this.state.carrierNumber,
+				insuranceGroupNumber: this.state.groupNumber,
+				insurancePolicyNumber: this.state.policyNumber,
 				insuranceVerified: false,
 				orderImageUrl: this.state.mriOrder,
 				resourceId: this.state.timeSlot.resourceId,
 				serviceType: JSON.stringify(this.state.scan),
 				weight: this.state.weight,
 				birthday: this.state.dob,
-				serviceLength: 30, // TODO: Update service length?
+				serviceLength: 45, // TODO: Update service length?
 			},
 			search: '',
 			authToken: '',
@@ -388,6 +396,63 @@ class ContactInformation extends FormBasePage {
 					required
 					value={this.state.lname}
 					onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private insuranceCarrier() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="carrierNumber" className="flexlabel">Insurance Carrier</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="carrierNumber"
+					data-name="Insurance Carrier"
+					id="carrierNumber"
+					required
+					value={this.state.carrierNumber}
+					onChange={(e) => this.setState({carrierNumber: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private groupNumber() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="groupNumber" className="flexlabel">Group #</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="groupNumber"
+					data-name="Group #"
+					id="groupNumber"
+					required
+					value={this.state.groupNumber}
+					onChange={(e) => this.setState({groupNumber: e.currentTarget.value}, () => this.saveState())}
+				/>
+			</div>
+		);
+	}
+
+	private policyNumber() {
+		return (
+			<div className="inputrow">
+				<label htmlFor="policyNumber" className="flexlabel">Policy #</label>
+				<input
+					type="text"
+					className="flexinput w-input"
+					maxLength={256}
+					name="policyNumber"
+					data-name="Policy #"
+					id="policyNumber"
+					required
+					value={this.state.policyNumber}
+					onChange={(e) => this.setState({policyNumber: e.currentTarget.value}, () => this.saveState())}
 				/>
 			</div>
 		);

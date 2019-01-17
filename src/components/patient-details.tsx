@@ -156,9 +156,9 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 				{this.renderSafetyAnswers()}
 				<hr/>
 				<div className="centered">
-					<button type="button" onClick={(e) => this.doUpdate(e)}>Update</button>
-					<button type="button" onClick={(e) => this.doPrint(e)}>Print Data</button>
-					<button type="button" onClick={(e) => this.doCancel(e)}>Nevermind</button>
+					<button type="button" className="button w-button" onClick={(e) => this.doUpdate(e)}>Update</button>
+					<button type="button" className="button w-button" onClick={(e) => this.doPrint(e)}>Print Data</button>
+					<button type="button" className="button w-button" onClick={(e) => this.doCancel(e)}>Nevermind</button>
 				</div>
 				{this.renderTimePickModal()}
 				<hr />

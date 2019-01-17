@@ -65,8 +65,9 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			e.preventDefault();
 		}
 		const qs = `appt=${encodeURIComponent(JSON.stringify(selectedItem))}`;
-		navigate(`/admin/details/?${qs}`);
-		// this.setState({selectedItem, modal: 'edit'});
+		const url = `/admin/details/?${qs}`;
+		// navigate(url);
+		window.open(url, '_blank');
 	}
 
 	private doManualSchedule(e: React.MouseEvent<HTMLButtonElement>, slot: Api.SlotAvailabilityTime) {
@@ -85,7 +86,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					partitionKey: slot.slotId.split(' ')[1],
 					rowKey: slot.slotId,
 					resourceId: slot.resourceId,
-					serviceLength: 30,
+					serviceLength: 45,
 				},
 				isAvailable: false,
 				isContrastAvailable: true,
