@@ -44,18 +44,21 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		const isComplete = !isEmpty(json);
 		const q = JSON.parse(json || '{}');
 		const safetyItems = {
-			"Cardiac pacer": q.pacemaker ? 'yes' : 'no',
-			"Stimulator": q.spinalStimulator ? 'yes' : 'no',
-			"Brain implant": !!q.neurostimulator,
-			"Loop recorder": !!q.loopRecorder,
-			"Defibrillator implant": !!q.defibrillatorImplant,
+			"Cardiac pacer": q['a cardiac pacemaker?'] ? 'yes' : 'no',
+			"Stimulator": q['a spinal stimulator?'] ? 'yes' : 'no',
+			"Brain implant": !!q['a brain neurostimulator?'],
+			"Loop recorder": !!q['a loop recorder?'],
+			"Defibrillator implant": !!q['implanted defibrillator (also called ICD or AICD)?'],
 			"Other implants": q.implants ? (`yes:${q.currentImplant}` || 'no detail') : 'no',
-			"Metal in eye": q.eye ? 'yes' : 'no',
-			"Metal removed": q.eye ? (q.e1 ? 'yes' : 'no') : 'N/A',
-			"claustrophobic?": !!q.p1,
-			"Contrast allergy": q.AllergicToContrast ? 'yes' : 'no',
-			"kidney disease?": !!q.p2,
-			"diabetes?": !!q.p3,
+			"Metal in eye": q.MetalInEye ? 'yes' : 'no',
+			"Metal removed": q.MetalInEye ? (q['Was it completely removed?'] ? 'yes' : 'no') : 'N/A',
+			"claustrophobic?": !!q['Are you claustrophobic?'],
+			"Contrast allergy": q['Are you allergic to IV contrast or MRI contrast?'] ? 'yes' : 'no',
+			"kidney disease?": !!q['Do you have any kidney disease?'],
+			"diabetes?": !!q['Do you have diabetes?'],
+			"pain?": !!q.pain,
+			"injury?": !!q.injury,
+			"cancer?": !!q.cancer,
 		};
 		const keys = Object.keys(safetyItems);
 		return (
@@ -67,12 +70,17 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 					{keys.map((key) => (
 						<div key={key} className="qa-item">
 							<div className="qa-label">{key}</div>
-							<div className="qa-answer">{typeof safetyItems[key] === 'boolean'
-								? (safetyItems[key] === true ? 'yes' : 'no')
-								: (safetyItems[key])
-							}</div>
+							<div className="qa-answer">
+								{typeof safetyItems[key] === 'boolean'
+									? (safetyItems[key] === true ? 'yes' : 'no')
+									: (safetyItems[key])
+								}
+							</div>
 						</div>
 					))}
+				</div>
+				<div style={{opacity: isComplete ? 1 : 0.5}}>
+					{this.renderSafetyFormTable()}
 				</div>
 			</React.Fragment>
 		)
@@ -172,8 +180,6 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 					<img style={{maxWidth: '700px', maxHeight: '500px'}} src={`https://mrischedba06.blob.core.windows.net/uploads/${this.state.insuranceBackUrl}`}/>
 				</div>
 				<hr />
-				<h3>Extended Safety Form Data</h3>
-				{this.renderSafetyFormTable()}
 			</div>
 		);
 	}
@@ -304,4 +310,21 @@ const excluded = [
 	'zip',
 	'optedIn',
 	'validationResult',
+	'implanted defibrillator (also called ICD or AICD)?',
+	'a cardiac pacemaker?',
+	'a brain neurostimulator?',
+	'a spinal stimulator?',
+	'neurostimulator',
+	'a loop recorder?',
+	'defibrillatorImplant',
+	'implants',
+	'MetalInEye',
+	'Was it completely removed?',
+	'Are you claustrophobic?',
+	'injury',
+	'cancer',
+	'pain',
+	'Are you allergic to IV contrast or MRI contrast?',
+	'Do you have any kidney disease?',
+	'Do you have diabetes?'
 ];
