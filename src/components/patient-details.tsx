@@ -242,9 +242,31 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 			alert('No slotId was specified!');
 			return;
 		}
+		const oldAppointment = copyAppointment(this.state);
 		this.setState({
 			partitionKey: slotAvailabilityTime.slotId.split(' ')[1],
 			rowKey: slotAvailabilityTime.slotId
+		}, () => {
+			new ScheduleApi().appointmentHandlerPOST({
+				authToken: getAuthToken(),
+				locationId: '',
+				req: copyAppointment(this.state),
+				search: '',
+				withContrast: false,
+			}).then((releaseResp) => {
+				if (releaseResp.success) {
+					new ScheduleApi().appointmentHandlerDELETE({
+						authToken: getAuthToken(),
+						req: oldAppointment,
+					}).then((res) => {
+						if (res.success) {
+							alert('Time updated, you will need to refresh the appointment list to see the new appointment.');
+						} else {
+							alert('Failed to release old appointment: ' + res.message);
+						}
+					});
+				}
+			});
 		});
 	}
 
