@@ -110,6 +110,7 @@ class MriType extends React.Component<{}, IScanTypeState> {
 								<td>{row.time}</td>
 								<td><button
 									onClick={() => this.select(JSON.stringify(row))}
+									style={{color: 'navy', textDecoration: 'underline'}}
 								>Select</button></td>
 							</tr>
 						))}

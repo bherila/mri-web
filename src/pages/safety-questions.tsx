@@ -11,6 +11,8 @@ import {ScheduleApi} from "../api/api";
 import copyAppointment from "../helpers/copyAppointment";
 import {isEmpty} from "ucshared";
 
+const contrastMessage = 'This may affect your ability to receive IV contrast. If you need a scan with contrast, please give us a call.';
+
 const qs = [
 	{id: 'pacemaker', q: 'a cardiac pacemaker?', r: false, e: 'You have a cardiac pacemaker.'},
 	{id: 'defibrillatorImplant', q: 'implanted defibrillator (also called ICD or AICD)?', r: false, e: 'You have an implanted defibrillator.'},
@@ -21,15 +23,15 @@ const qs = [
 
 const qEye = [
 	{id: 'e1', q: 'Was it completely removed?', r: true, e: 'Metal in your eye may not be completely removed.' },
-	{id: 'e2', q: 'Have you had an xray of your eyes showing no metal?', r: true, e: 'Metal in your eye may not be completely removed.' },
+	{id: 'e2', q: 'Have you had an x-ray of your eyes showing no metal?', r: true, e: 'Metal in your eye may not be completely removed.' },
 	{id: 'e3', q: 'Have you had an MRI since the injury?', r: true, e: 'You have not had a MRI since getting metal in your eye.' },
 ];
 
 const qPost = [
-	{id: 'p1', q: 'Are you claustrophobic?', r: false, m: 'We recommend having your doctor prescribe a medicine for anxiety. We recommend 1mg of Xanax.'},
-	{id: 'p2', q: 'Do you have any kidney disease?', r: false},
+	{id: 'p1', q: 'Are you claustrophobic?', r: false, inlineMessage: 'We recommend having your doctor prescribe a medicine for anxiety. We recommend 1mg of Xanax.'},
+	{id: 'p2', q: 'Do you have any kidney disease?', r: false, inlineMessage: contrastMessage},
 	{id: 'p3', q: 'Do you have diabetes?', r: false},
-	{id: 'AllergicToContrast', q: 'Are you allergic to IV contrast or MRI contrast?', r: false, m: 'If your MRI requires contrast, you will need to be premedicated with steriods.'}
+	{id: 'AllergicToContrast', q: 'Are you allergic to IV contrast or MRI contrast?', r: false, inlineMessage: 'If your MRI requires contrast, you will need to be premedicated with steriods.'}
 ];
 
 class SafetyQuestions extends FormBasePage {
@@ -58,7 +60,7 @@ class SafetyQuestions extends FormBasePage {
 			if (typeof ans === 'undefined') {
 				continue;
 			}
-			if (ans !== qObj.r) {
+			if (ans !== qObj.r && !qObj.inlineMessage) {
 				problems.push(qObj.e || qObj.q);
 			}
 		}
@@ -92,9 +94,9 @@ class SafetyQuestions extends FormBasePage {
 						onChange={(val) => this.ans(item.q, val)}
 						text={item.q}
 					>
-						{!!item.m ? (
+						{!!item.inlineMessage ? (
 							<div className="alert">
-								{item.m}
+								{item.inlineMessage}
 							</div>
 						) : undefined}
 					</YesNoQuestion>
