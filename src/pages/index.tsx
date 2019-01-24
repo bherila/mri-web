@@ -27,8 +27,8 @@ class IndexPage extends FormBasePage {
 			<section id="Q1" className="vspace80 w-container">
 				<div className="vspace40 centered w-row">
 					<div>
-						<h3>Ready to schedule your MRI?</h3>
-						<p>It's easy, we'll walk you through it step by step.</p>
+						<h3 style={{fontWeight: 'bold'}}>Ready to schedule your MRI?</h3>
+						<h3>It's easy, we'll walk you through it step by step.</h3>
 					</div>
 				</div>
 				<div className="vspace40 centered w-row">

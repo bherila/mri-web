@@ -30,7 +30,7 @@ const qEye = [
 const qPost = [
 	{id: 'p1', q: 'Are you claustrophobic?', r: false, inlineMessage: 'We recommend having your doctor prescribe a medicine for anxiety. We recommend 1mg of Xanax.'},
 	{id: 'p2', q: 'Do you have any kidney disease?', r: false, inlineMessage: contrastMessage},
-	{id: 'p3', q: 'Do you have diabetes?', r: false},
+	{id: 'p3', q: 'Do you have diabetes?', r: false, inlineMessage: contrastMessage},
 	{id: 'AllergicToContrast', q: 'Are you allergic to IV contrast or MRI contrast?', r: false, inlineMessage: 'If your MRI requires contrast, you will need to be premedicated with steriods.'}
 ];
 

@@ -132,7 +132,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 				<div className="inputrow">
 					{this.field('phone', 'Phone', this.state.phone, (phone) => this.setState({phone}))}
 					{this.field('Email', 'Email', this.state.email, (email) => this.setState({email}))}
-					{this.field('Weight', 'Weight', this.state.weight, (weight) => this.setState({weight}))}
+					{/*{this.field('Weight', 'Weight', this.state.weight, (weight) => this.setState({weight}))}*/}
 				</div>
 				<div className="inputrow">
 					{this.field('Address1', 'Address1', this.state.address1, (address1) => this.setState({address1}))}

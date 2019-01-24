@@ -55,7 +55,7 @@ class ContactInformation extends FormBasePage {
 									{/*</p>*/}
 									{this.dateOfBirth()}
 									{/*{this.height()}*/}
-									{this.weight()}
+									{/*{this.weight()}*/}
 									{this.firstName()}
 									{this.lastName()}
 									{this.addressBlock()}

@@ -93,22 +93,22 @@ class MriType extends React.Component<{}, IScanTypeState> {
 					{(this.state.mriName || '').length > 0 && <table className="vspace80 w-row" style={{width: '100%', marginBottom: '80px'}} cellPadding={3} cellSpacing={3}>
 						<thead>
 						<tr>
-							<th>Service Type</th>
-							<th>Time Needed</th>
+							<th style={{textAlign: 'left'}}>Type of Scan</th>
+							<th style={{textAlign: 'left', width: '20%'}}>Length</th>
 						</tr>
 						</thead>
 						<tbody>
 						{this.state.matches.map((row) => (
 							<tr key={JSON.stringify(row)}>
-								<td>
+								<td style={{textAlign: 'left'}}>
 									{row.name}
 									{row.name2.length > 0 && `/${row.name2}`}
 									{row.name3.length > 0 && `/${row.name3}`}
 									{' '}
 									{row.contrast}
 								</td>
-								<td>{row.time}</td>
-								<td><button
+								<td style={{textAlign: 'left'}}>{row.time}</td>
+								<td style={{textAlign: 'left'}}><button
 									onClick={() => this.select(JSON.stringify(row))}
 									style={{color: 'navy', textDecoration: 'underline'}}
 								>Select</button></td>
@@ -116,6 +116,13 @@ class MriType extends React.Component<{}, IScanTypeState> {
 						))}
 						</tbody>
 					</table>}
+					<div className="vspace40 centered w-row">
+						<div className="w-col w-col-3" />
+						<div className="w-col w-col-6">
+							<p><b>P.S.</b> this is Beta software. If you run into any issues, please give us a call at 833-IDEAL-MR.</p>
+						</div>
+						<div className="w-col w-col-3" />
+					</div>
 				</section>
 			</IndexLayout>
 		);
