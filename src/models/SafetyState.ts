@@ -1,5 +1,4 @@
-import {SlotAvailabilityTime} from "../api/api";
-import {IScan} from "./Scan";
+import {ServiceType, SlotAvailabilityTime} from "../api/api";
 
 export class SafetyState {
 	constructor() {
@@ -47,7 +46,7 @@ export class SafetyState {
 	public implants: string[];
 	public currentImplant: string;
 	public haveOrder: boolean;
-	public scan: IScan | null;
+	public scan: ServiceType | null;
 	public overrideSafetyWarning: boolean;
 	public height: string;
 	public weight: string;

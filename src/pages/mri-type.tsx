@@ -102,8 +102,8 @@ class MriType extends React.Component<{}, IScanTypeState> {
 							<tr key={JSON.stringify(row)}>
 								<td style={{textAlign: 'left'}}>
 									{row.name}
-									{row.name2.length > 0 && `/${row.name2}`}
-									{row.name3.length > 0 && `/${row.name3}`}
+									{(row.name2 || '').length > 0 && `/${row.name2}`}
+									{(row.name3 || '').length > 0 && `/${row.name3}`}
 									{' '}
 									{row.contrast}
 								</td>

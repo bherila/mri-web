@@ -5,7 +5,7 @@ import copyAppointment from "../helpers/copyAppointment";
 import {isEmpty} from "ucshared";
 import ReactModal from 'react-modal';
 import {TimePickWidget} from "./pick-time-component";
-import {IScan, scanTypes} from "../models/Scan";
+import {scanTypes} from "../models/Scan";
 
 export interface PatientDetailsFormProps {
 	selectedSlotAvailabilityTime: SlotAvailabilityTime;
@@ -107,7 +107,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 	}
 
 	public render() {
-		// const scan: IScan = JSON.parse(this.state.serviceType || '{}') || {};
+		// const scan: ServiceType = JSON.parse(this.state.serviceType || '{}') || {};
 		return (
 			<div>
 				<div className="centered">

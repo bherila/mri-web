@@ -1,11 +1,8 @@
 import * as React from 'react'
 import * as Api from '../api/api'
-import IndexLayout from '../layouts'
-import {Ez123, MriTypeBreadcrumb} from "../components/breadcrumb";
-import {navigate} from "gatsby";
 import {SafetyState} from "../models/SafetyState";
 import ReactModal from 'react-modal';
-import {IScan} from "../models/Scan";
+import {ServiceType} from "../api/api";
 
 const take = 4;
 
@@ -15,10 +12,11 @@ interface TimePickState {
 	total: number;
 	qna: SafetyState;
 	times: Api.SlotAvailabilityDate[];
+	selectedTime: any;
 	showModal: boolean;
 }
 
-export class TimePickWidget extends React.Component<{scan: IScan, onPick: (time: Api.SlotAvailabilityTime) => any}, TimePickState> {
+export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: (time: Api.SlotAvailabilityTime) => any}, TimePickState> {
 	constructor(props, context) {
 		super(props, context);
 		this.state = {
@@ -26,6 +24,7 @@ export class TimePickWidget extends React.Component<{scan: IScan, onPick: (time:
 			offset: 0,
 			total: 14,
 			qna: SafetyState.loadState(),
+			selectedTime: null,
 			times: [],
 			showModal: false,
 		};
@@ -98,7 +97,7 @@ export class TimePickWidget extends React.Component<{scan: IScan, onPick: (time:
 	}
 
 	public render() {
-		const {offset, total, err, times} = this.state;
+		const {offset, total, times} = this.state;
 		return (
 			<React.Fragment>
 				<div className="w-row">
