@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as Api from '../api/api'
 import {SafetyState} from "../models/SafetyState";
 import ReactModal from 'react-modal';
-import {ServiceType} from "../api/api";
+import {ServiceType, SlotAvailabilityTime} from "../api/api";
 
 const take = 4;
 
@@ -51,6 +51,11 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 			err,
 			qna: SafetyState.loadState(),
 		}));
+	}
+
+	public componentWillReceiveProps(nextProps: Readonly<{ scan: ServiceType; onPick: (time: SlotAvailabilityTime) => any }>, nextContext: any): void {
+		this.setState({offset: 0});
+		this.componentDidMount();
 	}
 
 	public renderSlotAvailabilityDate(dt: Api.SlotAvailabilityDate, needConfirm: boolean) {
@@ -104,7 +109,7 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 					<div className="w-col w-col-2">
 						<div className="timeslotcolumn">
 							{offset > 0 && (
-								<a href="#"
+								<a href="javascript:void(0)"
 								   onClick={() => this.setState({offset: offset - 1})}
 								   className="buttontimeslot w-button">
 									&laquo; Earlier Dates
@@ -122,10 +127,10 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 					{offset + take < total && (
 						<div className="w-col w-col-2">
 							<div className="timeslotcolumn">
-								<a href="#"
+								<a href="javascript:void(0)"
 								   onClick={() => this.setState({offset: offset + 1})}
 								   className="buttontimeslot w-button">
-									Later Dates &gt;&gt;
+									Later Dates &raquo;
 								</a>
 							</div>
 						</div>

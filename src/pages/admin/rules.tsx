@@ -5,6 +5,8 @@ import Page from '../../components/Page'
 import AdminLayout from '../../layouts/admin'
 import {getAuthToken} from "../../helpers/authToken";
 import {navigate} from "gatsby";
+import {TimePickWidget} from "../../components/pick-time-component";
+import {scanTypes} from "../../models/Scan";
 
 interface IRuleEditorState {
 	hideUnavailable: boolean;
@@ -22,6 +24,7 @@ interface IRuleEditorState {
 	err: string;
 	date: string;
 	newItemComment: string;
+	previewContrast: boolean;
 }
 
 class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
@@ -43,6 +46,7 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 			date: 'yyyy-mm-dd',
 			err: '',
 			newItemComment: '',
+			previewContrast: false,
 		};
 	}
 
@@ -62,6 +66,7 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 			console.log(err);
 			// TODO: loginRedirect()
 		});
+
 	}
 
 	public render() {
@@ -128,7 +133,10 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 							<td style={{whiteSpace: 'nowrap'}}>{rule.resourceID}</td>
 							<td style={{whiteSpace: 'nowrap'}}>{rule.comment}</td>
 							<td style={{whiteSpace: 'nowrap'}}>{rule.status}</td>
-							<td style={{whiteSpace: 'nowrap'}}>-</td>
+							<td style={{whiteSpace: 'nowrap'}}>
+								<button className="button-2 w-button" type="button" style={{zoom: 0.7}}>▲</button>&nbsp;
+								<button className="button-2 w-button" type="button" style={{zoom: 0.7}}>▼</button>
+							</td>
 						</tr>
 					))}
 					<tr>
@@ -183,16 +191,27 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 		);
 	}
 
+	private swapContrast(e: React.MouseEvent<HTMLAnchorElement>) {
+		e.preventDefault();
+		this.setState({previewContrast: !this.state.previewContrast});
+	}
+
 	public renderInner() {
 		return (
 			<div>
 				<h2>Time Rules For This Location</h2>
 				{this.renderTable()}
 
+				<h3>Preview Schedule</h3>
+				<p>Currently viewing <a href="javascript:void(0)" onClick={(e) => this.swapContrast(e)}>{this.state.previewContrast ? 'contrast' : 'non-contrast'} (click to swap)</a>.</p>
+				<TimePickWidget
+					onPick={(timeSlot) => console.log(timeSlot)}
+					scan={{contrast: this.state.previewContrast ? 'with and without contrast' : '', name: '', time: scanTypes[0].time }}
+				/>
+
 				<button className="w-button" onClick={() => navigate('/admin/site')}>
 					Go back to site
 				</button>
-
 
 			</div>
 		);
