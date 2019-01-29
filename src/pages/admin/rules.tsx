@@ -206,7 +206,7 @@ class RulesPage extends React.Component<{classes: any}, IRuleEditorState>{
 				<p>Currently viewing <a href="javascript:void(0)" onClick={(e) => this.swapContrast(e)}>{this.state.previewContrast ? 'contrast' : 'non-contrast'} (click to swap)</a>.</p>
 				<TimePickWidget
 					onPick={(timeSlot) => console.log(timeSlot)}
-					scan={{contrast: this.state.previewContrast ? 'with and without contrast' : '', name: '', time: scanTypes[0].time }}
+					scan={{contrast: this.state.previewContrast ? 'with and without contrast' : '', name: '', time: (scanTypes[0] || {}).time }}
 				/>
 
 				<button className="w-button" onClick={() => navigate('/admin/site')}>
