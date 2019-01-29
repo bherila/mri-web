@@ -22,6 +22,7 @@ interface ISiteFormState {
 	modal: 'confirm' | 'edit' | 'release' | null;
 	data: Api.SlotAvailabilityDate[];
 	selectedItem: Api.SlotAvailabilityTime | null;
+	skip: number;
 }
 
 class SitePage extends React.Component<{classes: any}, ISiteFormState>{
@@ -37,6 +38,7 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			modal: null,
 			data: [],
 			selectedItem: null,
+			skip: -1,
 		};
 	}
 
@@ -46,6 +48,8 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 			authToken: getAuthToken(),
 			locationId: '',
 			withContrast: false,
+			skip: this.state.skip,
+
 		} as any).then((result) => {
 			this.setState({data: result.value || []});
 		}, (err) => {
@@ -147,8 +151,8 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				<h1>Waco Location</h1>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
-						<button className="button w-button">&laquo; Previous</button>
-						<button className="button w-button">Next &raquo;</button>
+						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) - 14})}>&laquo; Previous</button>
+						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) + 14})}>Next &raquo;</button>
 					</div>
 					<button className="button w-button" type="button" onClick={() => navigate('/admin/rules')}>
 						Manage availability rules
