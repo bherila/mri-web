@@ -151,8 +151,8 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 				<h1>Waco Location</h1>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>
 					<div style={{display: 'flex', flexDirection: 'row'}}>
-						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) - 14})}>&laquo; Previous</button>
-						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) + 14})}>Next &raquo;</button>
+						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) - 14}, () => this.componentDidMount())}>&laquo; Previous</button>
+						<button className="button w-button" onClick={(e) => this.setState({skip: (this.state.skip || 0) + 14}, () => this.componentDidMount())}>Next &raquo;</button>
 					</div>
 					<button className="button w-button" type="button" onClick={() => navigate('/admin/rules')}>
 						Manage availability rules

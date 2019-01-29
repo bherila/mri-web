@@ -17,7 +17,8 @@
     "lint": "tslint 'src/**/*.{ts,tsx}'",
     "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "swagger": "java -jar ../swagger-codegen-cli.jar generate -i http://localhost:7071/api/swagger/v1 -l typescript-fetch -o ./src/api"
+    "swagger": "java -jar ../swagger-codegen-cli.jar generate -i http://localhost:7071/api/swagger/v1 -l typescript-fetch -o ./src/api",
+    "patch": "rm -rf docs public && npm run build && mv public docs && git checkout docs/CNAME && git add . && git commit -m \"Rebuild\""
   },
   "engines": {
     "node": ">=8.0.0"
