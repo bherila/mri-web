@@ -35,7 +35,7 @@ class IndexPage extends FormBasePage {
 					<div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
 					<div className="w-col w-col-6">
 						<div className="w-form">
-							<form action="#" onSubmit={(e) => this.submitLead(e)}>
+							<form action="#" onSubmit={(e) => this.submitIndexForm(e)}>
 								<label htmlFor="fname">First name</label>
 								<input
 									type="text"
@@ -46,6 +46,7 @@ class IndexPage extends FormBasePage {
 									id="fname"
 									value={this.state.fname}
 									onChange={(e) => this.setState({fname: e.currentTarget.value}, () => this.saveState())}
+									onBlur={(e) => this.captureLead(e)}
 								/>
 
 								<label htmlFor="lname">Last name</label>
@@ -58,6 +59,7 @@ class IndexPage extends FormBasePage {
 									id="lname"
 									value={this.state.lname}
 									onChange={(e) => this.setState({lname: e.currentTarget.value}, () => this.saveState())}
+									onBlur={(e) => this.captureLead(e)}
 								/>
 
 								<label htmlFor="email">Email Address</label>
@@ -71,6 +73,7 @@ class IndexPage extends FormBasePage {
 									required
 									value={this.state.email}
 									onChange={(e) => this.setState({email: e.currentTarget.value}, () => this.saveState())}
+									onBlur={(e) => this.captureLead(e)}
 								/>
 
 								<div className="inputrow">
@@ -104,7 +107,7 @@ class IndexPage extends FormBasePage {
 									data-wait="Please wait..."
 									className={`${err ? 'disabled ' : ''}w-button`}
 									disabled={!!err}
-									onClick={(e) => this.submitLead(e)}
+									onClick={(e) => this.submitIndexForm(e)}
 								/>
 							</form>
 						</div>
@@ -115,19 +118,24 @@ class IndexPage extends FormBasePage {
 		</IndexLayout>;
 	}
 
-	private submitLead(e) { //  React.FormEvent<HTMLFormElement>
+	private submitIndexForm(e) { //  React.FormEvent<HTMLFormElement>
 		e.preventDefault();
-		new LeadGenApi().runPOST({
+		this.captureLead(e).then((resp) => {
+			console.log(resp);
+			navigate('/have-order');
+		});
+	}
+
+	private captureLead(e: React.FocusEvent<HTMLInputElement>) {
+		return new LeadGenApi().runPOST({
 			req: {
 				firstName: this.state.fname,
 				lastName: this.state.lname,
 				email: this.state.email,
+				phone: this.state.phone
 			},
 			authToken: '',
-		}).then((resp) => {
-			console.log(resp);
-			navigate('/have-order');
-		});
+		}); // todo: avoid generating too many duplicate leads
 	}
 }
 

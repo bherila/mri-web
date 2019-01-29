@@ -58,23 +58,6 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 		this.componentDidMount();
 	}
 
-	public renderSlotAvailabilityDate(dt: Api.SlotAvailabilityDate, needConfirm: boolean) {
-		return (
-			<div className="timeslotcolumn">
-				<h3 style={{whiteSpace: 'nowrap'}}>{dt.friendlyBegin}</h3>
-				{dt.times ? dt.times.map((timeSlot) => (
-					<a key={timeSlot.time}
-					   href="#"
-					   className={`buttontimeslot ${timeSlot.isAvailable ? '' : 'unavailable '}w-button`}
-					   onClick={() => this.pickTime(timeSlot, needConfirm)}
-					>
-						{timeSlot.time}
-					</a>
-				)) : <div>dt.times is {typeof dt.times}</div>}
-			</div>
-		);
-	}
-
 	public renderModal() {
 		return (
 			<ReactModal
@@ -88,7 +71,7 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 				<p>
 					<button type="button"
 							className="button w-button"
-							onClick={() => this.props.onPick(this.state.selectedTime)}>
+							onClick={() => this.pickTime(this.state.selectedTime, false)}>
 						Yes, continue
 					</button>
 					<button type="button"
@@ -120,7 +103,7 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 					{times && times.map((date, i) => (
 						(i >= offset && (i - offset) < take) && (
 							<div key={JSON.stringify(date || i)} className="w-col w-col-2">
-								{this.renderSlotAvailabilityDate(date, i < 1)}
+								{this.renderSlotAvailabilityDate(date, !!date.isTomorrow)}
 							</div>
 						)
 					))}
@@ -141,10 +124,26 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 		);
 	}
 
+	private renderSlotAvailabilityDate(dt: Api.SlotAvailabilityDate, needConfirm: boolean) {
+		return (
+			<div className="timeslotcolumn">
+				<h3 style={{whiteSpace: 'nowrap'}}>{dt.friendlyBegin}</h3>
+				{dt.times ? dt.times.map((timeSlot) => (
+					<a key={timeSlot.time}
+					   href="#"
+					   className={`buttontimeslot ${timeSlot.isAvailable ? '' : 'unavailable '}w-button`}
+					   onClick={() => this.pickTime(timeSlot, needConfirm)}
+					>
+						{timeSlot.time}
+					</a>
+				)) : <div>dt.times is {typeof dt.times}</div>}
+			</div>
+		);
+	}
 	private pickTime(timeSlot: Api.SlotAvailabilityTime, needConfirm: boolean) {
 		if (timeSlot.isAvailable) {
 			if (needConfirm) {
-				this.setState({showModal: true});
+				this.setState({selectedTime: timeSlot, showModal: true});
 			} else {
 				this.props.onPick(timeSlot);
 			}
