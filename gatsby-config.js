@@ -2,9 +2,9 @@
 
 module.exports = {
   siteMetadata: {
-    title: 'MRI Scheduler',
-    description: 'TBD',
-    siteUrl: 'http://bherila.net/mrisched',
+    title: 'ideal MRI - Schedule Now',
+    description: 'High quality, low cost MRI scans. Fast and convenient. Schedule online now.',
+    siteUrl: 'https://schedule.idealmri.com',
     author: {
       name: 'Ben Herila',
       url: 'https://www.bherila.net',
@@ -47,7 +47,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-canonical-urls',
       options: {
-        siteUrl: 'https://gatsby-starter-typescript-plus.netlify.com'
+        siteUrl: 'https://schedule.idealmri.com'
       }
     },
     'gatsby-plugin-emotion',
