@@ -157,7 +157,6 @@ class SitePage extends React.Component<{classes: any}, ISiteFormState>{
 					<button className="button w-button" type="button" onClick={() => navigate('/admin/rules')}>
 						Manage availability rules
 					</button>
-
 					<SignOutButton/>
 				</div>
 				<div style={{display: 'flex', flexDirection: 'row', justifyItems: 'stretch'}}>

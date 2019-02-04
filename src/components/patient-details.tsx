@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Appointment, ScheduleApi, SlotAvailabilityTime} from "../api/api";
+import {Appointment, ScheduleApi, ServiceType, SlotAvailabilityTime} from "../api/api";
 import {getAuthToken} from "../helpers/authToken";
 import copyAppointment from "../helpers/copyAppointment";
 import {isEmpty} from "ucshared";
@@ -13,7 +13,7 @@ export interface PatientDetailsFormProps {
 	onCancel: () => any;
 }
 
-export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment & {isPickTime?: boolean}> {
+export class PatientDetailsForm extends React.Component<PatientDetailsFormProps, Appointment & {isPickTime?: boolean, scanTypes?: ServiceType[]}> {
 	constructor(props, context) {
 		super(props, context);
 		const appointment = this.props.selectedSlotAvailabilityTime.linkedAppointment;
@@ -22,6 +22,10 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 			appointment.serviceType = JSON.stringify(JSON.parse(appointment.serviceType || '{}'));
 		}
 		this.state = appointment || {};
+	}
+
+	public componentDidMount(): void {
+		new ScheduleApi().serviceTypesGET({locationId: ''}).then((res) => this.setState({scanTypes: res.value || []}));
 	}
 
 	public componentWillReceiveProps(nextProps: Readonly<PatientDetailsFormProps>): void {
@@ -228,7 +232,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 							name2: '',
 							name3: '',
 							name4: '',
-							time: '30'
+							time: 30
 						}}
 						onPick={(slotAvailabilityTime) => this.setTime(slotAvailabilityTime)}
 					/>
