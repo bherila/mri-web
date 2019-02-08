@@ -39,7 +39,13 @@ module.exports = {
               quality: 90,
               linkImagesToOriginal: false
             }
-          }
+          },
+          {
+            resolve: `gatsby-plugin-facebook-pixel`,
+            options: {
+              pixelId: '783520752000386',
+            },
+          },
         ]
       }
     },
