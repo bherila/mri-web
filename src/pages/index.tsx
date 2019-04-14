@@ -24,7 +24,6 @@ class IndexPage extends FormBasePage {
 
 	public render() {
 		const err = this.formError();
-		const err = this.formError();
 		return <IndexLayout>
 			<section id="Q1" className="vspace80 w-container">
 				<div className="vspace40 centered w-row">
