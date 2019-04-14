@@ -96,7 +96,7 @@ class IndexPage extends FormBasePage {
 									name="phone"
 									data-name="Phone"
 									id="phone"
-									required
+									required={true}
 									value={this.state.phone}
 									onChange={(e) => this.setState({phone: formatPhone(e.currentTarget.value)}, () => this.saveState())}
 								/>
