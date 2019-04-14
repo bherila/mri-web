@@ -18,6 +18,7 @@ class IndexPage extends FormBasePage {
 		if (this.state.fname === '') return 'First name is required';
 		if (this.state.lname === '') return 'Last name is required';
 		if (this.state.email === '') return 'Email is required';
+		if (this.state.phone === '') return 'Phone is required';
 		return null;
 	}
 
