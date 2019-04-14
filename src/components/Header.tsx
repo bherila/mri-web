@@ -7,6 +7,7 @@ import { heights, dimensions, colors } from '../styles/variables'
 import Container from './Container'
 import * as Webflow from '../styles/webflow';
 import { css } from "emotion";
+import {setup} from "../helpers/tracker";
 
 const StyledHeader = styled.header('navContainer');
 
@@ -16,7 +17,7 @@ const Header: React.SFC<{}> = ({}) => (
 			<div id="w-node-82dfbff5e208-14f3913a" className="header-cta-top">
 				<div className="header-inline-block">
 					<div className="cta-heading inline-block blue">Call :&nbsp;</div>
-					<div className="cta-heading inline-block"><a href="tel:+18334332567" className="white">833-IDEAL-MR</a></div>
+					<div className="cta-heading inline-block"><a ref={(e) => setup(e)} href="tel:+18334332567" className="white">833-IDEAL-MR</a></div>
 				</div>
 				<a href="https://schedule.idealmri.com" className="button-3">Schedule Online</a></div>
 			<a href="https://www.idealmri.com/" id="w-node-82dfbff5e20f-14f3913a" className="brand w-nav-brand w--current">

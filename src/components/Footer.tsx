@@ -1,12 +1,13 @@
 import * as React from 'react'
 import Helmet from "react-helmet";
+import {setup} from "../helpers/tracker";
 
 const Footer: React.SFC<{}> = ({}) => (
 	<footer className="cta-section centered-accented">
 		<div className="cta-footer">
 			<div className="footer-inline-block">
 				<h2 className="cta-heading inline-block blue"><a href="tel:+18334332567">Call</a> : </h2>
-				<h2 className="cta-heading inline-block"><a href="tel:+18334332567" className="white">833-IDEAL-MR</a>
+				<h2 className="cta-heading inline-block"><a href="tel:+18334332567" className="white" ref={(e) => setup(e)}>833-IDEAL-MR</a>
 				</h2>
 			</div>
 			<a href="https://schedule.idealmri.com" className="button large">Schedule Online</a></div>
