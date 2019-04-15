@@ -94,6 +94,7 @@ module.exports = {
         // gtmPreview: "YOUR_GOOGLE_TAGMANAGER_ENVIROMENT_PREVIEW_NAME",
         // dataLayerName: "YOUR_DATA_LAYER_NAME",
       },
+    },
     'gatsby-plugin-emotion',
     'gatsby-plugin-typescript',
     'gatsby-plugin-sharp',
