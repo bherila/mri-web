@@ -100,6 +100,7 @@ class IndexPage extends FormBasePage {
 									required={true}
 									value={this.state.phone}
 									onChange={(e) => this.setState({phone: formatPhone(e.currentTarget.value)}, () => this.saveState())}
+									onBlur={(e) => this.captureLead(e)}
 								/>
 
 								<input
