@@ -7,11 +7,11 @@ import * as React from 'react'
 //
 
 interface LayoutMainProps {
+  children: React.ReactNode
   className?: string
 }
 
-// <StyledLayoutMain className={className}>{children}</StyledLayoutMain>
-const LayoutMain: React.SFC<LayoutMainProps> = ({ children, className }) => (
+const LayoutMain = ({ children, className }: LayoutMainProps) => (
   <main className={className || "white-section"}>
       <div className="vspace80 w-container">
           {children}

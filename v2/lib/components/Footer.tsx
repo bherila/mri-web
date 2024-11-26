@@ -1,8 +1,8 @@
-import * as React from 'react'
-import Helmet from "react-helmet";
-import {setup} from "../helpers/tracker";
+'use client'
+import {setup} from "@/lib/tracker";
 
-const Footer: React.SFC<{}> = ({}) => (
+function Footer() {
+	return (
 	<footer className="cta-section centered-accented">
 		<div className="cta-footer">
 			<div className="footer-inline-block">
@@ -15,13 +15,8 @@ const Footer: React.SFC<{}> = ({}) => (
 			src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5ba3081aff7d475f9a6fa6d1_Logo%20Dark.svg"
 			height="60" alt="" className="cta-branding"/><a href="https://www.idealmri.com/policies-and-hipaa-notice">Policies and
 			Information</a></div>
-		<Helmet>
-			<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"
-					integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossOrigin="anonymous" />
-			<script src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/js/ideal-mri.71c22ec14.js"
-					type="text/javascript" />
-		</Helmet>
 	</footer>
-);
+	);
+}
 
 export default Footer

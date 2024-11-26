@@ -4,11 +4,7 @@ import {StaticQuery, graphql} from 'gatsby'
 
 // import 'modern-normalize'
 // import '../styles/normalize'
-import '../styles/webflow.css'
-import '../styles/custom.css'
-import '../styles/webflow.grid.css'
-import '../styles/animate.css'
-import '../styles/tables.css'
+
 
 import Header from '../components/Header'
 import LayoutRoot from '../components/LayoutRoot'
@@ -46,10 +42,6 @@ const IndexLayout: React.SFC = ({children}) => (
 						{name: 'keywords', content: 'gatsbyjs, gatsby, javascript, sample, something'}
 					]}
 				/>
-				<Header/>
-				<LayoutMain>{children}</LayoutMain>
-				<FooterNav/>
-				<Footer/>
 			</LayoutRoot>
 		)}
 	/>
