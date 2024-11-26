@@ -1,0 +1,41 @@
+table.blue {
+    border: 1px solid #FFFFFF;
+    width: 100%;
+    border-collapse: collapse;
+}
+table.blue td, table.blue th {
+    border: 1px solid #FFFFFF;
+    padding: 3px 2px;
+}
+table.blue tr:nth-child(even) {
+    background: #E1ECF5;
+}
+table.blue thead {
+    background: #0B6FA4;
+    background: -moz-linear-gradient(top, #4893bb 0%, #237dad 66%, #0B6FA4 100%);
+    background: -webkit-linear-gradient(top, #4893bb 0%, #237dad 66%, #0B6FA4 100%);
+    background: linear-gradient(to bottom, #4893bb 0%, #237dad 66%, #0B6FA4 100%);
+    border-bottom: 5px solid #FFFFFF;
+}
+table.blue thead th {
+    font-weight: bold;
+    color: #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+}
+table.blue thead th:first-child {
+    border-left: none;
+}
+
+table.blue tfoot {
+    font-weight: bold;
+    color: #333333;
+    background: #D0E4F5;
+    background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+    border-top: 3px solid #444444;
+}
+
+.form-control {
+    width: 100%;
+}

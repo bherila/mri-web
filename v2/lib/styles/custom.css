@@ -1,0 +1,12 @@
+.flexmargin {
+    width: 10%;
+    font-size: 15px;
+    line-height: 16px;
+}
+
+.flexsubitem {
+    width: 90%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-radius: 3px;
+}
