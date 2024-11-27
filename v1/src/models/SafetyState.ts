@@ -34,7 +34,7 @@ export class SafetyState {
 		this.city = '';
 		this.state = '';
 		this.zip = '';
-		this.optedIn = true;
+		this.optedIn = false;
 		this.validationResult = [];
 	}
 

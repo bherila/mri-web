@@ -77,7 +77,7 @@ class IndexPage extends FormBasePage {
 									onBlur={(e) => this.captureLead(e)}
 								/>
 
-								<div className="inputrow">
+								{/* <div className="inputrow">
 									<label style={{fontWeight: 'normal', fontSize: '8pt'}}>
 										<input
 											type="checkbox"
@@ -87,7 +87,7 @@ class IndexPage extends FormBasePage {
 										/>&nbsp;
 										It's OK to send me more information about ideal MRI. (We'll never share your information)
 									</label>
-								</div>
+								</div> */}
 
 								<label htmlFor="email">Phone</label>
 								<input
@@ -102,6 +102,18 @@ class IndexPage extends FormBasePage {
 									onChange={(e) => this.setState({phone: formatPhone(e.currentTarget.value)}, () => this.saveState())}
 									onBlur={(e) => this.captureLead(e)}
 								/>
+
+								<div className="inputrow">
+									<label style={{fontWeight: 'normal', fontSize: '8pt'}}>
+										<input
+											type="checkbox"
+											checked={this.state.optedIn}
+											value="yes"
+											onChange={(e) => this.setState({optedIn: e.currentTarget.checked})}
+										/>&nbsp;
+										It's OK to send me SMS about ideal MRI. (We'll never share your information)
+									</label>
+								</div>
 
 								<input
 									type="submit"

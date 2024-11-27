@@ -26,7 +26,7 @@ const Header: React.SFC<{}> = ({}) => (
 			<div data-collapse="medium" data-animation="default" data-duration="400" id="w-node-82dfbff5e211-14f3913a" className="navbar w-nav">
 				<nav role="navigation" className="navigation-menu w-nav-menu">
 					<a href="https://www.idealmri.com/why-ideal-mri" className="navigation-link-2 white w-nav-link">Why ideal MRI</a>
-					<a href="https://www.idealmri.com/for-clinicians" className="navigation-link-2 white w-nav-link">Meet Our Team</a>
+					{/* <a href="https://www.idealmri.com/for-clinicians" className="navigation-link-2 white w-nav-link">Meet Our Team</a> */}
 					<a href="https://www.idealmri.com/what-to-expect" className="navigation-link-2 white w-nav-link">What to Expect</a>
 					<a href="https://www.idealmri.com/pricing-and-insurance" className="navigation-link-2 white w-nav-link">Pricing &amp; Insurance</a>
 					<a href="https://www.idealmri.com/for-clinicians" className="navigation-link-2 white w-nav-link">For Clinicians</a>

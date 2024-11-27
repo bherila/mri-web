@@ -105,7 +105,7 @@ class ManageQuestions extends React.Component<any, {
 		});
 	}
 
-	public componentWillReceiveProps(nextProps) {
+	public UNSAFE_componentWillReceiveProps(nextProps) {
 		console.log(nextProps);
 	}
 

@@ -13,11 +13,13 @@ const Footer: React.SFC<{}> = ({}) => (
 				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f69d670128b342c0a_Expect.svg"
 				alt="" className="cta-button-image"/>
 				<div>What to Expect</div>
-			</a><a href="https://www.idealmri.com/meet-our-team" id="w-node-774288a9e262-774089fe" className="cta-grid-item w-inline-block"><img
+			</a>
+			{/* <a href="https://www.idealmri.com/meet-our-team" id="w-node-774288a9e262-774089fe" className="cta-grid-item w-inline-block"><img
 				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead2f3661e73d2f76eedd_Meet%20Our%20Team.svg"
 				alt="" className="cta-button-image"/>
 				<div>Meet Our Team</div>
-			</a><a href="https://www.idealmri.com/for-clinicians" id="w-node-774288a9e266-774089fe"
+			</a> */}
+			<a href="https://www.idealmri.com/for-clinicians" id="w-node-774288a9e266-774089fe"
 				   className="cta-grid-item w-inline-block"><img
 				src="https://uploads-ssl.webflow.com/5b9e87c40899a487ba8091e4/5b9ead313661e7266876eedf_Providers.svg"
 				alt="" className="cta-button-image"/>

@@ -53,7 +53,7 @@ export class TimePickWidget extends React.Component<{scan: ServiceType, onPick: 
 		}));
 	}
 
-	public componentWillReceiveProps(nextProps: Readonly<{ scan: ServiceType; onPick: (time: SlotAvailabilityTime) => any }>, nextContext: any): void {
+	public UNSAFE_componentWillReceiveProps(nextProps: Readonly<{ scan: ServiceType; onPick: (time: SlotAvailabilityTime) => any }>, nextContext: any): void {
 		this.setState({offset: 0});
 		this.componentDidMount();
 	}

@@ -28,7 +28,7 @@ export class PatientDetailsForm extends React.Component<PatientDetailsFormProps,
 		new ScheduleApi().serviceTypesGET({locationId: ''}).then((res) => this.setState({scanTypes: res.value || []}));
 	}
 
-	public componentWillReceiveProps(nextProps: Readonly<PatientDetailsFormProps>): void {
+	public UNSAFE_componentWillReceiveProps(nextProps: Readonly<PatientDetailsFormProps>): void {
 		const {selectedSlotAvailabilityTime} = nextProps;
 		if (selectedSlotAvailabilityTime !== this.props.selectedSlotAvailabilityTime) {
 			this.setState(selectedSlotAvailabilityTime.linkedAppointment || {});
