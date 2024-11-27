@@ -1,101 +1,130 @@
-import Image from "next/image";
+'use client';
+
+import { LeadGenApi } from "@/lib/api/api";
+import { formatPhone } from "@/lib/phone";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [fname, setFname] = useState('');
+  const [lname, setLname] = useState('');
+  const [email, setEmail] = useState('');
+  const [optedIn, setOptedIn] = useState(false);
+  const [phone, setPhone] = useState('');
+  const router = useRouter();
+  const [err, setErr] = useState(null);
+  
+  function submitIndexForm(e: React.FormEvent<HTMLFormElement | HTMLInputElement>) {
+		e.preventDefault();
+		captureLead().then((_resp: any) => {
+			router.push('/have-order');
+		});
+	}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+	function captureLead() : Promise<any> {
+		return new LeadGenApi().runPOST({
+			req: {
+				firstName: fname,
+				lastName: lname,
+				email: email,
+				phone: phone
+			},
+			authToken: '',
+		});
+	}
+
+  return (
+    <section id="Q1" className="vspace80 w-container">
+    <div className="vspace40 centered w-row">
+      <div>
+        <h3 style={{fontWeight: 'bold'}}>Ready to schedule your MRI?</h3>
+        <h3>It's easy, we'll walk you through it step by step.</h3>
+      </div>
     </div>
+    <div className="vspace40 centered w-row">
+      <div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
+      <div className="w-col w-col-6">
+        <div className="w-form">
+          <form action="#" onSubmit={(e) => submitIndexForm(e)}>
+            <label htmlFor="fname">First name</label>
+            <input
+              type="text"
+              className="w-input centered"
+              maxLength={256}
+              name="fname"
+              data-name="First Name"
+              id="fname"
+              value={fname}
+              onChange={(e) => setFname(e.currentTarget.value)}
+              onBlur={(e) => captureLead()}
+            />
+
+            <label htmlFor="lname">Last name</label>
+            <input
+              type="text"
+              className="w-input centered"
+              maxLength={256}
+              name="lname"
+              data-name="Last Name"
+              id="lname"
+              value={lname}
+              onChange={(e) => setLname(e.currentTarget.value)}
+              onBlur={() => captureLead()}
+            />
+
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="text"
+              className="w-input centered"
+              maxLength={256}
+              name="email"
+              data-name="Email"
+              id="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              onBlur={() => captureLead()}
+            />
+
+            <div className="inputrow">
+              <label style={{fontWeight: 'normal', fontSize: '8pt'}}>
+                <input
+                  type="checkbox"
+                  checked={optedIn}
+                  value="yes"
+                  onChange={(e) => setOptedIn(e.currentTarget.checked)}
+                />&nbsp;
+                It's OK to send me more information about ideal MRI. (We'll never share your information)
+              </label>
+            </div>
+
+            <label htmlFor="email">Phone</label>
+            <input
+              type="text"
+              className="w-input centered"
+              maxLength={256}
+              name="phone"
+              data-name="Phone"
+              id="phone"
+              required={true}
+              value={phone}
+              onChange={(e) => setPhone(formatPhone(e.currentTarget.value))}
+              onBlur={() => captureLead()}
+            />
+
+            <input
+              type="submit"
+              value="Let's begin!"
+              data-wait="Please wait..."
+              className={`${err ? 'disabled ' : ''}w-button`}
+              disabled={!!err}
+              onClick={(e) => submitIndexForm(e)}
+            />
+          </form>
+        </div>
+      </div>
+      <div className="w-hidden-small w-hidden-tiny w-col w-col-3"/>
+    </div>
+  </section>
   );
 }

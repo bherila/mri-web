@@ -13,41 +13,10 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: `gatsby-plugin-facebook-pixel`,
       options: {
-        name: 'content',
-        path: `${__dirname}/src/content`
-      }
-    },
-    {
-      resolve: 'gatsby-transformer-remark',
-      options: {
-        plugins: [
-          {
-            resolve: 'gatsby-remark-responsive-iframe',
-            options: {
-              wrapperStyle: 'margin-bottom: 1rem'
-            }
-          },
-          'gatsby-remark-prismjs',
-          'gatsby-remark-copy-linked-files',
-          'gatsby-remark-smartypants',
-          {
-            resolve: 'gatsby-remark-images',
-            options: {
-              maxWidth: 1140,
-              quality: 90,
-              linkImagesToOriginal: false
-            }
-          },
-          {
-            resolve: `gatsby-plugin-facebook-pixel`,
-            options: {
-              pixelId: '783520752000386',
-            },
-          },
-        ]
-      }
+        pixelId: '783520752000386',
+      },
     },
     'gatsby-transformer-json',
     {
@@ -97,7 +66,6 @@ module.exports = {
     },
     'gatsby-plugin-emotion',
     'gatsby-plugin-typescript',
-    'gatsby-transformer-sharp',
     'gatsby-plugin-react-helmet'
   ]
 }

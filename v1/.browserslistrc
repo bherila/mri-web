@@ -1,0 +1,6 @@
+defaults
+not dead
+> 0.5%
+last 2 versions
+not ie <= 11
+maintained node versions
