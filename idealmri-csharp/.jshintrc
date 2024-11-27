@@ -1,0 +1,23 @@
+{
+  "white": true,
+  "indent": 2,
+  "node": true,
+  "browser": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": true,
+  "trailing": true,
+  "smarttabs": true,
+  "globals": {
+    "jQuery": false,
+    "$": false,
+    "_gaq": false,
+    "_ga": false
+  }
+}

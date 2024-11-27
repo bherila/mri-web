@@ -1,0 +1,42 @@
+{
+  "version": "2.0",
+  "Values": {
+    "BindingRedirects": "[ { \"ShortName\": \"Newtonsoft.Json\", \"RedirectToVersion\": \"10.0.0.0\", \"PublicKeyToken\": \"30ad4fe6b2a6aeed\" }, { \"ShortName\": \"System.ComponentModel.Annotations\", \"RedirectToVersion\": \"4.2.1.0\", \"PublicKeyToken\": \"b03f5f7f11d50a3a\" } ]",
+    "PersistentStorage": "DefaultEndpointsProtocol=https;AccountName=mrischedba06;AccountKey=T3uvollYnKL0Rlymkj1CkHbqcZKEg0lsXW29ecy4O1V4MWWNWDjtbp9fS1CXqUFPxSbx5/g3tGAgUQUGdV2WOw==;EndpointSuffix=core.windows.net"
+  },
+  "extensions": {
+    "cosmosDB": {
+      "connectionMode": "Gateway",
+      "protocol": "Https",
+      "leaseOptions": {
+        "leasePrefix": "prefix1"
+      }
+    },
+    "sendGrid": {
+      "from": "Azure Functions <samples@functions.com>"
+    },
+    "http": {
+      "routePrefix": "api",
+      "maxConcurrentRequests": 5,
+      "maxOutstandingRequests": 30
+    },
+    "queues": {
+      "visibilityTimeout": "00:00:10",
+      "maxDequeueCount": 3
+    },
+    "eventHubs": {
+      "batchCheckpointFrequency": 5,
+      "eventProcessorOptions": {
+        "maxBatchSize": 256,
+        "prefetchCount": 512
+      }
+    },
+    "serviceBus": {
+      "prefetchCount": 100,
+      "messageHandlerOptions": {
+        "maxConcurrentCalls": 32,
+        "maxAutoRenewDuration": "00:55:00"
+      }
+    }
+  }
+}

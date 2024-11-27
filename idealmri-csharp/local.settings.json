@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "BindingRedirects": "[ { \"ShortName\": \"Newtonsoft.Json\", \"RedirectToVersion\": \"10.0.0.0\", \"PublicKeyToken\": \"30ad4fe6b2a6aeed\" }, { \"ShortName\": \"System.ComponentModel.Annotations\", \"RedirectToVersion\": \"4.2.1.0\", \"PublicKeyToken\": \"b03f5f7f11d50a3a\" } ]",
+    "PersistentStorage": "DefaultEndpointsProtocol=https;AccountName=mrischedba06;AccountKey=T3uvollYnKL0Rlymkj1CkHbqcZKEg0lsXW29ecy4O1V4MWWNWDjtbp9fS1CXqUFPxSbx5/g3tGAgUQUGdV2WOw==;EndpointSuffix=core.windows.net",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "ConnectionStrings": {
+    "connstr": {
+      "ConnectionString": "Server=ec2-54-235-160-57.compute-1.amazonaws.com;Port=5432;Database=d5ldgr38pedrqh;User Id=zdjfawbbpgxjjp;Password=3738a2b6ee01b2b9db8aba2bf6d6b1058148b21fa6a22d8b084e3eee55362bf9;CommandTimeout=20;"
+    }
+  },
+  "Host": {
+    "CORS": "*"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "author": {
+    "name": "Ben Herila",
+    "email": "ben@undergroundcellar.com",
+    "website": "https://www.undergroundcellar.com"
+  },
+  "contributors": [],
+  "license": "MIT",
+  "name": "ucshared",
+  "description": "Shared libs for ucellar",
+  "keywords": [
+    "ucellar"
+  ],
+  "version": "2.29.0",
+  "homepage": "https://www.undergroundcellar.com",
+  "repository": {
+    "type": "git",
+    "url": "https://ucellar.visualstudio.com/UC/_git/uc_web/"
+  },
+  "bugs": {
+    "url": "https://www.undergroundcellar.com"
+  },
+  "main": "lib.es5/index.js",
+  "types": "lib.es6/index.d.ts",
+  "scripts": {
+    "clean": "rimraf lib.es6 lib.es5",
+    "prebuild": "rimraf lib.es6 lib.es5",
+    "postbuild": "babel lib.es6 --out-dir lib.es5 --source-maps",
+    "build": "tsc -p ."
+  },
+  "files": [
+    "lib.es6",
+    "lib.es5",
+    "src",
+    "tsconfig.json"
+  ],
+  "dependencies": {
+    "@types/credit-card-type": "^5.0.1",
+    "@types/node": "^8.0.1",
+    "@types/underscore": "^1.8.1",
+    "credit-card-type": "^5.0.3",
+    "moment": "^2.18.1",
+    "portable-fetch": "^3.0.0",
+    "querystring": "^0.2.0",
+    "typescript": "^2.2.2",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "rimraf": "^2.6.2"
+  }
+}

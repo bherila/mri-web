@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    },
+    "outDir": "lib.es6",
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "experimentalDecorators": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "jsx": "react",
+    "moduleResolution": "node",
+	"declaration": true
+  },
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}
